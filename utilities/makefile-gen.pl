@@ -61,11 +61,24 @@ include $configFile
 
 EXTRA_FLAGS=$extra_flags{$kernel}
 
+all: $kernel $kernel-jlm
+
+$kernel-jlm: $kernel.c $kernel.h
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	jlm-opt $kernel.ll > $kernel-jlm.ll
+	jlm-opt polybench.ll > polybench-jlm.ll
+	llc-3.7 -O0 -filetype=obj -o $kernel-jlm.o $kernel-jlm.ll
+	llc-3.7 -O0 -filetype=obj -o polybench-jlm.o polybench-jlm.ll
+	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench-jlm.o \${EXTRA_FLAGS}
+
 $kernel: $kernel.c $kernel.h
 	\${VERBOSE} \${CC} -o $kernel $kernel.c \${CFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
 
 clean:
 	@ rm -f $kernel
+	@ rm -f $kernel-jlm
+	@ rm -f *.ll
+	@ rm -f *.o
 
 EOF
 
@@ -80,8 +93,9 @@ if ($GEN_CONFIG) {
 open FILE, '>'.$TARGET_DIR.'/config.mk';
 
 print FILE << "EOF";
-CC=gcc
-CFLAGS=-O2 -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
+CC=clang-3.7
+CPPFLAGS= -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
+CFLAGS=-O0
 EOF
 
 close FILE;
