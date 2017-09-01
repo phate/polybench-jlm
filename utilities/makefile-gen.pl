@@ -72,7 +72,7 @@ $kernel-jlm: $kernel.c $kernel.h
 	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench-jlm.o \${EXTRA_FLAGS}
 
 $kernel: $kernel.c $kernel.h
-	\${VERBOSE} \${CC} -o $kernel $kernel.c \${CFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+	\${VERBOSE} \${CC} -o $kernel $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
 
 clean:
 	@ rm -f $kernel
