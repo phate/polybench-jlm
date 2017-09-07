@@ -61,7 +61,7 @@ include $configFile
 
 EXTRA_FLAGS=$extra_flags{$kernel}
 
-all: $kernel $kernel-jlm
+all: $kernel-O2 $kernel-O0 $kernel-jlm
 
 $kernel-jlm: $kernel.c $kernel.h
 	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
@@ -71,11 +71,18 @@ $kernel-jlm: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench-jlm.o polybench-jlm.ll
 	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench-jlm.o \${EXTRA_FLAGS}
 
-$kernel: $kernel.c $kernel.h
-	\${VERBOSE} \${CC} -o $kernel $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+$kernel-O0: $kernel.c $kernel.h
+	\${VERBOSE} \${CC} -o $kernel-O0 $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+
+$kernel-O2: $kernel.c $kernel.h
+	\${VERBOSE} \${CC} -O2 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	mv $kernel.ll $kernel-O2.ll
+	\${VERBOSE} \${CC} -o $kernel-O2 $kernel.c -O2 \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+
 
 clean:
-	@ rm -f $kernel
+	@ rm -f $kernel-O0
+	@ rm -f $kernel-O2
 	@ rm -f $kernel-jlm
 	@ rm -f *.ll
 	@ rm -f *.o
