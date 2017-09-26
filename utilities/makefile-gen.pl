@@ -61,7 +61,7 @@ include $configFile
 
 EXTRA_FLAGS=$extra_flags{$kernel}
 
-all: $kernel-O2 $kernel-O0 $kernel-jlm
+all: $kernel-O2 $kernel-O1 $kernel-O0 $kernel-jlm
 
 $kernel-jlm: $kernel.c $kernel.h
 	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
@@ -74,6 +74,9 @@ $kernel-jlm: $kernel.c $kernel.h
 $kernel-O0: $kernel.c $kernel.h
 	\${VERBOSE} \${CC} -o $kernel-O0 $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
 
+$kernel-O1: $kernel.c $kernel.h
+	\${VERBOSE} \${CC} -o $kernel-O1 $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+
 $kernel-O2: $kernel.c $kernel.h
 	\${VERBOSE} \${CC} -O2 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	mv $kernel.ll $kernel-O2.ll
@@ -82,6 +85,7 @@ $kernel-O2: $kernel.c $kernel.h
 
 clean:
 	@ rm -f $kernel-O0
+	@ rm -f $kernel-O1
 	@ rm -f $kernel-O2
 	@ rm -f $kernel-jlm
 	@ rm -f *.ll
