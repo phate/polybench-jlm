@@ -65,8 +65,9 @@ all: $kernel-O2 $kernel-O1 $kernel-O0 $kernel-jlm
 
 $kernel-jlm: $kernel.c $kernel.h
 	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
-	jlm-opt \${OPTFLAGS} --xml $kernel.ll > $kernel-jlm.rvsdg
-	jlm-opt \${OPTFLAGS} --llvm $kernel.ll > $kernel-jlm.ll
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+	jlm-opt \${OPTFLAGS} --xml $kernel-opt.ll > $kernel-jlm.rvsdg
+	jlm-opt \${OPTFLAGS} --llvm $kernel-opt.ll > $kernel-jlm.ll
 	jlm-opt --llvm polybench.ll > polybench-jlm.ll
 	llc-3.7 -O0 -filetype=obj -o $kernel-jlm.o $kernel-jlm.ll
 	llc-3.7 -O0 -filetype=obj -o polybench-jlm.o polybench-jlm.ll
