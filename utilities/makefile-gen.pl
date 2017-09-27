@@ -89,6 +89,7 @@ clean:
 	@ rm -f $kernel-O1
 	@ rm -f $kernel-O2
 	@ rm -f $kernel-jlm
+	@ rm -f *.rvsdg
 	@ rm -f *.ll
 	@ rm -f *.o
 
