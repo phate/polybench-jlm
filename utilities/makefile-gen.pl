@@ -36,6 +36,7 @@ my %categories = (
 );
 
 my %extra_flags = (
+   'deriche' => '-lm',
    'cholesky' => '-lm',
    'gramschmidt' => '-lm',
    'correlation' => '-lm'
