@@ -1,4 +1,9 @@
 *.ll
 *.o
 *-jlm
+*-O0
+*-O1
+*-O2
+*.rvsdg
+config.mk
 Makefile
