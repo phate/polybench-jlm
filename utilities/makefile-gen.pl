@@ -75,10 +75,10 @@ $kernel-jlm: $kernel.c $kernel.h
 	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench-jlm.o \${EXTRA_FLAGS}
 
 $kernel-O0: $kernel.c $kernel.h
-	\${VERBOSE} \${CC} -o $kernel-O0 $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+	\${VERBOSE} \${CC} -o $kernel-O0 $kernel.c -O0 \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
 
 $kernel-O1: $kernel.c $kernel.h
-	\${VERBOSE} \${CC} -o $kernel-O1 $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+	\${VERBOSE} \${CC} -o $kernel-O1 $kernel.c -O1 \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
 
 $kernel-O2: $kernel.c $kernel.h
 	\${VERBOSE} \${CC} -O2 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
