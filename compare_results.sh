@@ -1,11 +1,12 @@
 #!	/bin/bash
 
+optflags=`cat optflags`
 echo "CC=clang-3.7" > config.mk
 echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_DUMP_ARRAYS" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
-echo "OPTFLAGS=" >> config.mk
+echo "OPTFLAGS=$optflags" >> config.mk
 
-./compile_all.sh
+./compile_all.sh 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
