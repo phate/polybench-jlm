@@ -62,7 +62,7 @@ include $configFile
 
 EXTRA_FLAGS=$extra_flags{$kernel}
 
-all: $kernel-O2 $kernel-O1 $kernel-O0 $kernel-jlm
+all: $kernel-Os $kernel-O2 $kernel-O1 $kernel-O0 $kernel-jlm
 
 $kernel-jlm: $kernel.c $kernel.h
 	@ echo ""
@@ -113,11 +113,23 @@ $kernel-O2: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-O2 $kernel-O2.o polybench.o \${EXTRA_FLAGS}
 
+$kernel-Os: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling Os:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	opt-3.7 -Os -S $kernel-opt.ll > $kernel-Os.ll
+
+	llc-3.7 -O0 -filetype=obj -o $kernel-Os.o $kernel-Os.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-Os $kernel-Os.o polybench.o \${EXTRA_FLAGS}
 
 clean:
 	@ rm -f $kernel-O0
 	@ rm -f $kernel-O1
 	@ rm -f $kernel-O2
+	@ rm -f $kernel-Os
 	@ rm -f $kernel-jlm
 	@ rm -f *.rvsdg
 	@ rm -f *.ll
