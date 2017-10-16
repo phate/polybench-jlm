@@ -65,25 +65,53 @@ EXTRA_FLAGS=$extra_flags{$kernel}
 all: $kernel-O2 $kernel-O1 $kernel-O0 $kernel-jlm
 
 $kernel-jlm: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling jlm:"
 	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
 	jlm-opt \${OPTFLAGS} --xml $kernel-opt.ll > $kernel-jlm.rvsdg
 	jlm-opt \${OPTFLAGS} --llvm $kernel-opt.ll > $kernel-jlm.ll
-	jlm-opt --llvm polybench.ll > polybench-jlm.ll
+
 	llc-3.7 -O0 -filetype=obj -o $kernel-jlm.o $kernel-jlm.ll
-	llc-3.7 -O0 -filetype=obj -o polybench-jlm.o polybench-jlm.ll
-	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench-jlm.o \${EXTRA_FLAGS}
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench.o \${EXTRA_FLAGS}
 
 $kernel-O0: $kernel.c $kernel.h
-	\${VERBOSE} \${CC} -o $kernel-O0 $kernel.c -O0 \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+	@ echo ""
+	@ echo "Compiling O0:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	cp $kernel-opt.ll $kernel-O0.ll
+
+	llc-3.7 -O0 -filetype=obj -o $kernel-O0.o $kernel-O0.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-O0 $kernel-O0.o polybench.o \${EXTRA_FLAGS}
 
 $kernel-O1: $kernel.c $kernel.h
-	\${VERBOSE} \${CC} -o $kernel-O1 $kernel.c -O1 \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+	@ echo ""
+	@ echo "Compiling O1:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	opt-3.7 -O1 -S $kernel-opt.ll > $kernel-O1.ll
+
+	llc-3.7 -O0 -filetype=obj -o $kernel-O1.o $kernel-O1.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-O1 $kernel-O1.o polybench.o \${EXTRA_FLAGS}
 
 $kernel-O2: $kernel.c $kernel.h
-	\${VERBOSE} \${CC} -O2 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
-	mv $kernel.ll $kernel-O2.ll
-	\${VERBOSE} \${CC} -o $kernel-O2 $kernel.c -O2 \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c \${EXTRA_FLAGS}
+	@ echo ""
+	@ echo "Compiling O2:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	opt-3.7 -O2 -S $kernel-opt.ll > $kernel-O2.ll
+
+	llc-3.7 -O0 -filetype=obj -o $kernel-O2.o $kernel-O2.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-O2 $kernel-O2.o polybench.o \${EXTRA_FLAGS}
 
 
 clean:
