@@ -62,7 +62,15 @@ include $configFile
 
 EXTRA_FLAGS=$extra_flags{$kernel}
 
-all: Os O2 O1 O0 jlm
+all: Os O2 O1 O0 jlm ct
+
+ct: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling ct:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	jlm-opt \${OPTFLAGS} $kernel-opt.ll
 
 jlm: $kernel.c $kernel.h
 	@ echo ""
