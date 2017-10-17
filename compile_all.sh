@@ -4,49 +4,41 @@ perl utilities/makefile-gen.pl .
 source ~/bin/load-jlm.sh
 
 # Datamining
-cd datamining
-cd correlation && make clean && make && cd ..
-cd covariance && make clean && make && cd ..
-cd ..
+make -C datamining/correlation clean all
+make -C datamining/covariance clean all
 
 # Linear Algebra
-cd linear-algebra
-cd blas/gemm && make clean && make && cd ../..
-cd blas/gemver && make clean && make && cd ../..
-cd blas/gesummv && make clean && make && cd ../..
-cd blas/symm && make clean && make && cd ../..
-cd blas/syr2k && make clean && make && cd ../..
-cd blas/syrk && make clean && make && cd ../..
-cd blas/trmm && make clean && make && cd ../..
+make -C linear-algebra/blas/gemm clean all
+make -C linear-algebra/blas/gemver clean all
+make -C linear-algebra/blas/gesummv clean all
+make -C linear-algebra/blas/symm clean all
+make -C linear-algebra/blas/syr2k clean all
+make -C linear-algebra/blas/syrk clean all
+make -C linear-algebra/blas/trmm clean all
 
-cd kernels/2mm && make clean && make && cd ../..
-cd kernels/3mm && make clean && make && cd ../..
-cd kernels/atax && make clean && make && cd ../..
-cd kernels/bicg && make clean && make && cd ../..
-cd kernels/doitgen && make clean && make && cd ../..
-cd kernels/mvt && make clean && make && cd ../..
+make -C linear-algebra/kernels/2mm clean all
+make -C linear-algebra/kernels/3mm clean all
+make -C linear-algebra/kernels/atax clean all
+make -C linear-algebra/kernels/bicg clean all
+make -C linear-algebra/kernels/doitgen make all
+make -C linear-algebra/kernels/mvt clean all
 
-cd solvers/cholesky && make clean && make && cd ../..
-cd solvers/durbin && make clean && make && cd ../..
-cd solvers/gramschmidt && make clean && make && cd ../..
-cd solvers/lu && make clean && make && cd ../..
-cd solvers/ludcmp && make clean && make && cd ../..
-cd solvers/trisolv && make clean && make && cd ../..
-cd ..
+make -C linear-algebra/solvers/cholesky clean all
+make -C linear-algebra/solvers/durbin clean all
+make -C linear-algebra/solvers/gramschmidt clean all
+make -C linear-algebra/solvers/lu clean all
+make -C linear-algebra/solvers/ludcmp clean all
+make -C linear-algebra/solvers/trisolv clean all
 
 # Medley
-cd medley
-cd deriche && make clean && make && cd ..
-cd floyd-warshall && make clean && make && cd ..
-cd nussinov && make clean && make && cd ..
-cd ..
+make -C medley/deriche clean all
+make -C medley/floyd-warshall clean all
+make -C medley/nussinov clean all
 
 #Stencils
-cd stencils
-cd adi && make clean && make && cd ..
-cd fdtd-2d && make clean && make && cd ..
-cd heat-3d && make clean && make && cd ..
-cd jacobi-1d && make clean && make && cd ..
-cd jacobi-2d && make clean && make && cd ..
-cd seidel-2d && make clean && make && cd ..
-cd ..
+make -C stencils/adi clean all
+make -C stencils/fdtd-2d clean all
+make -C stencils/head-3d clean all
+make -C stencils/jacobi-1d clean all
+make -C stencils/jacobi-2d clean all
+make -C stencils/seidel-2d clean all
