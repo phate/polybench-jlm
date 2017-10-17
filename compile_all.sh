@@ -48,7 +48,7 @@ make -C medley/nussinov $TARGETS
 #Stencils
 make -C stencils/adi $TARGETS
 make -C stencils/fdtd-2d $TARGETS
-make -C stencils/head-3d $TARGETS
+make -C stencils/heat-3d $TARGETS
 make -C stencils/jacobi-1d $TARGETS
 make -C stencils/jacobi-2d $TARGETS
 make -C stencils/seidel-2d $TARGETS
