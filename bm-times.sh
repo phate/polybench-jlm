@@ -6,7 +6,7 @@ echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "OPTFLAGS=$optflags" >> config.mk
 
-./compile_all.sh 1>&2
+./compile_all.sh clean O0 O1 O2 jlm 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
