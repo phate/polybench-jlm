@@ -57,7 +57,8 @@ declare -a kernels=(
 echo "# $optflags"
 echo "# kernel Os O2 JLM"
 for kernel in "${kernels[@]}"; do
-	echo -n "$kernel "
+	BASENAME=$(basename "${kernel}")
+	echo -n "$BASENAME "
 
 	OsSIZE=`size $kernel-Os | tail +2 | cut -f1 | xargs`
 	echo -n "$OsSIZE "
