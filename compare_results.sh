@@ -46,7 +46,7 @@ for kernel in "${kernels[@]}"; do
 	bash -c "$kernel-O2 2> /tmp/O2.log"
 	echo -n "run jlm "
 	bash -c "$kernel-jlm 2> /tmp/jlm.log"
-	DIFF=$(diff /tmp/O2.log /tmp/jlm.log)
+	DIFF=$(diff -q /tmp/O2.log /tmp/jlm.log)
 	if [ "$DIFF" != "" ]; then
 		echo "$DIFF"
 		exit;
