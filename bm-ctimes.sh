@@ -5,11 +5,6 @@ if [ -z "$JLMROOT" ]; then
 	exit 1
 fi
 
-OPTTIMES=""
-for OPT in "$@"; do
-	OPTTIMES+="-D${OPT} "
-done
-
 JIVEROOT=$JLMROOT/external/jive
 
 OPTFLAGS=`cat optflags`
@@ -18,10 +13,10 @@ echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "OPTFLAGS=$OPTFLAGS" >> config.mk
 
-make -C $JIVEROOT clean
-make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -O2"
+make -C $JIVEROOT clean 1>&2
+make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -O3" 1>&2
 
-make -C $JLMROOT clean
-make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -O2 $OPTTIMES"
+make -C $JLMROOT clean 1>&2
+make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -O3 -DRVSDGTIME" 1>&2
 
-./compile_all.sh clean ct
+./compile_all.sh clean ct 2>&1 >/dev/null
