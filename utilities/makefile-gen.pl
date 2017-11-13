@@ -70,7 +70,7 @@ ct: $kernel.c $kernel.h
 	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
 
-	jlm-opt \${OPTFLAGS} --llvm $kernel-opt.ll
+	jlm-opt \${JLMFLAGS} --llvm $kernel-opt.ll
 
 jlm: $kernel.c $kernel.h
 	@ echo ""
@@ -78,8 +78,8 @@ jlm: $kernel.c $kernel.h
 	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
 
-	jlm-opt \${OPTFLAGS} --xml $kernel-opt.ll > $kernel-jlm.rvsdg
-	jlm-opt \${OPTFLAGS} --llvm $kernel-opt.ll > $kernel-jlm.ll
+	jlm-opt \${JLMFLAGS} --xml $kernel-opt.ll > $kernel-jlm.rvsdg
+	jlm-opt \${JLMFLAGS} --llvm $kernel-opt.ll > $kernel-jlm.ll
 
 	llc-3.7 -O0 -filetype=obj -o $kernel-jlm.o $kernel-jlm.ll
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
