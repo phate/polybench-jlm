@@ -14,12 +14,14 @@ make -C $JLMROOT clean 1>&2
 make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
 
 optflags=`cat optflags`
+optcflags=`cat optcflags | tr '\n' ' '`
 echo "CC=clang-3.7" > config.mk
 echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "OPTFLAGS=$optflags" >> config.mk
+echo "OPTCFLAGS=$optcflags" >> config.mk
 
-./compile_all.sh clean O0 O1 O2 O3 jlm 1>&2
+./compile_all.sh clean O0 O1 O2 O3 optc jlm 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -54,7 +56,7 @@ declare -a kernels=(
 	"stencils/seidel-2d/seidel-2d")
 
 echo "# $optflags"
-echo "# kernel O0 O1 O2 O3 JLM"
+echo "# kernel O0 O1 O2 O3 OPTC JLM"
 for kernel in "${kernels[@]}"; do
 	echo -n "$kernel "
 
@@ -69,6 +71,9 @@ for kernel in "${kernels[@]}"; do
 
 	O3TIME=$($kernel-O3)
 	echo -n "$O3TIME "
+
+	OPTCTIME=$($kernel-optc)
+	echo -n "$OPTCTIME "
 
 	JLMTIME=$($kernel-jlm)
 	echo "$JLMTIME"
