@@ -19,7 +19,7 @@ echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "OPTFLAGS=$optflags" >> config.mk
 
-./compile_all.sh clean O0 O1 O2 jlm 1>&2
+./compile_all.sh clean O0 O1 O2 O3 jlm 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -54,7 +54,7 @@ declare -a kernels=(
 	"stencils/seidel-2d/seidel-2d")
 
 echo "# $optflags"
-echo "# kernel O0 O1 O2 JLM"
+echo "# kernel O0 O1 O2 O3 JLM"
 for kernel in "${kernels[@]}"; do
 	echo -n "$kernel "
 
@@ -66,6 +66,9 @@ for kernel in "${kernels[@]}"; do
 
 	O2TIME=$($kernel-O2)
 	echo -n "$O2TIME "
+
+	O3TIME=$($kernel-O3)
+	echo -n "$O3TIME "
 
 	JLMTIME=$($kernel-jlm)
 	echo "$JLMTIME"
