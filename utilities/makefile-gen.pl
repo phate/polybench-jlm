@@ -145,11 +145,25 @@ Os: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-Os $kernel-Os.o polybench.o \${EXTRA_FLAGS}
 
+optc: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling optc:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	opt-3.7 \${OPTCFLAGS} -S $kernel-opt.ll > $kernel-optc.ll
+
+	llc-3.7 -O0 -filetype=obj -o $kernel-optc.o $kernel-optc.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-optc $kernel-optc.o polybench.o \${EXTRA_FLAGS}
+
 clean:
 	@ rm -f $kernel-O0
 	@ rm -f $kernel-O1
 	@ rm -f $kernel-O2
+	@ rm -f $kernel-O3
 	@ rm -f $kernel-Os
+	@ rm -f $kernel-optc
 	@ rm -f $kernel-jlm
 	@ rm -f *.rvsdg
 	@ rm -f *.ll
