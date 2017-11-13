@@ -121,6 +121,18 @@ O2: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-O2 $kernel-O2.o polybench.o \${EXTRA_FLAGS}
 
+O3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling O3:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	opt-3.7 -O3 -S $kernel-opt.ll > $kernel-O3.ll
+
+	llc-3.7 -O0 -filetype=obj -o $kernel-O3.o $kernel-O3.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-O3 $kernel-O3.o polybench.o \${EXTRA_FLAGS}
+
 Os: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling Os:"
