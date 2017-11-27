@@ -19,7 +19,7 @@ echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$jlmflags" >> config.mk
 
-./compile_all.sh clean Os O2 jlm 1>&2
+./compile_all.sh clean Os O3 jlm 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -54,18 +54,18 @@ declare -a kernels=(
 	"stencils/seidel-2d/seidel-2d")
 
 
-echo "# $optflags"
-echo "# kernel Os O2 JLM"
+echo "# $jlmflags"
+echo "# kernel Os O3 JLM"
 for kernel in "${kernels[@]}"; do
 	BASENAME=$(basename "${kernel}")
 	echo -n "$BASENAME "
 
-	OsSIZE=`size $kernel-Os | tail +2 | cut -f1 | xargs`
+	OsSIZE=`size ${kernel}-Os | tail -1 | cut -f1 | xargs`
 	echo -n "$OsSIZE "
 
-	O2SIZE=`size $kernel-O2 | tail +2 | cut -f1 | xargs`
-	echo -n "$O2SIZE "
+	O3SIZE=`size ${kernel}-O3 | tail -1 | cut -f1 | xargs`
+	echo -n "$O3SIZE "
 
-	JLMSIZE=`size $kernel-jlm | tail +2 | cut -f1 | xargs`
+	JLMSIZE=`size ${kernel}-jlm | tail -1 | cut -f1 | xargs`
 	echo "$JLMSIZE"
 done
