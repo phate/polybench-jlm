@@ -55,7 +55,7 @@ declare -a kernels=(
 	"stencils/jacobi-2d/jacobi-2d"
 	"stencils/seidel-2d/seidel-2d")
 
-echo "# $optflags"
+echo "# $jlmflags"
 echo "# kernel O0 O1 O2 O3 OPTC JLM"
 for kernel in "${kernels[@]}"; do
 	echo -n "$kernel "
