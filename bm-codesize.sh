@@ -19,7 +19,7 @@ echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$jlmflags" >> config.mk
 
-./compile_all.sh clean Os O3 jlm 1>&2
+./compile_all.sh clean Os O3 optc jlm 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -55,7 +55,7 @@ declare -a kernels=(
 
 
 echo "# $jlmflags"
-echo "# kernel Os O3 JLM"
+echo "# kernel Os O3 OPTC JLM"
 for kernel in "${kernels[@]}"; do
 	BASENAME=$(basename "${kernel}")
 	echo -n "$BASENAME "
@@ -65,6 +65,9 @@ for kernel in "${kernels[@]}"; do
 
 	O3SIZE=`size ${kernel}-O3 | tail -1 | cut -f1 | xargs`
 	echo -n "$O3SIZE "
+
+	OPTCSIZE=`size ${kernel}-optc | tail -1 | cut -f1 | xargs`
+	echo -n "$OPTCSIZE "
 
 	JLMSIZE=`size ${kernel}-jlm | tail -1 | cut -f1 | xargs`
 	echo "$JLMSIZE"
