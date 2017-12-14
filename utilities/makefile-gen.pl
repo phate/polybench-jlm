@@ -178,6 +178,7 @@ clean:
 	@ rm -f $kernel-Os
 	@ rm -f $kernel-optc
 	@ rm -f $kernel-jlm
+	@ rm -f $kernel-jlm-no-unroll
 	@ rm -f *.rvsdg
 	@ rm -f *.ll
 	@ rm -f *.o
