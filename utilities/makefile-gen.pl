@@ -85,6 +85,19 @@ jlm: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench.o \${EXTRA_FLAGS}
 
+jlm-no-unroll: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling jlm-no-unroll:"
+	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-opt.ll
+
+	jlm-opt \${JLMFLAGSNOUNROLL} --xml $kernel-opt.ll > $kernel-jlm-no-unroll.rvsdg
+	jlm-opt \${JLMFLAGSNOUNROLL} --llvm $kernel-opt.ll > $kernel-jlm-no-unroll.ll
+
+	llc-3.7 -O0 -filetype=obj -o $kernel-jlm-no-unroll.o $kernel-jlm-no-unroll.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm-no-unroll $kernel-jlm-no-unroll.o polybench.o \${EXTRA_FLAGS}
+
 O0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling O0:"

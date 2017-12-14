@@ -1,6 +1,7 @@
 *.ll
 *.o
 *-jlm
+*jlm-no-unroll
 *-O0
 *-O1
 *-O2

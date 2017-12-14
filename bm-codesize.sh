@@ -14,12 +14,14 @@ make -C $JLMROOT clean 1>&2
 make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
 
 jlmflags=`cat jlmflags`
+jlmflagsnounroll=`cat jlmflags | sed -e "s/--url//"`
 echo "CC=clang-3.7" > config.mk
 echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$jlmflags" >> config.mk
+echo "JLMFLAGSNOUNROLL=$jlmflagsnounroll" >> config.mk
 
-./compile_all.sh clean Os O3 optc jlm 1>&2
+./compile_all.sh clean Os O3 optc jlm jlm-no-unroll 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -55,7 +57,7 @@ declare -a kernels=(
 
 
 echo "# $jlmflags"
-echo "# kernel Os O3 OPTC JLM"
+echo "# kernel Os O3 OPTC JLM-NO-UNROLL JLM"
 for kernel in "${kernels[@]}"; do
 	BASENAME=$(basename "${kernel}")
 	echo -n "$BASENAME "
@@ -68,6 +70,9 @@ for kernel in "${kernels[@]}"; do
 
 	OPTCSIZE=`size ${kernel}-optc | tail -1 | cut -f1 | xargs`
 	echo -n "$OPTCSIZE "
+
+	JLMSIZENOUNROLL=`size ${kernel}-jlm-no-unroll | tail -1 | cut -f1 | xargs`
+	echo -n "$JLMSIZENOUNROLL "
 
 	JLMSIZE=`size ${kernel}-jlm | tail -1 | cut -f1 | xargs`
 	echo "$JLMSIZE"
