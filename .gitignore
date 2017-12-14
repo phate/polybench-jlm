@@ -3,6 +3,7 @@
 *-jlm
 *jlm-no-unroll
 *-gcc
+*-clang
 *-O0
 *-O1
 *-O2
