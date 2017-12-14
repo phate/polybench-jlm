@@ -94,6 +94,7 @@ clang: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling clang:"
 	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir -O3 -o $kernel-clang $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
+	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir -O3 -S -emit-llvm -o $kernel-clang.ll $kernel.c
 
 jlm-no-unroll: $kernel.c $kernel.h
 	@ echo ""
