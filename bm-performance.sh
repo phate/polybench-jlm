@@ -21,7 +21,7 @@ echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$jlmflags" >> config.mk
 echo "OPTCFLAGS=$optcflags" >> config.mk
 
-./compile_all.sh clean O0 O1 O2 O3 optc jlm 1>&2
+./compile_all.sh clean O0 O1 O2 O3 optc gcc jlm 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -56,7 +56,7 @@ declare -a kernels=(
 	"stencils/seidel-2d/seidel-2d")
 
 echo "# $jlmflags"
-echo "# kernel O0 O1 O2 O3 OPTC JLM"
+echo "# kernel O0 O1 O2 O3 OPTC GCC JLM"
 for kernel in "${kernels[@]}"; do
 	echo -n "$kernel "
 
@@ -74,6 +74,9 @@ for kernel in "${kernels[@]}"; do
 
 	OPTCTIME=$($kernel-optc)
 	echo -n "$OPTCTIME "
+
+	GCCTIME=$($kernel-gcc)
+	echo -n "$GCCTIME "
 
 	JLMTIME=$($kernel-jlm)
 	echo "$JLMTIME"
