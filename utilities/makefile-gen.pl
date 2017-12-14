@@ -85,6 +85,11 @@ jlm: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench.o \${EXTRA_FLAGS}
 
+gcc: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling gcc:"
+	\${VERBOSE} gcc \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir -O3 -o $kernel-gcc $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
+
 jlm-no-unroll: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling jlm-no-unroll:"
@@ -177,6 +182,7 @@ clean:
 	@ rm -f $kernel-O3
 	@ rm -f $kernel-Os
 	@ rm -f $kernel-optc
+	@ rm -f $kernel-gcc
 	@ rm -f $kernel-jlm
 	@ rm -f $kernel-jlm-no-unroll
 	@ rm -f *.rvsdg
