@@ -62,18 +62,7 @@ include $configFile
 
 EXTRA_FLAGS=$extra_flags{$kernel}
 
-all: O0 O1 O2 O3 O3-no-vec Os clang gcc jlm jlm-no-unroll ct
-
-ct: $kernel.c $kernel.h
-	@ echo ""
-	@ echo "Compiling ct:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
-	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
-
-	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
-	python $utilityDir/remove-metadata.py $kernel-opt.ll > $kernel-opt-stripped.ll
-
-	jlm-opt \${JLMFLAGS} --llvm $kernel-opt-stripped.ll
+all: O0 O1 O2 O3 O3-no-vec Os clang gcc jlm jlm-no-unroll
 
 jlm: $kernel.c $kernel.h
 	@ echo ""
