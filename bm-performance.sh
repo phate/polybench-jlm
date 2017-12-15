@@ -5,24 +5,7 @@ if [ -z "$JLMROOT" ]; then
 	exit 1
 fi
 
-JIVEROOT=$JLMROOT/external/jive
-
-make -C $JIVEROOT clean 1>&2
-make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -g -DJIVE_DEBUG" 1>&2
-
-make -C $JLMROOT clean 1>&2
-make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
-
-jlmflags=`cat jlmflags`
-optcflags=`cat optcflags | tr '\n' ' '`
-echo "CC=clang-3.7" > config.mk
-echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
-echo "JLMFLAGS=$jlmflags" >> config.mk
-echo "OPTCFLAGS=$optcflags" >> config.mk
-
-./compile_all.sh clean O0 O1 O2 O3 O3-no-vec gcc clang jlm 1>&2
-
-declare -a kernels=(
+declare -a benchmarks=(
 	"datamining/correlation/correlation"
 	"datamining/covariance/covariance"
 	"linear-algebra/blas/gemm/gemm"
@@ -54,33 +37,45 @@ declare -a kernels=(
 	"stencils/jacobi-2d/jacobi-2d"
 	"stencils/seidel-2d/seidel-2d")
 
+declare -a targets=("O0" "O1" "O2" "O3" "O3-no-vec" "gcc" "clang" "jlm")
+
+JIVEROOT=$JLMROOT/external/jive
+
+make -C $JIVEROOT clean 1>&2
+make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -g -DJIVE_DEBUG" 1>&2
+
+make -C $JLMROOT clean 1>&2
+make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
+
+jlmflags=`cat jlmflags`
+optcflags=`cat optcflags | tr '\n' ' '`
+echo "CC=clang-3.7" > config.mk
+echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
+echo "JLMFLAGS=$jlmflags" >> config.mk
+echo "OPTCFLAGS=$optcflags" >> config.mk
+
+#Compile targets
+./compile_all.sh clean 1>&2
+for target in "${targets[@]}"; do
+	./compile_all.sh $target 1>&2
+done
+
+#Print header
 echo "# $jlmflags"
-echo "# kernel O0 O1 O2 O3 O3-no-vec GCC CLANG JLM"
-for kernel in "${kernels[@]}"; do
-	BM=$(basename "${kernel}")
-	echo -n "$BM "
+echo -n "# benchmark "
+for target in "${targets[@]}"; do
+	echo -n "$target "
+done
+echo ""
 
-	O0TIME=$($kernel-O0)
-	echo -n "$O0TIME "
+#Execute benchmarks and print timings
+for benchmark in "${benchmarks[@]}"; do
+	BM=$(basename "${benchmark}")
+	echo -n "$BM"
 
-	O1TIME=$($kernel-O1)
-	echo -n "$O1TIME "
-
-	O2TIME=$($kernel-O2)
-	echo -n "$O2TIME "
-
-	O3TIME=$($kernel-O3)
-	echo -n "$O3TIME "
-
-	O3NOVECTIME=$($kernel-O3-no-vec)
-	echo -n "$O3NOVECTIME "
-
-	GCCTIME=$($kernel-gcc)
-	echo -n "$GCCTIME "
-
-	CLANGTIME=$($kernel-clang)
-	echo -n "$CLANGTIME "
-
-	JLMTIME=$($kernel-jlm)
-	echo "$JLMTIME"
+	for target in "${targets[@]}"; do
+		TIME=$($benchmark-$target)
+		echo -n " $TIME"
+	done
+	echo ""
 done
