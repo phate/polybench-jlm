@@ -57,7 +57,8 @@ declare -a kernels=(
 echo "# $jlmflags"
 echo "# kernel O0 O1 O2 O3 O3-no-vec GCC CLANG JLM"
 for kernel in "${kernels[@]}"; do
-	echo -n "$kernel "
+	BM=$(basename "${kernel}")
+	echo -n "$BM "
 
 	O0TIME=$($kernel-O0)
 	echo -n "$O0TIME "
