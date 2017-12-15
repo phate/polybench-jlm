@@ -62,7 +62,7 @@ include $configFile
 
 EXTRA_FLAGS=$extra_flags{$kernel}
 
-all: Os O2 O1 O0 jlm ct
+all: O0 O1 O2 O3 Os optc clang gcc jlm jlm-no-unroll ct
 
 ct: $kernel.c $kernel.h
 	@ echo ""
