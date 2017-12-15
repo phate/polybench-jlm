@@ -37,7 +37,15 @@ declare -a benchmarks=(
 	"stencils/jacobi-2d/jacobi-2d"
 	"stencils/seidel-2d/seidel-2d")
 
-declare -a targets=("O0" "O1" "O2" "O3" "O3-no-vec" "gcc" "clang" "jlm")
+declare -a targets=(
+	"OPTO0-LLCO0-stripped"
+	"OPTO1-LLCO0-stripped"
+	"OPTO2-LLCO0-stripped"
+	"OPTO3-LLCO0-stripped"
+	"OPTO3-no-vec-LLCO0-stripped"
+	"gcc"
+	"clang"
+	"jlm")
 
 JIVEROOT=$JLMROOT/external/jive
 
