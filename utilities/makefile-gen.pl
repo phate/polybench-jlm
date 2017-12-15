@@ -93,6 +93,8 @@ all:	OPTO0-LLCO0 \\
 			OPTOs-LLCO3-stripped \\
 			\\
 			jlm-LLCO0 \\
+			jlm-LLCO3 \\
+			\\
 			jlm-no-unroll
 			clang \\
 			gcc \\
@@ -110,6 +112,22 @@ jlm-LLCO0: $kernel.c $kernel.h
 	jlm-opt \${JLMFLAGS} --llvm $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 
 	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
+jlm-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling jlm-LLCO3:"
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
+
+	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
+
+	jlm-opt \${JLMFLAGS} --xml $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.rvsdg
+	jlm-opt \${JLMFLAGS} --llvm $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+
+	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
@@ -518,6 +536,7 @@ clean:
 	@ rm -f $kernel-OPTO3-no-vec-LLCO3-stripped
 
 	@ rm -f $kernel-jlm-LLCO0
+	@ rm -f $kernel-jlm-LLCO3
 
 	@ rm -f $kernel-gcc
 	@ rm -f $kernel-clang
