@@ -126,7 +126,7 @@ for i in $(seq 1 $NRUNS); do
 
         for target in "${targets[@]}"; do
           TIME=$($benchmark-$target)
-          echo -n " $TIME"
+          echo -n " $TIME" >> $FILE
         done
         echo ""
     done
