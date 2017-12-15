@@ -33,14 +33,30 @@ declare -a benchmarks=(
 	"stencils/seidel-2d/seidel-2d")
 
 declare -a targets=(
+	"OPTO0-LLCO0"
+	"OPTO0-LLCO3"
 	"OPTO0-LLCO0-stripped"
+	"OPTO0-LLCO3-stripped"
+	"OPTO1-LLCO0"
+	"OPTO1-LLCO3"
 	"OPTO1-LLCO0-stripped"
+	"OPTO1-LLCO3-stripped"
+	"OPTO2-LLCO0"
+	"OPTO2-LLCO3"
 	"OPTO2-LLCO0-stripped"
+	"OPTO2-LLCO3-stripped"
+	"OPTO3-LLCO0"
+	"OPTO3-LLCO3"
 	"OPTO3-LLCO0-stripped"
+	"OPTO3-LLCO3-stripped"
+	"OPTO3-no-vec-LLCO0"
+	"OPTO3-no-vec-LLCO3"
 	"OPTO3-no-vec-LLCO0-stripped"
+	"OPTO3-no-vec-LLCO3-stripped"
+	"jlm-LLCO0"
+	"jlm-LLCO3"
 	"gcc"
-	"clang"
-	"jlm-LLCO0")
+	"clang")
 
 if [ "$#" -ne 2 ]; then
     echo "No output folder and # of experiments not specified."
