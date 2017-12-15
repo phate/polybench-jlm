@@ -7,6 +7,40 @@
 #SBATCH --mem=60000
 #SBATCH -A p_readex
 
+declare -a benchmarks=(
+	"datamining/correlation/correlation"
+	"datamining/covariance/covariance"
+	"linear-algebra/blas/gemm/gemm"
+	"linear-algebra/blas/gemver/gemver"
+	"linear-algebra/blas/gesummv/gesummv"
+	"linear-algebra/blas/symm/symm"
+	"linear-algebra/blas/syr2k/syr2k"
+	"linear-algebra/blas/syrk/syrk"
+	"linear-algebra/blas/trmm/trmm"
+	"linear-algebra/kernels/2mm/2mm"
+	"linear-algebra/kernels/3mm/3mm"
+	"linear-algebra/kernels/atax/atax"
+	"linear-algebra/kernels/bicg/bicg"
+	"linear-algebra/kernels/doitgen/doitgen"
+	"linear-algebra/kernels/mvt/mvt"
+	"linear-algebra/solvers/cholesky/cholesky"
+	"linear-algebra/solvers/durbin/durbin"
+	"linear-algebra/solvers/gramschmidt/gramschmidt"
+	"linear-algebra/solvers/lu/lu"
+	"linear-algebra/solvers/ludcmp/ludcmp"
+	"linear-algebra/solvers/trisolv/trisolv"
+	"medley/deriche/deriche"
+	"medley/floyd-warshall/floyd-warshall"
+	"medley/nussinov/nussinov"
+	"stencils/adi/adi"
+	"stencils/fdtd-2d/fdtd-2d"
+	"stencils/heat-3d/heat-3d"
+	"stencils/jacobi-1d/jacobi-1d"
+	"stencils/jacobi-2d/jacobi-2d"
+	"stencils/seidel-2d/seidel-2d")
+
+declare -a targets=("O0" "O1" "O2" "O3" "O3-no-vec" "gcc" "clang" "jlm")
+
 if [ "$#" -ne 2 ]; then
     echo "No output folder and # of experiments not specified."
     exit 1
@@ -49,66 +83,33 @@ echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
 echo "JLMFLAGS=$JLMFLAGS " >> config.mk
 echo "OPTCFLAGS=$OPTCFLAGS" >> config.mk
 
-./compile_all.sh clean O0 O1 O2 O3 O3-no-vec jlm 1>&2
+#Compile targets
+./compile_all.sh clean 1>&2
+for target in "${targets[@]}"; do
+	./compile_all.sh $target 1>&2
+done
 
-declare -a kernels=(
-	"datamining/correlation/correlation"
-	"datamining/covariance/covariance"
-	"linear-algebra/blas/gemm/gemm"
-	"linear-algebra/blas/gemver/gemver"
-	"linear-algebra/blas/gesummv/gesummv"
-	"linear-algebra/blas/symm/symm"
-	"linear-algebra/blas/syr2k/syr2k"
-	"linear-algebra/blas/syrk/syrk"
-	"linear-algebra/blas/trmm/trmm"
-	"linear-algebra/kernels/2mm/2mm"
-	"linear-algebra/kernels/3mm/3mm"
-	"linear-algebra/kernels/atax/atax"
-	"linear-algebra/kernels/bicg/bicg"
-	"linear-algebra/kernels/doitgen/doitgen"
-	"linear-algebra/kernels/mvt/mvt"
-	"linear-algebra/solvers/cholesky/cholesky"
-	"linear-algebra/solvers/durbin/durbin"
-	"linear-algebra/solvers/gramschmidt/gramschmidt"
-	"linear-algebra/solvers/lu/lu"
-	"linear-algebra/solvers/ludcmp/ludcmp"
-	"linear-algebra/solvers/trisolv/trisolv"
-	"medley/deriche/deriche"
-	"medley/floyd-warshall/floyd-warshall"
-	"medley/nussinov/nussinov"
-	"stencils/adi/adi"
-	"stencils/fdtd-2d/fdtd-2d"
-	"stencils/heat-3d/heat-3d"
-	"stencils/jacobi-1d/jacobi-1d"
-	"stencils/jacobi-2d/jacobi-2d"
-	"stencils/seidel-2d/seidel-2d")
-
+#Execute benchmarks and print timings
 for i in $(seq 1 $NRUNS); do
     FILE=$OUTDIR/perf${i}.log
 
+    #Print header
     echo "# $JLMFLAGS" > $FILE
-    echo "# kernel O0 O1 O2 O3 O3-no-vec JLM" >> $FILE
-    for kernel in "${kernels[@]}"; do
-        BM=$(basename "${kernel}")
+		echo -n "# kernel " >> $FILE
+		for target in "${targets[@]}"; do
+			echo -n "$target " >> $FILE
+		done
+		echo "" >> $FILE
+
+    for benchmark in "${benchmarks[@]}"; do
+        BM=$(basename "${benchmark}")
         echo -n "$BM" >> $FILE
 
-        O0TIME=$($kernel-O0)
-        echo -n " $O0TIME" >> $FILE
-
-        O1TIME=$($kernel-O1)
-        echo -n " $O1TIME" >> $FILE
-
-        O2TIME=$($kernel-O2)
-        echo -n " $O2TIME" >> $FILE
-
-        O3TIME=$($kernel-O3)
-        echo -n " $O3TIME" >> $FILE
-
-        O3NOVECTIME=$($kernel-O3-no-vec)
-        echo -n " $O3NOVECTIME" >> $FILE
-
-        JLMTIME=$($kernel-jlm)
-        echo " $JLMTIME" >> $FILE
+        for target in "${targets[@]}"; do
+          TIME=$($benchmark-$target)
+          echo -n " $TIME"
+        done
+        echo ""
     done
 done
 
