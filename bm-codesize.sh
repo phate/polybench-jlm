@@ -5,24 +5,7 @@ if [ -z "$JLMROOT" ]; then
 	exit 1
 fi
 
-JIVEROOT=$JLMROOT/external/jive
-
-make -C $JIVEROOT clean 1>&2
-make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -g -DJIVE_DEBUG" 1>&2
-
-make -C $JLMROOT clean 1>&2
-make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
-
-jlmflags=`cat jlmflags`
-jlmflagsnounroll=`cat jlmflags | sed -e "s/--url//"`
-echo "CC=clang-3.7" > config.mk
-echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
-echo "JLMFLAGS=$jlmflags" >> config.mk
-echo "JLMFLAGSNOUNROLL=$jlmflagsnounroll" >> config.mk
-
-./compile_all.sh clean Os O3 O3-no-vec jlm jlm-no-unroll 1>&2
-
-declare -a kernels=(
+declare -a benchmarks=(
 	"datamining/correlation/correlation"
 	"datamining/covariance/covariance"
 	"linear-algebra/blas/gemm/gemm"
@@ -54,25 +37,45 @@ declare -a kernels=(
 	"stencils/jacobi-2d/jacobi-2d"
 	"stencils/seidel-2d/seidel-2d")
 
+declare -a targets=("Os" "O3" "O3-no-vec" "jlm" "jlm-no-unroll")
 
+JIVEROOT=$JLMROOT/external/jive
+
+make -C $JIVEROOT clean 1>&2
+make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -g -DJIVE_DEBUG" 1>&2
+
+make -C $JLMROOT clean 1>&2
+make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
+
+jlmflags=`cat jlmflags`
+jlmflagsnounroll=`cat jlmflags | sed -e "s/--url//"`
+echo "CC=clang-3.7" > config.mk
+echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
+echo "JLMFLAGS=$jlmflags" >> config.mk
+echo "JLMFLAGSNOUNROLL=$jlmflagsnounroll" >> config.mk
+
+#Compile targets
+./compile_all.sh clean 1>&2
+for target in "${targets[@]}"; do
+	./compile_all.sh $target 1>&2
+done
+
+#Print header
 echo "# $jlmflags"
-echo "# kernel Os O3 O3-no-vec JLM-NO-UNROLL JLM"
-for kernel in "${kernels[@]}"; do
-	BASENAME=$(basename "${kernel}")
-	echo -n "$BASENAME "
+echo -n "# kernel "
+for target in "${targets[@]}"; do
+	echo -n "$target "
+done
+echo ""
 
-	OsSIZE=`size ${kernel}-Os | tail -1 | cut -f1 | xargs`
-	echo -n "$OsSIZE "
+#Execute benchmarks and print timings
+for benchmark in "${benchmarks[@]}"; do
+	BM=$(basename "${benchmark}")
+	echo -n "$BM"
 
-	O3SIZE=`size ${kernel}-O3 | tail -1 | cut -f1 | xargs`
-	echo -n "$O3SIZE "
-
-	O3NOVECCSIZE=`size ${kernel}-O3-no-vec | tail -1 | cut -f1 | xargs`
-	echo -n "$O3NOVECSIZE "
-
-	JLMSIZENOUNROLL=`size ${kernel}-jlm-no-unroll | tail -1 | cut -f1 | xargs`
-	echo -n "$JLMSIZENOUNROLL "
-
-	JLMSIZE=`size ${kernel}-jlm | tail -1 | cut -f1 | xargs`
-	echo "$JLMSIZE"
+	for target in "${targets[@]}"; do
+		SIZE=`size ${benchmark}-${target} | tail -1 | cut -f1 | xargs`
+		echo -n " $SIZE"
+	done
+	echo ""
 done
