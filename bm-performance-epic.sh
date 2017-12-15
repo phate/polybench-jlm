@@ -89,7 +89,8 @@ for i in $(seq 1 $NRUNS); do
     echo "# $JLMFLAGS" > $FILE
     echo "# kernel O0 O1 O2 O3 O3-no-vec JLM" >> $FILE
     for kernel in "${kernels[@]}"; do
-        echo -n "$kernel" >> $FILE
+        BM=$(basename "${kernel}")
+        echo -n "$BM" >> $FILE
 
         O0TIME=$($kernel-O0)
         echo -n " $O0TIME" >> $FILE
