@@ -1,11 +1,4 @@
 #!  /bin/bash
-#SBATCH --output=perf.out
-#SBATCH --nodes=1
-#SBATCH --cpus-per-task=24
-#SBATCH --partition=haswell
-#SBATCH --exclusive
-#SBATCH --mem=60000
-#SBATCH -A p_readex
 
 declare -a benchmarks=(
 	"datamining/correlation/correlation"
