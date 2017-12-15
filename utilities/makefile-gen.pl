@@ -63,26 +63,32 @@ include $configFile
 EXTRA_FLAGS=$extra_flags{$kernel}
 
 all:	OPTO0-LLCO0 \\
+			OPTO0-LLCO3 \\
 			OPTO0-LLCO0-stripped \\
 			OPTO0-LLCO3-stripped \\
 			\\
 			OPTO1-LLCO0 \\
+			OPTO1-LLCO3 \\
 			OPTO1-LLCO0-stripped \\
 			OPTO1-LLCO3-stripped \\
 			\\
 			OPTO2-LLCO0 \\
+			OPTO2-LLCO3 \\
 			OPTO2-LLCO0-stripped \\
 			OPTO2-LLCO3-stripped \\
 			\\
 			OPTO3-LLCO0 \\
+			OPTO3-LLCO3 \\
 			OPTO3-LLCO0-stripped \\
 			OPTO3-LLCO3-stripped \\
 			\\
 			OPTO3-no-vec-LLCO0 \\
+			OPTO3-no-vec-LLCO3 \\
 			OPTO3-no-vec-LLCO0-stripped \\
 			OPTO3-no-vec-LLCO3-stripped \\
 			\\
 			OPTOs-LLCO0 \\
+			OPTOs-LLCO3 \\
 			OPTOs-LLCO0-stripped \\
 			OPTOs-LLCO3-stripped \\
 			\\
@@ -147,6 +153,19 @@ OPTO0-LLCO0: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
+OPTO0-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling OPTO0-LLCO3:"
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+
+	cp $kernel-\${@}-opt.ll $kernel-\${@}.ll
+
+	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
 OPTO0-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO0-LLCO0-stripped:"
@@ -187,6 +206,19 @@ OPTO1-LLCO0: $kernel.c $kernel.h
 	opt-3.7 -O1 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
 	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
+OPTO1-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling OPTO1-LLCO3:"
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+
+	opt-3.7 -O1 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+
+	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
@@ -235,6 +267,19 @@ OPTO2-LLCO0: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
+OPTO2-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling OPTO2-LLCO3:"
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+
+	opt-3.7 -O2 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+
+	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
 OPTO2-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO2-LLCO0-stripped:"
@@ -269,7 +314,7 @@ OPTO2-LLCO3-stripped: $kernel.c $kernel.h
 
 OPTO3-LLCO0: $kernel.c $kernel.h
 	@ echo ""
-	@ echo "Compiling OPTO3-LLCO3:"
+	@ echo "Compiling OPTO3-LLCO0:"
 	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
 	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
@@ -277,6 +322,19 @@ OPTO3-LLCO0: $kernel.c $kernel.h
 	opt-3.7 -O3 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
 	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
+OPTO3-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling OPTO3-LLCO3:"
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+
+	opt-3.7 -O3 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+
+	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
@@ -325,6 +383,19 @@ OPTOs-LLCO0: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
+OPTOs-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling OPTOs-LLCO3:"
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+
+	opt-3.7 -Os -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+
+	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
 OPTOs-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTOs-LLCO0-stripped:"
@@ -370,6 +441,19 @@ OPTO3-no-vec-LLCO0: $kernel.c $kernel.h
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
 	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
+OPTO3-no-vec-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling OPTO3-no-vec-LLCO3:"
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+
+	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+
+	opt-3.7 \${OPTCFLAGS} -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+
+	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
 OPTO3-no-vec-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-no-vec-LLCO0-stripped:"
@@ -404,26 +488,32 @@ OPTO3-no-vec-LLCO3-stripped: $kernel.c $kernel.h
 
 clean:
 	@ rm -f $kernel-OPTO0-LLCO0
+	@ rm -f $kernel-OPTO0-LLCO3
 	@ rm -f $kernel-OPTO0-LLCO0-stripped
 	@ rm -f $kernel-OPTO0-LLCO3-stripped
 
 	@ rm -f $kernel-OPTO1-LLCO0
+	@ rm -f $kernel-OPTO1-LLCO3
 	@ rm -f $kernel-OPTO1-LLCO0-stripped
 	@ rm -f $kernel-OPTO1-LLCO3-stripped
 
 	@ rm -f $kernel-OPTO2-LLCO0
+	@ rm -f $kernel-OPTO2-LLCO3
 	@ rm -f $kernel-OPTO2-LLCO0-stripped
 	@ rm -f $kernel-OPTO2-LLCO3-stripped
 
 	@ rm -f $kernel-OPTO3-LLCO0
+	@ rm -f $kernel-OPTO3-LLCO3
 	@ rm -f $kernel-OPTO3-LLCO0-stripped
 	@ rm -f $kernel-OPTO3-LLCO3-stripped
 
 	@ rm -f $kernel-OPTOs-LLCO0
+	@ rm -f $kernel-OPTOs-LLCO3
 	@ rm -f $kernel-OPTOs-LLCO0-stripped
 	@ rm -f $kernel-OPTOs-LLCO3-stripped
 
 	@ rm -f $kernel-OPTO3-no-vec-LLCO0
+	@ rm -f $kernel-OPTO3-no-vec-LLCO3
 	@ rm -f $kernel-OPTO3-no-vec-LLCO0-stripped
 	@ rm -f $kernel-OPTO3-no-vec-LLCO3-stripped
 
