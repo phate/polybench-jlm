@@ -9,7 +9,7 @@
 *-O2
 *-O3
 *-Os
-*-optc
+*-O3-no-vec
 *.rvsdg
 config.mk
 Makefile

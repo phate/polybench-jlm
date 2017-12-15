@@ -21,7 +21,7 @@ echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$jlmflags" >> config.mk
 echo "JLMFLAGSNOUNROLL=$jlmflagsnounroll" >> config.mk
 
-./compile_all.sh clean Os O3 optc jlm jlm-no-unroll 1>&2
+./compile_all.sh clean Os O3 O3-no-vec jlm jlm-no-unroll 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -57,7 +57,7 @@ declare -a kernels=(
 
 
 echo "# $jlmflags"
-echo "# kernel Os O3 OPTC JLM-NO-UNROLL JLM"
+echo "# kernel Os O3 O3-no-vec JLM-NO-UNROLL JLM"
 for kernel in "${kernels[@]}"; do
 	BASENAME=$(basename "${kernel}")
 	echo -n "$BASENAME "
@@ -68,8 +68,8 @@ for kernel in "${kernels[@]}"; do
 	O3SIZE=`size ${kernel}-O3 | tail -1 | cut -f1 | xargs`
 	echo -n "$O3SIZE "
 
-	OPTCSIZE=`size ${kernel}-optc | tail -1 | cut -f1 | xargs`
-	echo -n "$OPTCSIZE "
+	O3NOVECCSIZE=`size ${kernel}-O3-no-vec | tail -1 | cut -f1 | xargs`
+	echo -n "$O3NOVECSIZE "
 
 	JLMSIZENOUNROLL=`size ${kernel}-jlm-no-unroll | tail -1 | cut -f1 | xargs`
 	echo -n "$JLMSIZENOUNROLL "

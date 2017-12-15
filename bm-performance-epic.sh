@@ -50,7 +50,7 @@ echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$JLMFLAGS " >> config.mk
 echo "OPTCFLAGS=$OPTCFLAGS" >> config.mk
 
-./compile_all.sh clean O0 O1 O2 O3 optc jlm 1>&2
+./compile_all.sh clean O0 O1 O2 O3 O3-no-vec jlm 1>&2
 
 declare -a kernels=(
 	"datamining/correlation/correlation"
@@ -88,7 +88,7 @@ for i in $(seq 1 $NRUNS); do
     FILE=$OUTDIR/perf${i}.log
 
     echo "# $JLMFLAGS" > $FILE
-    echo "# kernel O0 O1 O2 O3 OPTC JLM" >> $FILE
+    echo "# kernel O0 O1 O2 O3 O3-no-vec JLM" >> $FILE
     for kernel in "${kernels[@]}"; do
         echo -n "$kernel" >> $FILE
 
@@ -104,8 +104,8 @@ for i in $(seq 1 $NRUNS); do
         O3TIME=$($kernel-O3)
         echo -n " $O3TIME" >> $FILE
 
-        OPTCTIME=$($kernel-optc)
-        echo -n " $OPTCTIME" >> $FILE
+        O3NOVECTIME=$($kernel-O3-no-vec)
+        echo -n " $O3NOVECTIME" >> $FILE
 
         JLMTIME=$($kernel-jlm)
         echo " $JLMTIME" >> $FILE
