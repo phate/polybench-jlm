@@ -69,6 +69,8 @@ if [ -z "$JLMROOT" ]; then
 	exit 1
 fi
 
+module load intel
+
 JIVEROOT=$JLMROOT/external/jive
 
 make -C $JIVEROOT clean 1>&2
