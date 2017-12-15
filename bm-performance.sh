@@ -45,7 +45,7 @@ declare -a targets=(
 	"OPTO3-no-vec-LLCO0-stripped"
 	"gcc"
 	"clang"
-	"jlm")
+	"jlm-LLCO0")
 
 JIVEROOT=$JLMROOT/external/jive
 

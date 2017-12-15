@@ -92,14 +92,14 @@ all:	OPTO0-LLCO0 \\
 			OPTOs-LLCO0-stripped \\
 			OPTOs-LLCO3-stripped \\
 			\\
+			jlm-LLCO0 \\
+			jlm-no-unroll
 			clang \\
 			gcc \\
-			jlm \\
-			jlm-no-unroll
 
-jlm: $kernel.c $kernel.h
+jlm-LLCO0: $kernel.c $kernel.h
 	@ echo ""
-	@ echo "Compiling jlm:"
+	@ echo "Compiling jlm-LLCO0:"
 	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
@@ -517,9 +517,10 @@ clean:
 	@ rm -f $kernel-OPTO3-no-vec-LLCO0-stripped
 	@ rm -f $kernel-OPTO3-no-vec-LLCO3-stripped
 
+	@ rm -f $kernel-jlm-LLCO0
+
 	@ rm -f $kernel-gcc
 	@ rm -f $kernel-clang
-	@ rm -f $kernel-jlm
 	@ rm -f $kernel-jlm-no-unroll
 	@ rm -f *.rvsdg
 	@ rm -f *.ll

@@ -41,7 +41,7 @@ declare -a targets=(
 	"OPTOs-LLCO0-stripped"
 	"OPTO3-LLCO0-stripped"
 	"OPTO3-no-vec-LLCO0-stripped"
-	"jlm"
+	"jlm-LLCO0"
 	"jlm-no-unroll")
 
 JIVEROOT=$JLMROOT/external/jive

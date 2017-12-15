@@ -47,7 +47,7 @@ declare -a targets=(
 	"OPTO3-no-vec-LLCO0-stripped"
 	"gcc"
 	"clang"
-	"jlm")
+	"jlm-LLCO0")
 
 if [ "$#" -ne 2 ]; then
     echo "No output folder and # of experiments not specified."
