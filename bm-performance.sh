@@ -17,7 +17,6 @@ jlmflags=`cat jlmflags`
 optcflags=`cat optcflags | tr '\n' ' '`
 echo "CC=clang-3.7" > config.mk
 echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
-echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$jlmflags" >> config.mk
 echo "OPTCFLAGS=$optcflags" >> config.mk
 

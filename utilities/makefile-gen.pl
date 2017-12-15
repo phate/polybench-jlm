@@ -67,7 +67,7 @@ all: O0 O1 O2 O3 O3-no-vec Os clang gcc jlm jlm-no-unroll
 jlm: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling jlm:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -78,23 +78,23 @@ jlm: $kernel.c $kernel.h
 
 	llc-3.7 -O0 -filetype=obj -o $kernel-jlm.o $kernel-jlm.ll
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench.o \${EXTRA_FLAGS}
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-jlm $kernel-jlm.o polybench.o \${EXTRA_FLAGS}
 
 gcc: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling gcc:"
-	\${VERBOSE} gcc \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir -O3 -o $kernel-gcc $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
+	\${VERBOSE} gcc -O3 \${CPPFLAGS} -I. -I$utilityDir -o $kernel-gcc $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
 
 clang: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling clang:"
-	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir -O3 -o $kernel-clang $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
-	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir -O3 -S -emit-llvm -o $kernel-clang.ll $kernel.c
+	\${VERBOSE} clang-3.7 -O3 \${CPPFLAGS} -I. -I$utilityDir -o $kernel-clang $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
+	\${VERBOSE} clang-3.7 -O3 \${CPPFLAGS} -I. -I$utilityDir -S -emit-llvm -o $kernel-clang.ll $kernel.c
 
 jlm-no-unroll: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling jlm-no-unroll:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -105,12 +105,12 @@ jlm-no-unroll: $kernel.c $kernel.h
 
 	llc-3.7 -O0 -filetype=obj -o $kernel-jlm-no-unroll.o $kernel-jlm-no-unroll.ll
 	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 \${CFLAGS} \${CPPFLAGS} -o $kernel-jlm-no-unroll $kernel-jlm-no-unroll.o polybench.o \${EXTRA_FLAGS}
+	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-jlm-no-unroll $kernel-jlm-no-unroll.o polybench.o \${EXTRA_FLAGS}
 
 O0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling O0:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -125,7 +125,7 @@ O0: $kernel.c $kernel.h
 O1: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling O1:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -141,7 +141,7 @@ O1: $kernel.c $kernel.h
 O2: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling O2:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -157,7 +157,7 @@ O2: $kernel.c $kernel.h
 O3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling O3:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -173,7 +173,7 @@ O3: $kernel.c $kernel.h
 Os: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling Os:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -189,7 +189,7 @@ Os: $kernel.c $kernel.h
 O3-no-vec: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling O3-no-vec:"
-	\${VERBOSE} clang-3.7 -S -emit-llvm $kernel.c \${CFLAGS} \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-stripped.ll
 
 	opt-3.7 -mem2reg -S $kernel-stripped.ll > $kernel-opt.ll
@@ -232,7 +232,6 @@ open FILE, '>'.$TARGET_DIR.'/config.mk';
 print FILE << "EOF";
 CC=clang-3.7
 CPPFLAGS= -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-CFLAGS=-O0
 EOF
 
 close FILE;
