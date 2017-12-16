@@ -103,9 +103,9 @@ echo "JLMFLAGS=$JLMFLAGS " >> config.mk
 echo "OPTCFLAGS=$OPTCFLAGS" >> config.mk
 
 #Compile targets
-./compile_all.sh clean 1>&2
+./compile-target.sh clean 1>&2
 for target in "${targets[@]}"; do
-	./compile_all.sh $target 1>&2
+	./compile-target.sh $target 1>&2
 done
 
 #Execute benchmarks and print timings
