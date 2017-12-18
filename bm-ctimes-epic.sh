@@ -44,7 +44,7 @@ make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -O3 -DRVSDGTIME"
 
 for i in $(seq 1 $NRUNS); do
     FILE=$OUTDIR/ctimes${i}.log
-    ./compile_all.sh clean ct 2>&1 >/dev/null 2> $FILE
+    ./compile-target.sh clean jlm-LLCO3 2>&1 >/dev/null 2> $FILE
 done
 
 #Verify output
