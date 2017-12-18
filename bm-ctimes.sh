@@ -19,4 +19,4 @@ make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -O3" 1>&2
 make -C $JLMROOT clean 1>&2
 make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -O3 -DRVSDGTIME" 1>&2
 
-./compile_all.sh clean ct 2>&1 >/dev/null
+./compile-target.sh clean jlm-LLCO3 2>&1 >/dev/null
