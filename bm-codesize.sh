@@ -38,11 +38,11 @@ declare -a benchmarks=(
 	"stencils/seidel-2d/seidel-2d")
 
 declare -a targets=(
-	"OPTOs-LLCO0-stripped"
-	"OPTO3-LLCO0-stripped"
-	"OPTO3-no-vec-LLCO0-stripped"
+	"OPTO3-LLCO3"
+	"OPTO3-no-vec-LLCO3"
+	"OPTOs-LLCO3"
 	"jlm-LLCO0"
-	"jlm-no-unroll")
+	"jlm-no-unroll-LLCO3")
 
 JIVEROOT=$JLMROOT/external/jive
 
