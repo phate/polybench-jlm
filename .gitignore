@@ -2,7 +2,7 @@
 *.o
 *-jlm-LLCO0
 *-jlm-LLCO3
-*jlm-no-unroll
+*-jlm-no-unroll-LLCO3
 *-gcc
 *-clang
 *-OPTO0-LLCO0
@@ -25,7 +25,7 @@
 *-OPTO3-no-vec-LLCO3
 *-OPTO3-no-vec-LLCO0-stripped
 *-OPTO3-no-vec-LLCO3-stripped
-*-Os
+*-OPTOs-LLCO3
 *.rvsdg
 config.mk
 Makefile
