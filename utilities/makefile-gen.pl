@@ -102,34 +102,34 @@ all:	OPTO0-LLCO0 \\
 jlm-LLCO0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling jlm-LLCO0:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
 	jlm-opt \${JLMFLAGS} --xml $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.rvsdg
 	jlm-opt \${JLMFLAGS} --llvm $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 jlm-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling jlm-LLCO3:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
 	jlm-opt \${JLMFLAGS} --xml $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.rvsdg
 	jlm-opt \${JLMFLAGS} --llvm $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 gcc: $kernel.c $kernel.h
 	@ echo ""
@@ -139,370 +139,370 @@ gcc: $kernel.c $kernel.h
 clang: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling clang:"
-	\${VERBOSE} clang-3.7 -O3 \${CPPFLAGS} -I. -I$utilityDir -o $kernel-\${@} $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
-	\${VERBOSE} clang-3.7 -O3 \${CPPFLAGS} -I. -I$utilityDir -S -emit-llvm -o $kernel-\${@}.ll $kernel.c
+	\${VERBOSE} clang -O3 \${CPPFLAGS} -I. -I$utilityDir -o $kernel-\${@} $kernel.c $utilityDir/polybench.c \${EXTRA_FLAGS}
+	\${VERBOSE} clang -O3 \${CPPFLAGS} -I. -I$utilityDir -S -emit-llvm -o $kernel-\${@}.ll $kernel.c
 
 jlm-no-unroll-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling jlm-no-unroll:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
 	jlm-opt \${JLMFLAGSNOUNROLL} --xml $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.rvsdg
 	jlm-opt \${JLMFLAGSNOUNROLL} --llvm $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO0-LLCO0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO0-LLCO0:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
 	cp $kernel-\${@}-opt.ll $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO0-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO0-LLCO3:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
 	cp $kernel-\${@}-opt.ll $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO0-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO0-LLCO0-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
 	cp $kernel-\${@}-opt-rmd.ll $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO0-LLCO3-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO0-LLCO3-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
 	cp $kernel-\${@}-opt-rmd.ll $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO1-LLCO0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO1-LLCO0:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -O1 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -O1 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO1-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO1-LLCO3:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -O1 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -O1 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO1-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO1-LLCO0-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -O1 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -O1 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO1-LLCO3-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO1-LLCO3-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -O1 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -O1 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO2-LLCO0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO2-LLCO0:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -O2 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -O2 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO2-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO2-LLCO3:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -O2 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -O2 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO2-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO2-LLCO0-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -O2 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -O2 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO2-LLCO3-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO2-LLCO3-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -O2 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -O2 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-LLCO0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-LLCO0:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -O3 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -O3 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-LLCO3:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -O3 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -O3 -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-LLCO0-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -O3 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -O3 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-LLCO3-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-LLCO3-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -O3 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -O3 -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTOs-LLCO0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTOs-LLCO0:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -Os -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -Os -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTOs-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTOs-LLCO3:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 -Os -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt -Os -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTOs-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTOs-LLCO0-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -Os -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -Os -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTOs-LLCO3-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTOs-LLCO3-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 -Os -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt -Os -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-no-vec-LLCO0: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-no-vec-LLCO0:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 \${OPTCFLAGS} -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt \${OPTCFLAGS} -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-no-vec-LLCO3: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-no-vec-LLCO3:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 
-	opt-3.7 -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel.ll > $kernel-\${@}-opt.ll
 
-	opt-3.7 \${OPTCFLAGS} -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
+	opt \${OPTCFLAGS} -S $kernel-\${@}-opt.ll > $kernel-\${@}.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-no-vec-LLCO0-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-no-vec-LLCO0-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 \${OPTCFLAGS} -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt \${OPTCFLAGS} -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O0 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 OPTO3-no-vec-LLCO3-stripped: $kernel.c $kernel.h
 	@ echo ""
 	@ echo "Compiling OPTO3-no-vec-LLCO3-stripped:"
-	\${VERBOSE} clang-3.7 -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
 	python $utilityDir/remove-metadata.py $kernel.ll > $kernel-\${@}-rmd.ll
 
-	opt-3.7 -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
 
-	opt-3.7 \${OPTCFLAGS} -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+	opt \${OPTCFLAGS} -S $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 	python $utilityDir/remove-metadata.py $kernel-\${@}.ll > $kernel-\${@}-rmd.ll
 
-	llc-3.7 -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
-	llc-3.7 -O0 -filetype=obj -o polybench.o polybench.ll
-	\${VERBOSE} clang-3.7 -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}-rmd.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
 
 clean:
 	@ rm -f $kernel-OPTO0-LLCO0
@@ -558,7 +558,7 @@ if ($GEN_CONFIG) {
 open FILE, '>'.$TARGET_DIR.'/config.mk';
 
 print FILE << "EOF";
-CC=clang-3.7
+CC=clang
 CPPFLAGS= -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
 EOF
 
