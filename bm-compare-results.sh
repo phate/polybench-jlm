@@ -51,7 +51,7 @@ echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_DUMP_ARRAYS" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
 echo "JLMFLAGS=$jlmflags" >> config.mk
 
-./compile_all.sh clean clang jlm-LLCO3 1>&2
+./compile-target.sh clean clang jlm-LLCO3 1>&2
 
 for benchmark in "${benchmarks[@]}"; do
 	echo -n "$benchmark: "
