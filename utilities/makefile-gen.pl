@@ -97,7 +97,7 @@ all:	OPTO0-LLCO0 \\
 			jlm-LLCO0 \\
 			jlm-LLCO3 \\
 			\\
-			jlm-no-unroll
+			jlm-no-unroll-LLCO3 \\
 			jlm-no-opt-LLCO3 \\
 			clang \\
 			gcc \\
@@ -559,7 +559,7 @@ clean:
 
 	@ rm -f $kernel-gcc
 	@ rm -f $kernel-clang
-	@ rm -f $kernel-jlm-no-unroll
+	@ rm -f $kernel-jlm-no-unroll-LLCO3
 	@ rm -f $kernel-jlm-no-opt-LLCO3
 	@ rm -f *.rvsdg
 	@ rm -f *.ll
