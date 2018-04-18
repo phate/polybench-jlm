@@ -90,6 +90,11 @@ if [ -z "$JLMFLAGS" ]; then
 	exit 1
 fi
 
+if [ -z "$OPTCFLAGS" ]; then
+	echo "OPTCFLAGS variable not set."
+	exit 1
+fi
+
 JIVEROOT=$JLMROOT/external/jive
 
 make -C $JIVEROOT clean 1>&2
@@ -98,10 +103,8 @@ make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -g -DJIVE_D
 make -C $JLMROOT clean 1>&2
 make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
 
-OPTCFLAGS=`cat optcflags | tr '\n' ' '`
 echo "CC=clang-3.7" > config.mk
 echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME" >> config.mk
-echo "OPTCFLAGS=$OPTCFLAGS" >> config.mk
 
 #Compile targets
 ./compile-target.sh clean 1>&2
