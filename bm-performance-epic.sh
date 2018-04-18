@@ -55,6 +55,7 @@ declare -a targets=(
 	"OPTO3-no-vec-LLCO3-stripped"
 	"jlm-LLCO0"
 	"jlm-LLCO3"
+	"jlm-no-opt-LLCO3"
 	"gcc"
 	"clang")
 

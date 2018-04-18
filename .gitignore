@@ -2,6 +2,7 @@
 *.o
 *-jlm-LLCO0
 *-jlm-LLCO3
+*-jlm-no-opt-LLCO3
 *-jlm-no-unroll-LLCO3
 *-gcc
 *-clang

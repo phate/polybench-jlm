@@ -98,6 +98,7 @@ all:	OPTO0-LLCO0 \\
 			jlm-LLCO3 \\
 			\\
 			jlm-no-unroll
+			jlm-no-opt-LLCO3 \\
 			clang \\
 			gcc \\
 
@@ -155,6 +156,22 @@ jlm-no-unroll-LLCO3: $kernel.c $kernel.h
 
 	jlm-opt \${JLMFLAGSNOUNROLL} --xml $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.rvsdg
 	jlm-opt \${JLMFLAGSNOUNROLL} --llvm $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
+
+	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
+	llc -O0 -filetype=obj -o polybench.o polybench.ll
+	\${VERBOSE} clang -O0 \${CPPFLAGS} -o $kernel-\${@} $kernel-\${@}.o polybench.o \${EXTRA_FLAGS}
+
+jlm-no-opt-LLCO3: $kernel.c $kernel.h
+	@ echo ""
+	@ echo "Compiling \${@}:"
+	\${VERBOSE} clang -O0 -S -emit-llvm $kernel.c \${CPPFLAGS} -I. -I$utilityDir $utilityDir/polybench.c
+	\${LLVM_STRIP} $kernel.ll > $kernel-\${@}-rmd.ll
+
+	opt -mem2reg -S $kernel-\${@}-rmd.ll > $kernel-\${@}-opt.ll
+	\${LLVM_STRIP} $kernel-\${@}-opt.ll > $kernel-\${@}-opt-rmd.ll
+
+	jlm-opt --xml $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.rvsdg
+	jlm-opt --llvm $kernel-\${@}-opt-rmd.ll > $kernel-\${@}.ll
 
 	llc -O3 -filetype=obj -o $kernel-\${@}.o $kernel-\${@}.ll
 	llc -O0 -filetype=obj -o polybench.o polybench.ll
@@ -543,6 +560,7 @@ clean:
 	@ rm -f $kernel-gcc
 	@ rm -f $kernel-clang
 	@ rm -f $kernel-jlm-no-unroll
+	@ rm -f $kernel-jlm-no-opt-LLCO3
 	@ rm -f *.rvsdg
 	@ rm -f *.ll
 	@ rm -f *.o
