@@ -10,6 +10,11 @@ if [ -z "$JLMFLAGS" ]; then
 	exit 1
 fi
 
+if [ -z "$OPTCFLAGS" ]; then
+	echo "OPTCFLAGS variable not set."
+	exit 1
+fi
+
 declare -a benchmarks=(
 	"datamining/correlation/correlation"
 	"datamining/covariance/covariance"
