@@ -37,6 +37,11 @@ if [ -z "$JLMROOT" ]; then
 	exit 1
 fi
 
+if [ -z "$JLMFLAGS" ]; then
+	echo "JLMFLAGS variable not set."
+	exit 1
+fi
+
 JIVEROOT=$JLMROOT/external/jive
 
 make -C $JIVEROOT clean 1>&2
@@ -45,11 +50,9 @@ make -C $JIVEROOT -j4 CFLAGS="-Wall --std=c++14 -xc++ -Wfatal-errors -g -DJIVE_D
 make -C $JLMROOT clean 1>&2
 make -C $JLMROOT -j4 CXXFLAGS="-Wall --std=c++14 -Wfatal-errors -g -DJLM_DEBUG -DJIVE_DEBUG" 1>&2
 
-jlmflags=`cat jlmflags`
 echo "CC=clang-3.7" > config.mk
 echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_DUMP_ARRAYS" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
-echo "JLMFLAGS=$jlmflags" >> config.mk
 
 ./compile-target.sh clean clang jlm-LLCO3 1>&2
 

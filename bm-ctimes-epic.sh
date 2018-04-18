@@ -27,13 +27,16 @@ if [ -z "$JLMROOT" ]; then
 	exit 1
 fi
 
+if [ -z "$JLMFLAGS" ]; then
+	echo "JLMFLAGS variable not set."
+	exit 1
+fi
+
 JIVEROOT=$JLMROOT/external/jive
 
-jlmflags=`cat jlmflags`
 echo "CC=clang-3.7" > config.mk
 echo "CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO" >> config.mk
 echo "CFLAGS=-O0" >> config.mk
-echo "JLMFLAGS=$jlmflags" >> config.mk
 
 export CC="gcc"
 make -C $JIVEROOT clean 1>&2
