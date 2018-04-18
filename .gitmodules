@@ -1,0 +1,3 @@
+[submodule "external/llvm-strip"]
+	path = external/llvm-strip
+	url = https://github.com/phate/llvm-strip.git
