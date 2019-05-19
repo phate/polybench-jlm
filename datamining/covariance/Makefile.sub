@@ -1,0 +1,77 @@
+### CLANG
+
+$(COVARIANCE_ROOT)/clang: $(COVARIANCE_ROOT)/covariance.c $(COVARIANCE_ROOT)/covariance.h 
+	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(COVARIANCE_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(COVARIANCE_ROOT)/covariance.c $(POLYBENCH_ROOT)/utilities/polybench.c $(EXTRA_FLAGS)
+	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(COVARIANCE_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -S -emit-llvm -o $(COVARIANCE_ROOT)/covariance-$(@F).ll $(COVARIANCE_ROOT)/covariance.c
+
+### GCC
+
+$(COVARIANCE_ROOT)/gcc: $(COVARIANCE_ROOT)/covariance.c $(COVARIANCE_ROOT)/covariance.h
+	${VERBOSE} gcc -O3 ${CPPFLAGS} -I$(COVARIANCE_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(COVARIANCE_ROOT)/covariance.c $(POLYBENCH_ROOT)/utilities/polybench.c ${EXTRA_FLAGS}
+
+### JLM
+
+$(COVARIANCE_ROOT)/jlm-%: $(COVARIANCE_ROOT)/covariance.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(LLVM_STRIP) $(COVARIANCE_ROOT)/covariance.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-rmd.ll
+	opt -mem2reg -S $(COVARIANCE_ROOT)/covariance-$(@F)-rmd.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-opt.ll
+	$(LLVM_STRIP) $(COVARIANCE_ROOT)/covariance-$(@F)-opt.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-opt-rmd.ll
+
+	jlm-opt $(JLMFLAGS) --xml $(COVARIANCE_ROOT)/covariance-$(@F)-opt-rmd.ll > $(COVARIANCE_ROOT)/covariance-$(@F).rvsdg
+	jlm-opt $(JLMFLAGS) --llvm $(COVARIANCE_ROOT)/covariance-$(@F)-opt-rmd.ll > $(COVARIANCE_ROOT)/covariance-$(@F).ll
+
+	llc $(LLC_FLAG_first) -filetype=obj -o $(COVARIANCE_ROOT)/covariance-$(@F).o $(COVARIANCE_ROOT)/covariance-$(@F).ll
+	llc $(LLC_FLAG_second) -filetype=obj -o $(COVARIANCE_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(COVARIANCE_ROOT)/covariance-$(@F).o $(COVARIANCE_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
+
+### OPT
+
+$(COVARIANCE_ROOT)/OPTO%: $(COVARIANCE_ROOT)/covariance.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(LLVM_STRIP) $(COVARIANCE_ROOT)/covariance.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-rmd.ll
+	opt -mem2reg -S $(COVARIANCE_ROOT)/covariance-$(@F)-rmd.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-opt.ll
+	$(LLVM_STRIP) $(COVARIANCE_ROOT)/covariance-$(@F)-opt.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-opt-rmd.ll
+
+	opt -mem2reg -S $(COVARIANCE_ROOT)/covariance-$(@F)-rmd.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-opt.ll
+	$(LLVM_STRIP) $(COVARIANCE_ROOT)/covariance-$(@F)-opt.ll > $(COVARIANCE_ROOT)/covariance-$(@F)-opt-rmd.ll
+
+	opt $(OPT_FLAG) -S $(COVARIANCE_ROOT)/covariance-$(@F)-opt-rmd.ll > $(COVARIANCE_ROOT)/covariance-$(@F).ll
+	$(LLVM_STRIP) $(COVARIANCE_ROOT)/covariance-$(@F).ll > $(COVARIANCE_ROOT)/covariance-$(@F)-rmd.ll
+
+	llc $(LLC_FLAG_first) -filetype=obj -o $(COVARIANCE_ROOT)/covariance-$(@F).o $(COVARIANCE_ROOT)/covariance-$(@F)-rmd.ll
+	llc $(LLC_FLAG_second) -filetype=obj -o $(COVARIANCE_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(COVARIANCE_ROOT)/covariance-$(@F).o $(COVARIANCE_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
+
+### COMPARE
+
+.PHONY: $(COVARIANCE_ROOT)/compare
+$(COVARIANCE_ROOT)/compare:
+	@echo "Covariance:"
+	@echo "    Running $(COMP1) version"
+	@$(COVARIANCE_ROOT)/$(COMP1) 2> /tmp/$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(COVARIANCE_ROOT)/$(COMP2) 2> /tmp/$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/$(COMP1).log /tmp/$(COMP2).log
+	@rm -rf /tmp/$(CMOP1).log
+	@rm -rf /tmp/$(COMP2).log
+
+### TIME
+
+.PHONY: $(COVARIANCE_ROOT)/time
+$(COVARIANCE_ROOT)/time:
+	$(COVARIANCE_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/$(TARGET)-time.txt
+
+### CLEAN
+
+.PHONY: $(COVARIANCE_ROOT)/clean
+$(COVARIANCE_ROOT)/clean:
+	@rm -f $(COVARIANCE_ROOT)/clang
+	@rm -f $(COVARIANCE_ROOT)/gcc
+	@rm -f $(COVARIANCE_ROOT)/jlm-*
+	@rm -f $(COVARIANCE_ROOT)/OPTO*
+	@rm -f $(COVARIANCE_ROOT)/*.rvsdg
+	@rm -f $(COVARIANCE_ROOT)/*.ll
+	@rm -f $(COVARIANCE_ROOT)/*.o
+
+.PHONY: $(COVARIANCE_ROOT)/clean-target
+$(COVARIANCE_ROOT)/clean-target:
+	@rm -f $(COVARIANCE_ROOT)/$(TARGET)
+
