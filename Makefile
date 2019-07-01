@@ -7,6 +7,10 @@ endef
 help:
 	@$(HELP_TEXT)
 	@$(HELP_TEXT_POLYBENCH)
+	@echo "submodule              Initializes all the dependent git submodules"
+	@echo "all                    Compiles jlm, and runs unit and C tests"
+	@echo "clean                  Alias for polybench-clean"
+	@echo "clean-all              Calls polybench-clean-all and clean for llvm-strip"
 	@$(HELP_TEXT_LLVMSTRIP)
 
 POLYBENCH_ROOT ?= .
@@ -15,10 +19,16 @@ LLVMSTRIP_ROOT = $(POLYBENCH_ROOT)/external/llvm-strip
 LLVMCONFIG ?= llvm-config
 
 include $(POLYBENCH_ROOT)/Makefile.sub
+ifneq ("$(wildcard $(LLVMSTRIP_ROOT)/Makefile.sub)","")
 include $(LLVMSTRIP_ROOT)/Makefile.sub
+endif
 
 .PHONY: all
 all: polybench
+
+.PHONY: submodule
+submodule:
+	git submodule update --init --recursive
 
 .PHONY: clean
 clean: polybench-clean
