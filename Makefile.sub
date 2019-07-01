@@ -13,7 +13,7 @@ echo "                       Collected results are stored in $(POLYBENCH_RESULTS
 echo "polybench-size         Collects the text size of sepcified target."
 echo "                       Default target is COMP1 but can also be set by TARGET"
 echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
-echo "plybench-help          Prints possible options for COMP1, COMP2, and TARGET"
+echo "polybench-help         Prints possible options for COMP1, COMP2, and TARGET"
 endef
 
 .PHONY: polybench-help
