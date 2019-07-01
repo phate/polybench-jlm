@@ -1,0 +1,83 @@
+### CLANG
+
+$(CORRELATION_ROOT)/clang: $(CORRELATION_ROOT)/correlation.c $(CORRELATION_ROOT)/correlation.h 
+	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(CORRELATION_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(CORRELATION_ROOT)/correlation.c $(POLYBENCH_ROOT)/utilities/polybench.c $(EXTRA_FLAGS)
+	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(CORRELATION_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -S -emit-llvm -o $(CORRELATION_ROOT)/correlation-$(@F).ll $(CORRELATION_ROOT)/correlation.c
+
+### GCC
+
+$(CORRELATION_ROOT)/gcc: $(CORRELATION_ROOT)/correlation.c $(CORRELATION_ROOT)/correlation.h
+	${VERBOSE} gcc -O3 ${CPPFLAGS} -I$(CORRELATION_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(CORRELATION_ROOT)/correlation.c $(POLYBENCH_ROOT)/utilities/polybench.c ${EXTRA_FLAGS}
+
+### JLM
+
+$(CORRELATION_ROOT)/jlm-%: $(CORRELATION_ROOT)/correlation.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation.ll > $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
+	opt -mem2reg -S $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll
+	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll
+
+	jlm-opt $(JLMFLAGS) --xml $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F).rvsdg
+	jlm-opt $(JLMFLAGS) --llvm $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F).ll
+
+	llc $(LLC_FLAG_first) -filetype=obj -o $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/correlation-$(@F).ll
+	llc $(LLC_FLAG_second) -filetype=obj -o $(CORRELATION_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
+
+### OPT
+
+$(CORRELATION_ROOT)/OPTO%: $(CORRELATION_ROOT)/correlation.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation.ll > $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
+	opt -mem2reg -S $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll
+	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll
+
+	opt -mem2reg -S $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll
+	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll
+
+	opt $(OPT_FLAG) -S $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F).ll
+	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F).ll > $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
+
+	llc $(LLC_FLAG_first) -filetype=obj -o $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
+	llc $(LLC_FLAG_second) -filetype=obj -o $(CORRELATION_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
+	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
+
+### COMPARE
+
+.PHONY: $(CORRELATION_ROOT)/compare
+$(CORRELATION_ROOT)/compare:
+	@echo "CORRELATION:"
+	@echo "    Running $(COMP1) version"
+	@$(CORRELATION_ROOT)/$(COMP1) 2> /tmp/correlation-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(CORRELATION_ROOT)/$(COMP2) 2> /tmp/correlation-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/correlation-$(COMP1).log /tmp/correlation-$(COMP2).log
+	@rm -rf /tmp/correlation-$(CMOP1).log
+	@rm -rf /tmp/correlation-$(COMP2).log
+
+### TIME
+
+.PHONY: $(CORRELATION_ROOT)/time
+$(CORRELATION_ROOT)/time:
+	$(CORRELATION_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/$(TARGET)-time.txt
+
+## SIZE
+
+.PHONY: $(CORRELATION_ROOT)/size
+$(CORRELATION_ROOT)/size:
+	size $(CORRELATION_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/$(TARGET)-size.txt
+
+### CLEAN
+
+.PHONY: $(CORRELATION_ROOT)/clean
+$(CORRELATION_ROOT)/clean:
+	@rm -f $(CORRELATION_ROOT)/clang
+	@rm -f $(CORRELATION_ROOT)/gcc
+	@rm -f $(CORRELATION_ROOT)/jlm-*
+	@rm -f $(CORRELATION_ROOT)/OPTO*
+	@rm -f $(CORRELATION_ROOT)/*.rvsdg
+	@rm -f $(CORRELATION_ROOT)/*.ll
+	@rm -f $(CORRELATION_ROOT)/*.o
+
+.PHONY: $(CORRELATION_ROOT)/clean-target
+$(CORRELATION_ROOT)/clean-target:
+	@rm -f $(CORRELATION_ROOT)/$(TARGET)
+
