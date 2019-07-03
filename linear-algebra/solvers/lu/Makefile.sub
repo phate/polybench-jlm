@@ -1,0 +1,49 @@
+$(LU_ROOT)/clang: $(LU_ROOT)/lu.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(LU_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(LU_ROOT)/gcc: $(LU_ROOT)/lu.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(LU_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(LU_ROOT)/jlm-%: $(LU_ROOT)/lu.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(LU_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(LU_ROOT)/OPTO%: $(LU_ROOT)/lu.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(LU_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(LU_ROOT)/compare
+$(LU_ROOT)/compare:
+	@echo "LU:"
+	@echo "    Running $(COMP1) version"
+	@$(LU_ROOT)/$(COMP1) 2> /tmp/lu-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(LU_ROOT)/$(COMP2) 2> /tmp/lu-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/lu-$(COMP1).log /tmp/lu-$(COMP2).log
+	@rm -rf /tmp/lu-$(COMP1).log
+	@rm -rf /tmp/lu-$(COMP2).log
+
+
+.PHONY: $(LU_ROOT)/time
+$(LU_ROOT)/time:
+	$(LU_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/lu-$(TARGET)-time.txt
+
+
+.PHONY: $(LU_ROOT)/size
+$(LU_ROOT)/size:
+	size $(LU_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/lu-$(TARGET)-size.txt
+
+
+.PHONY: $(LU_ROOT)/clean
+$(LU_ROOT)/clean:
+	@rm -f $(LU_ROOT)/clang
+	@rm -f $(LU_ROOT)/gcc
+	@rm -f $(LU_ROOT)/jlm-*
+	@rm -f $(LU_ROOT)/OPTO*
+	@rm -f $(LU_ROOT)/*.rvsdg
+	@rm -f $(LU_ROOT)/*.ll
+	@rm -f $(LU_ROOT)/*.o
+
+
+.PHONY: $(LU_ROOT)/clean-target
+$(LU_ROOT)/clean-target:
+	@rm -f $(LU_ROOT)/$(TARGET)

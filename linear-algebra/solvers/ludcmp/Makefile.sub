@@ -1,0 +1,49 @@
+$(LUDCMP_ROOT)/clang: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(LUDCMP_ROOT)/gcc: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(LUDCMP_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(LUDCMP_ROOT)/jlm-%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(LUDCMP_ROOT)/OPTO%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(LUDCMP_ROOT)/compare
+$(LUDCMP_ROOT)/compare:
+	@echo "LUDCMP:"
+	@echo "    Running $(COMP1) version"
+	@$(LUDCMP_ROOT)/$(COMP1) 2> /tmp/ludcmp-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(LUDCMP_ROOT)/$(COMP2) 2> /tmp/ludcmp-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/ludcmp-$(COMP1).log /tmp/ludcmp-$(COMP2).log
+	@rm -rf /tmp/ludcmp-$(COMP1).log
+	@rm -rf /tmp/ludcmp-$(COMP2).log
+
+
+.PHONY: $(LUDCMP_ROOT)/time
+$(LUDCMP_ROOT)/time:
+	$(LUDCMP_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/ludcmp-$(TARGET)-time.txt
+
+
+.PHONY: $(LUDCMP_ROOT)/size
+$(LUDCMP_ROOT)/size:
+	size $(LUDCMP_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/ludcmp-$(TARGET)-size.txt
+
+
+.PHONY: $(LUDCMP_ROOT)/clean
+$(LUDCMP_ROOT)/clean:
+	@rm -f $(LUDCMP_ROOT)/clang
+	@rm -f $(LUDCMP_ROOT)/gcc
+	@rm -f $(LUDCMP_ROOT)/jlm-*
+	@rm -f $(LUDCMP_ROOT)/OPTO*
+	@rm -f $(LUDCMP_ROOT)/*.rvsdg
+	@rm -f $(LUDCMP_ROOT)/*.ll
+	@rm -f $(LUDCMP_ROOT)/*.o
+
+
+.PHONY: $(LUDCMP_ROOT)/clean-target
+$(LUDCMP_ROOT)/clean-target:
+	@rm -f $(LUDCMP_ROOT)/$(TARGET)

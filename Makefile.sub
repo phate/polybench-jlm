@@ -21,7 +21,7 @@ polybench-help:
 	@$(HELP_TEXT_POLYBENCH_TARGETS)
 
 CC=clang
-
+CPPFLAGS = -I. -Iutilities/
 
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
 
@@ -29,8 +29,67 @@ CORRELATION_ROOT = $(POLYBENCH_ROOT)/datamining/correlation
 include $(CORRELATION_ROOT)/Makefile.sub
 COVARIANCE_ROOT = $(POLYBENCH_ROOT)/datamining/covariance
 include $(COVARIANCE_ROOT)/Makefile.sub
-GEMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gemm/
+
+GEMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gemm
 include $(GEMM_ROOT)/Makefile.sub
+GEMVER_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gemver
+include $(GEMVER_ROOT)/Makefile.sub
+GESUMMV_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gesummv
+include $(GESUMMV_ROOT)/Makefile.sub
+SYMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/symm
+include $(SYMM_ROOT)/Makefile.sub
+SYR2K_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/syr2k
+include $(SYR2K_ROOT)/Makefile.sub
+SYRK_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/syrk
+include $(SYRK_ROOT)/Makefile.sub
+TRMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/trmm
+include $(TRMM_ROOT)/Makefile.sub
+
+2MM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/2mm
+include $(2MM_ROOT)/Makefile.sub
+3MM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/3mm
+include $(3MM_ROOT)/Makefile.sub
+ATAX_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/atax
+include $(ATAX_ROOT)/Makefile.sub
+BICG_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/bicg
+include $(BICG_ROOT)/Makefile.sub
+DOITGEN_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/doitgen
+include $(DOITGEN_ROOT)/Makefile.sub
+MVT_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/mvt
+include $(MVT_ROOT)/Makefile.sub
+
+CHOLESKY_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/cholesky
+include $(CHOLESKY_ROOT)/Makefile.sub
+DURBIN_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/durbin
+include $(DURBIN_ROOT)/Makefile.sub
+GRAMSCHMIDT_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/gramschmidt
+include $(GRAMSCHMIDT_ROOT)/Makefile.sub
+LU_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/lu
+include $(LU_ROOT)/Makefile.sub
+LUDCMP_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/ludcmp
+include $(LUDCMP_ROOT)/Makefile.sub
+TRISOLV_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/trisolv
+include $(TRISOLV_ROOT)/Makefile.sub
+
+DERICHE_ROOT = $(POLYBENCH_ROOT)/medley/deriche
+include $(DERICHE_ROOT)/Makefile.sub
+FLOYD_WARSHALL_ROOT = $(POLYBENCH_ROOT)/medley/floyd-warshall
+include $(FLOYD_WARSHALL_ROOT)/Makefile.sub
+NUSSINOV_ROOT = $(POLYBENCH_ROOT)/medley/nussinov
+include $(NUSSINOV_ROOT)/Makefile.sub
+
+ADI_ROOT = $(POLYBENCH_ROOT)/stencils/adi
+include $(ADI_ROOT)/Makefile.sub
+FDTD_2D_ROOT = $(POLYBENCH_ROOT)/stencils/fdtd-2d
+include $(FDTD_2D_ROOT)/Makefile.sub
+HEAT_3D_ROOT = $(POLYBENCH_ROOT)/stencils/heat-3d
+include $(HEAT_3D_ROOT)/Makefile.sub
+JACOBI_1D_ROOT = $(POLYBENCH_ROOT)/stencils/jacobi-1d
+include $(JACOBI_1D_ROOT)/Makefile.sub
+JACOBI_2D_ROOT = $(POLYBENCH_ROOT)/stencils/jacobi-2d
+include $(JACOBI_2D_ROOT)/Makefile.sub
+SEIDEL_2D_ROOT = $(POLYBENCH_ROOT)/stencils/seidel-2d
+include $(SEIDEL_2D_ROOT)/Makefile.sub
 
 EXTRA_FLAGS=-lm
 
@@ -38,33 +97,33 @@ POLY_BENCHMARKS = \
 	$(CORRELATION_ROOT) \
 	$(COVARIANCE_ROOT) \
 	$(GEMM_ROOT) \
-#	gemver \
-	gesummv \
-	symm \
-	syr2k \
-	syrk \
-	trmm \
-	2mm \
-	3mm \
-	atax \
-	bicg \
-	doitgen \
-	mvt \
-	cholesky \
-	durbin \
-	gramschmidt \
-	lu \
-	ludcmp \
-	trisolv \
-	deriche \
-	floyd-warshall \
-	nussinov \
-	adi \
-	fdtd-2d \
-	heat-3d \
-	jacobi-1d \
-	jacobi-2d \
-	seidel-2d
+	$(GEMVER_ROOT)\
+	$(GESUMMV_ROOT) \
+	$(SYMM_ROOT) \
+	$(SYR2K_ROOT) \
+	$(SYRK_ROOT) \
+	$(TRMM_ROOT) \
+	$(2MM_ROOT) \
+	$(3MM_ROOT) \
+	$(ATAX_ROOT) \
+	$(BICG_ROOT) \
+	$(DOITGEN_ROOT) \
+	$(MVT_ROOT) \
+	$(CHOLESKY_ROOT) \
+	$(DURBIN_ROOT) \
+	$(GRAMSCHMIDT_ROOT) \
+	$(LU_ROOT) \
+	$(LUDCMP_ROOT) \
+	$(TRISOLV_ROOT) \
+	$(DERICHE_ROOT) \
+	$(FLOYD_WARSHALL_ROOT) \
+	$(NUSSINOV_ROOT) \
+	$(ADI_ROOT) \
+	$(FDTD_2D_ROOT) \
+	$(HEAT_3D_ROOT) \
+	$(JACOBI_1D_ROOT) \
+	$(JACOBI_2D_ROOT) \
+	$(SEIDEL_2D_ROOT)
 
 ### COMPARE, TIME, SIZE
 
@@ -72,29 +131,27 @@ COMP1 ?= jlm-LLCO0
 COMP2 ?= OPTO3-LLCO3
 
 .PHONY: polybench-compare
-polybench-compare: llvm-strip
-polybench-compare: CPPFLAGS= -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-compare: $(COMP1)                                     # Build first target of all benchmarks
-polybench-compare: $(COMP2)                                     # Build second target of all benchmarks
+polybench-compare: llvm-strip $(COMP1) $(COMP2)
+polybench-compare: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
 polybench-compare: $(patsubst %, %/compare, $(POLY_BENCHMARKS)) # Compare the two targets of all benchmarks
 
 .PHONY: polybench-time
 polybench-time: llvm-strip
-polybench-time: CPPFLAGS=-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
+polybench-time: CPPFLAGS += -DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
 polybench-time: TARGET ?= $(COMP1)
 polybench-time: TYPE = time
 polybench-time: polybench-clean-target                     # Clean the target
-polybench-time: $(COMP1)                                   # Build the target
+polybench-time: $(TARGET)                                  # Build the target
 polybench-time: $(POLYBENCH_RESULTS)                       # Create result directory
 polybench-time: $(patsubst %, %/time, $(POLY_BENCHMARKS))  # Time the target
 
 .PHONY: polybench-size
 polybench-size: llvm-strip
-polybench-size: CPPFLAGS= -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
+polybench-size: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
 polybench-size: TARGET ?= $(COMP1)
 polybench-size: TYPE = size
 polybench-size: polybench-clean-target                     # Clean the target
-polybench-size: $(COMP1)                                   # Build the target
+polybench-size: $(TARGET)                                  # Build the target
 polybench-size: $(POLYBENCH_RESULTS)                       # Create result directory
 polybench-size: $(patsubst %, %/size, $(POLY_BENCHMARKS))  # Time the target
 
@@ -166,10 +223,6 @@ polybench:	OPTO0-LLCO0 \
 # TARGETS FOR COMPILING ALL BENCHMARKS WITH DIFFERENT OPTIMIZATION OPTIONS #
 ############################################################################
 
-%.ll: %.c
-	$(VERBOSE) clang -O0 -S -emit-llvm -o $@ $^ $(CPPFLAGS) -I$(@D) -I$(POLYBENCH_ROOT)/utilities 
-
-
 ### CLANG
 
 .PHONY: clang
@@ -183,316 +236,275 @@ gcc: $(patsubst %, %/gcc, $(POLY_BENCHMARKS))
 ### JLM
 
 .PHONY: jlm-LLCO0
-jlm-LLCO0: LLC_FLAG_first = -O0
-jlm-LLCO0: LLC_FLAG_second = -O0
-jlm-LLCO0: JLMFLAGS ?= --iln --inv --red --dne --ivt --inv --dne --psh --inv --dne --url --inv --red --cne --dne --pll --inv --dne
-jlm-LLCO0: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+jlm-LLCO0: LLCOPT=LLCO0
+jlm-LLCO0: PIPELINE=jlm-LLC
+jlm-LLCO0: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jurl -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
 jlm-LLCO0: $(patsubst %, %/jlm-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: jlm-LLCO1
-jlm-LLCO1: LLC_FLAG_first = -O1
-jlm-LLCO1: LLC_FLAG_second = -O1
-jlm-LLCO1: JLMFLAGS ?= --iln --inv --red --dne --ivt --inv --dne --psh --inv --dne --url --inv --red --cne --dne --pll --inv --dne
-jlm-LLCO1: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+jlm-LLCO1: LLCOPT=LLCO1
+jlm-LLCO1: PIPELINE=jlm-LLC
+jlm-LLCO1: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jurl -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
 jlm-LLCO1: $(patsubst %, %/jlm-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: jlm-LLCO3
-jlm-LLCO3: LLC_FLAG_first = -O3
-jlm-LLCO3: LLC_FLAG_second = -O3
-jlm-LLCO3: JLMFLAGS ?= --iln --inv --red --dne --ivt --inv --dne --psh --inv --dne --url --inv --red --cne --dne --pll --inv --dne
-jlm-LLCO3: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+jlm-LLCO3: LLCOPT=LLCO3
+jlm-LLCO3: PIPELINE=jlm-LLC
+jlm-LLCO3: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jurl -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
 jlm-LLCO3: $(patsubst %, %/jlm-LLCO3, $(POLY_BENCHMARKS))
 
 .PHONY: jlm-no-unroll-LLCO3
-jlm-no-unroll-LLCO3: LLC_FLAG_first = -O3
-jlm-no-unroll-LLCO3: LLC_FLAG_second = -O3
-jlm-no-unroll-LLCO3: JLMFLAGS ?= --iln --inv --red --dne --ivt --inv --dne --psh --inv --dne --inv --red --cne --dne --pll --inv --dne
-jlm-no-unroll-LLCO3: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+jlm-no-unroll-LLCO3: LLCOPT = LLCO3
+jlm-no-unroll-LLCO3: PIPELINE = jlm-LLC
+jlm-no-unroll-LLCO3: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
 jlm-no-unroll-LLCO3: $(patsubst %, %/jlm-no-unroll-LLCO3, $(POLY_BENCHMARKS))
 
 .PHONY: jlm-LLCO3
-jlm-no-opt-LLCO3: LLC_FLAG_first = -O3
-jlm-no-opt-LLCO3: LLC_FLAG_second = -O0
-jlm-no-opt-LLCO3: JLMFLAGS ?= --iln --inv --red --dne --ivt --inv --dne --psh --inv --dne --url --inv --red --cne --dne --pll --inv --dne
-jlm-no-opt-LLCO3: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+jlm-no-opt-LLCO3: LLCOPT = LLCO3
+jlm-no-opt-LLCO3: PIPELINE = jlm-LLC
+jlm-no-opt-LLCO3: JLMFLAGS =
 jlm-no-opt-LLCO3: $(patsubst %, %/jlm-no-opt-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPT0
 
 .PHONY: OPTO0-LLCO0
-OPTO0-LLCO0: LLC_FLAG_first = -O0
-OPTO0-LLCO0: LLC_FLAG_second = -O0
-OPTO0-LLCO0: OPT_FLAG = -O0
-OPTO0-LLCO0: LLVM_STRIP = cat
+OPTO0-LLCO0: LLCOPT = LLCO0
+OPTO0-LLCO0: PIPELINE = opt-LLC
+OPTO0-LLCO0: LLVMOPT = -O0 --no-strip
 OPTO0-LLCO0: $(patsubst %, %/OPTO0-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO0-LLCO1
-OPTO0-LLCO1: LLC_FLAG_first = -O1
-OPTO0-LLCO1: LLC_FLAG_second = -O0
-OPTO0-LLCO1: OPT_FLAG = -O0
-OPTO0-LLCO1: LLVM_STRIP = cat
+OPTO0-LLCO1: LLCOPT = LLCO1
+OPTO0-LLCO1: PIPELINE = opt-LLC
+OPTO0-LLCO1: LLVMOPT = -O0 --no-strip
 OPTO0-LLCO1: $(patsubst %, %/OPTO0-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO0-LLCO3
-OPTO0-LLCO3: LLC_FLAG_first = -O3
-OPTO0-LLCO3: LLC_FLAG_second = -O0
-OPTO0-LLCO3: OPT_FLAG = -O0
-OPTO0-LLCO3: LLVM_STRIP = cat
+OPTO0-LLCO3: LLCOPT = LLCO3
+OPTO0-LLCO3: PIPELINE = opt-LLC
+OPTO0-LLCO3: LLVMOPT = -O0 --no-strip
 OPTO0-LLCO3: $(patsubst %, %/OPTO0-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPT0 stripped
 
 .PHONY: OPTO0-LLCO0-stripped
-OPTO0-LLCO0-stripped: LLC_FLAG_first = -O0
-OPTO0-LLCO0-stripped: LLC_FLAG_second = -O0
-OPTO0-LLCO0-stripped: OPT_FLAG = -O0
-OPTO0-LLCO0-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO0-LLCO0-stripped: LLCOPT = LLCO0
+OPTO0-LLCO0-stripped: PIPELINE = opt-LLC
+OPTO0-LLCO0-stripped: LLVMOPT = -O0
 OPTO0-LLCO0-stripped: $(patsubst %, %/OPTO0-LLCO0-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO0-LLCO1-stripped
-OPTO0-LLCO1-stripped: LLC_FLAG_first = -O1
-OPTO0-LLCO1-stripped: LLC_FLAG_second = -O0
-OPTO0-LLCO1-stripped: OPT_FLAG = -O0
-OPTO0-LLCO1-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO0-LLCO1-stripped: LLCOPT = LLCO1
+OPTO0-LLCO1-stripped: PIPELINE = opt-LLC
+OPTO0-LLCO1-stripped: LLVMOPT = -O0
 OPTO0-LLCO1-stripped: $(patsubst %, %/OPTO0-LLCO1-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO0-LLCO3-stripped
-OPTO0-LLCO3-stripped: LLC_FLAG_first = -O3
-OPTO0-LLCO3-stripped: LLC_FLAG_second = -O0
-OPTO0-LLCO3-stripped: OPT_FLAG = -O0
-OPTO0-LLCO3-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO0-LLCO3-stripped: LLCOPT = LLCO3
+OPTO0-LLCO3-stripped: PIPELINE = opt-LLC
+OPTO0-LLCO3-stripped: LLVMOPT = -O0
 OPTO0-LLCO3-stripped: $(patsubst %, %/OPTO0-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### OPT1
 
 .PHONY: OPTO1-LLCO0
-OPTO1-LLCO0: LLC_FLAG_first = -O0
-OPTO1-LLCO0: LLC_FLAG_second = -O0
-OPTO1-LLCO0: OPT_FLAG = -O1
-OPTO1-LLCO0: LLVM_STRIP = cat
+OPTO1-LLCO0: LLCOPT = LLCO0
+OPTO1-LLCO0: PIPELINE = opt-LLC
+OPTO1-LLCO0: LLVMOPT = -O1 --no-strip
 OPTO1-LLCO0: $(patsubst %, %/OPTO1-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO1-LLCO1
-OPTO1-LLCO1: LLC_FLAG_first = -O1
-OPTO1-LLCO1: LLC_FLAG_second = -O0
-OPTO1-LLCO1: OPT_FLAG = -O1
-OPTO1-LLCO1: LLVM_STRIP = cat
+OPTO1-LLCO1: LLCOPT = LLCO1
+OPTO1-LLCO1: PIPELINE = opt-LLC
+OPTO1-LLCO1: LLVMOPT = -O1 --no-strip
 OPTO1-LLCO1: $(patsubst %, %/OPTO1-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO1-LLCO3
-OPTO1-LLCO3: LLC_FLAG_first = -O3
-OPTO1-LLCO3: LLC_FLAG_second = -O0
-OPTO1-LLCO3: OPT_FLAG = -O1
-OPTO1-LLCO3: LLVM_STRIP = cat
+OPTO1-LLCO3: LLCOPT = LLCO3
+OPTO1-LLCO3: PIPELINE = opt-LLC
+OPTO1-LLCO3: LLVMOPT = -O1 --no-strip
 OPTO1-LLCO3: $(patsubst %, %/OPTO1-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPT1 stripped
 
 .PHONY: OPTO1-LLCO0-stripped
-OPTO1-LLCO0-stripped: LLC_FLAG_first = -O0
-OPTO1-LLCO0-stripped: LLC_FLAG_second = -O0
-OPTO1-LLCO0-stripped: OPT_FLAG = -O1
-OPTO1-LLCO0-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO1-LLCO0-stripped: LLCOPT = LLCO0
+OPTO1-LLCO0-stripped: PIPELINE = opt-LLC
+OPTO1-LLCO0-stripped: LLVMOPT = -O1
 OPTO1-LLCO0-stripped: $(patsubst %, %/OPTO1-LLCO0-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO1-LLCO1-stripped
-OPTO1-LLCO1-stripped: LLC_FLAG_first = -O1
-OPTO1-LLCO1-stripped: LLC_FLAG_second = -O0
-OPTO1-LLCO1-stripped: OPT_FLAG = -O1
-OPTO1-LLCO1-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO1-LLCO1-stripped: LLCOPT = LLCO1
+OPTO1-LLCO1-stripped: PIPELINE = opt-LLC
+OPTO1-LLCO1-stripped: LLVMOPT = -O1
 OPTO1-LLCO1-stripped: $(patsubst %, %/OPTO1-LLCO1-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO1-LLCO3-stripped
-OPTO1-LLCO3-stripped: LLC_FLAG_first = -O3
-OPTO1-LLCO3-stripped: LLC_FLAG_second = -O0
-OPTO1-LLCO3-stripped: OPT_FLAG = -O1
-OPTO1-LLCO3-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO1-LLCO3-stripped: LLCOPT = LLCO3
+OPTO1-LLCO3-stripped: PIPELINE = opt-LLC
+OPTO1-LLCO3-stripped: LLVMOPT = -O1
 OPTO1-LLCO3-stripped: $(patsubst %, %/OPTO1-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### OPT2
 
 .PHONY: OPTO2-LLCO0
-OPTO2-LLCO0: LLC_FLAG_first = -O0
-OPTO2-LLCO0: LLC_FLAG_second = -O0
-OPTO2-LLCO0: OPT_FLAG = -O2
-OPTO2-LLCO0: LLVM_STRIP = cat
+OPTO2-LLCO0: LLCOPT = LLCO0
+OPTO2-LLCO0: PIPELINE = opt-LLC
+OPTO2-LLCO0: LLVMOPT = -O2 --no-strip
 OPTO2-LLCO0: $(patsubst %, %/OPTO2-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO2-LLCO1
-OPTO2-LLCO1: LLC_FLAG_first = -O1
-OPTO2-LLCO1: LLC_FLAG_second = -O0
-OPTO2-LLCO1: OPT_FLAG = -O2
-OPTO2-LLCO1: LLVM_STRIP = cat
+OPTO2-LLCO1: LLCOPT = LLCO1
+OPTO2-LLCO1: PIPELINE = opt-LLC
+OPTO2-LLCO1: LLVMOPT = -O2 --no-strip
 OPTO2-LLCO1: $(patsubst %, %/OPTO2-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO2-LLCO3
-OPTO2-LLCO3: LLC_FLAG_first = -O3
-OPTO2-LLCO3: LLC_FLAG_second = -O0
-OPTO2-LLCO3: OPT_FLAG = -O2
-OPTO2-LLCO3: LLVM_STRIP = cat
+OPTO2-LLCO3: LLCOPT = LLCO3
+OPTO2-LLCO3: PIPELINE = opt-LLC
+OPTO2-LLCO3: LLVMOPT = -O2 --no-strip
 OPTO2-LLCO3: $(patsubst %, %/OPTO2-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPT2 stripped
 
 .PHONY: OPTO2-LLCO0-stripped
-OPTO2-LLCO0-stripped: LLC_FLAG_first = -O0
-OPTO2-LLCO0-stripped: LLC_FLAG_second = -O0
-OPTO2-LLCO0-stripped: OPT_FLAG = -O2
-OPTO2-LLCO0-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO2-LLCO0-stripped: LLCOPT = LLCO0
+OPTO2-LLCO0-stripped: PIPELINE = opt-LLC
+OPTO2-LLCO0-stripped: LLVMOPT = -O2
 OPTO2-LLCO0-stripped: $(patsubst %, %/OPTO2-LLCO0-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO2-LLCO1-stripped
-OPTO2-LLCO1-stripped: LLC_FLAG_first = -O1
-OPTO2-LLCO1-stripped: LLC_FLAG_second = -O0
-OPTO2-LLCO1-stripped: OPT_FLAG = -O2
-OPTO2-LLCO1-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO2-LLCO1-stripped: LLCOPT = LLCO1
+OPTO2-LLCO1-stripped: PIPELINE = opt-LLC
+OPTO2-LLCO1-stripped: LLVMOPT = -O2
 OPTO2-LLCO1-stripped: $(patsubst %, %/OPTO2-LLCO1-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO2-LLCO3-stripped
-OPTO2-LLCO3-stripped: LLC_FLAG_first = -O3
-OPTO2-LLCO3-stripped: LLC_FLAG_second = -O0
-OPTO2-LLCO3-stripped: OPT_FLAG = -O2
-OPTO2-LLCO3-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO2-LLCO3-stripped: LLCOPT = LLCO3
+OPTO2-LLCO3-stripped: PIPELINE = opt-LLC
+OPTO2-LLCO3-stripped: LLVMOPT = -O2
 OPTO2-LLCO3-stripped: $(patsubst %, %/OPTO2-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### OPT3
 
 .PHONY: OPTO3-LLCO0
-OPTO3-LLCO0: LLC_FLAG_first = -O0
-OPTO3-LLCO0: LLC_FLAG_second = -O0
-OPTO3-LLCO0: OPT_FLAG = -O3
-OPTO3-LLCO0: LLVM_STRIP = cat
+OPTO3-LLCO0: LLCOPT = LLCO0
+OPTO3-LLCO0: PIPELINE = opt-LLC
+OPTO3-LLCO0: LLVMOPT = -O3 --no-strip
 OPTO3-LLCO0: $(patsubst %, %/OPTO3-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-LLCO1
-OPTO3-LLCO1: LLC_FLAG_first = -O1
-OPTO3-LLCO1: LLC_FLAG_second = -O0
-OPTO3-LLCO1: OPT_FLAG = -O3
-OPTO3-LLCO1: LLVM_STRIP = cat
+OPTO3-LLCO1: LLCOPT = LLCO1
+OPTO3-LLCO1: PIPELINE = opt-LLC
+OPTO3-LLCO1: LLVMOPT = -O3 --no-strip
 OPTO3-LLCO1: $(patsubst %, %/OPTO3-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-LLCO3
-OPTO3-LLCO3: LLC_FLAG_first = -O3
-OPTO3-LLCO3: LLC_FLAG_second = -O0
-OPTO3-LLCO3: OPT_FLAG = -O3
-OPTO3-LLCO3: LLVM_STRIP = cat
+OPTO3-LLCO3: LLCOPT = LLCO3
+OPTO3-LLCO3: PIPELINE = opt-LLC
+OPTO3-LLCO3: LLVMOPT = -O3 --no-strip
 OPTO3-LLCO3: $(patsubst %, %/OPTO3-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPT3 stripped
 
 .PHONY: OPTO3-LLCO0-stripped
-OPTO3-LLCO0-stripped: LLC_FLAG_first = -O0
-OPTO3-LLCO0-stripped: LLC_FLAG_second = -O0
-OPTO3-LLCO0-stripped: OPT_FLAG = -O3
-OPTO3-LLCO0-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO3-LLCO0-stripped: LLCOPT = LLCO0
+OPTO3-LLCO0-stripped: PIPELINE = opt-LLC
+OPTO3-LLCO0-stripped: LLVMOPT = -O3
 OPTO3-LLCO0-stripped: $(patsubst %, %/OPTO3-LLCO0-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-LLCO1-stripped
-OPTO3-LLCO1-stripped: LLC_FLAG_first = -O1
-OPTO3-LLCO1-stripped: LLC_FLAG_second = -O0
-OPTO3-LLCO1-stripped: OPT_FLAG = -O3
-OPTO3-LLCO1-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO3-LLCO1-stripped: LLCOPT = LLCO1
+OPTO3-LLCO1-stripped: PIPELINE = opt-LLC
+OPTO3-LLCO1-stripped: LLVMOPT = -O3
 OPTO3-LLCO1-stripped: $(patsubst %, %/OPTO3-LLCO1-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-LLCO3-stripped
-OPTO3-LLCO3-stripped: LLC_FLAG_first = -O3
-OPTO3-LLCO3-stripped: LLC_FLAG_second = -O0
-OPTO3-LLCO3-stripped: OPT_FLAG = -O3
-OPTO3-LLCO3-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTO3-LLCO3-stripped: LLCOPT = LLCO3
+OPTO3-LLCO3-stripped: PIPELINE = opt-LLC
+OPTO3-LLCO3-stripped: LLVMOPT = -O3
 OPTO3-LLCO3-stripped: $(patsubst %, %/OPTO3-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### OPT3 no-vec
 
-NO_VEC = $(shell llvm-as < /dev/null | opt -O3 -disable-output -debug-pass=Arguments 2>&1 | awk '{if(NR==2)print}' | sed 's/Pass Arguments: //' | sed 's/-loop-vectorize //' | sed 's/-slp-vectorize //')
+NO_VEC = $(shell ./print-llvm-opts.py | sed 's/-V-loop-vectorize //' | sed 's/-V-slp-vectorize //')
 
 .PHONY: OPTO3-no-vec-LLCO0
-OPTO3-no-vec-LLCO0: LLC_FLAG_first = -O0
-OPTO3-no-vec-LLCO0: LLC_FLAG_second = -O0
-OPTO3-no-vec-LLCO0: OPT_FLAG = $(NO_VEC)
-OPTO3-no-vec-LLCO0: LLVM_STRIP = cat
+OPTO3-no-vec-LLCO0: LLCOPT = LLCO0
+OPTO3-no-vec-LLCO0: PIPELINE = opt-LLC
+OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
 OPTO3-no-vec-LLCO0: $(patsubst %, %/OPTO3-no-vec-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-no-vec-LLCO1
-OPTO3-no-vec-LLCO1: LLC_FLAG_first = -O1
-OPTO3-no-vec-LLCO1: LLC_FLAG_second = -O0
-OPTO3-no-vec-LLCO0: OPT_FLAG = $(NO_VEC)
-OPTO3-no-vec-LLCO1: LLVM_STRIP = cat
+OPTO3-no-vec-LLCO1: LLCOPT = LLCO1
+OPTO3-no-vec-LLCO1: PIPELINE = opt-LLC
+OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
 OPTO3-no-vec-LLCO1: $(patsubst %, %/OPTO3-no-vec-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-no-vec-LLCO3
-OPTO3-no-vec-LLCO3: LLC_FLAG_first = -O3
-OPTO3-no-vec-LLCO3: LLC_FLAG_second = -O0
-OPTO3-no-vec-LLCO0: OPT_FLAG = $(NO_VEC)
-OPTO3-no-vec-LLCO3: LLVM_STRIP = cat
+OPTO3-no-vec-LLCO3: LLCOPT = LLCO3
+OPTO3-no-vec-LLCO3: PIPELINE = opt-LLC
+OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
 OPTO3-no-vec-LLCO3: $(patsubst %, %/OPTO3-no-vec-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPT3 no-vec stripped
 
 .PHONY: OPTO3-no-vec-LLCO0-stripped
-OPTO3-no-vec-LLCO0: LLC_FLAG_first = -O0
-OPTO3-no-vec-LLCO0: LLC_FLAG_second = -O0
-OPTO3-no-vec-LLCO0: OPT_FLAG = $(NO_VEC)
-OPTO3-no-vec-LLCO0: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
-OPTO3-no-vec-LLCO0: $(patsubst %, %/OPTO3-no-vec-LLCO0, $(POLY_BENCHMARKS))
+OPTO3-no-vec-LLCO0-stripped: LLCOPT = LLCO0
+OPTO3-no-vec-LLCO0-stripped: PIPELINE = opt-LLC
+OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
+OPTO3-no-vec-LLCO0-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-no-vec-LLCO1-stripped
-OPTO3-no-vec-LLCO1: LLC_FLAG_first = -O1
-OPTO3-no-vec-LLCO1: LLC_FLAG_second = -O0
-OPTO3-no-vec-LLCO0: OPT_FLAG = $(NO_VEC)
-OPTO3-no-vec-LLCO1: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
-OPTO3-no-vec-LLCO1: $(patsubst %, %/OPTO3-no-vec-LLCO1, $(POLY_BENCHMARKS))
+OPTO3-no-vec-LLCO1-stripped: LLCOPT = LLCO1
+OPTO3-no-vec-LLCO1-stripped: PIPELINE = opt-LLC
+OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
+OPTO3-no-vec-LLCO1-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-no-vec-LLCO3-stripped
-OPTO3-no-vec-LLCO3: LLC_FLAG_first = -O3
-OPTO3-no-vec-LLCO3: LLC_FLAG_second = -O0
-OPTO3-no-vec-LLCO0: OPT_FLAG = $(NO_VEC)
-OPTO3-no-vec-LLCO3: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
-OPTO3-no-vec-LLCO3: $(patsubst %, %/OPTO3-no-vec-LLCO3, $(POLY_BENCHMARKS))
+OPTO3-no-vec-LLCO3-stripped: LLCOPT = LLCO3
+OPTO3-no-vec-LLCO3-stripped: PIPELINE = opt-LLC
+OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
+OPTO3-no-vec-LLCO3-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPTs
 
 .PHONY: OPTOs-LLCO0
-OPTOs-LLCO0: LLC_FLAG_first = -O0
-OPTOs-LLCO0: LLC_FLAG_second = -O0
-OPTOs-LLCO0: OPT_FLAG = -Os
-OPTOs-LLCO0: LLVM_STRIP = cat
+OPTOs-LLCO0: LLCOPT = LLCO0
+OPTOs-LLCO0: PIPELINE = opt-LLC
+OPTOs-LLCO0: LLVMOPT = -Os --no-strip
 OPTOs-LLCO0: $(patsubst %, %/OPTOs-LLCO0, $(POLY_BENCHMARKS))
 
 .PHONY: OPTOs-LLCO1
-OPTOs-LLCO1: LLC_FLAG_first = -O1
-OPTOs-LLCO1: LLC_FLAG_second = -O0
-OPTOs-LLCO1: OPT_FLAG = -Os
-OPTOs-LLCO1: LLVM_STRIP = cat
+OPTOs-LLCO1: LLCOPT = LLCO1
+OPTOs-LLCO1: PIPELINE = opt-LLC
+OPTOs-LLCO1: LLVMOPT = -Os --no-strip
 OPTOs-LLCO1: $(patsubst %, %/OPTOs-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTOs-LLCO3
-OPTOs-LLCO3: LLC_FLAG_first = -O3
-OPTOs-LLCO3: LLC_FLAG_second = -O0
-OPTOs-LLCO3: OPT_FLAG = -Os
-OPTOs-LLCO3: LLVM_STRIP = cat
+OPTOs-LLCO3: LLCOPT = LLCO3
+OPTOs-LLCO3: PIPELINE = opt-LLC
+OPTOs-LLCO3: LLVMOPT = -Os --no-strip
 OPTOs-LLCO3: $(patsubst %, %/OPTOs-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPTs stripped
 
 .PHONY: OPTOs-LLCO0-stripped
-OPTOs-LLCO0-stripped: LLC_FLAG_first = -O0
-OPTOs-LLCO0-stripped: LLC_FLAG_second = -O0
-OPTOs-LLCO0-stripped: OPT_FLAG = -Os
-OPTOs-LLCO0-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTOs-LLCO0-stripped: LLCOPT = LLCO0
+OPTOs-LLCO0-stripped: PIPELINE = opt-LLC
+OPTOs-LLCO0-stripped: LLVMOPT = -Os
 OPTOs-LLCO0-stripped: $(patsubst %, %/OPTOs-LLCO0-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTOs-LLCO1-stripped
-OPTOs-LLCO1-stripped: LLC_FLAG_first = -O1
-OPTOs-LLCO1-stripped: LLC_FLAG_second = -O0
-OPTOs-LLCO1-stripped: OPT_FLAG = -Os
-OPTOs-LLCO1-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTOs-LLCO1-stripped: LLCOPT = LLCO1
+OPTOs-LLCO1-stripped: PIPELINE = opt-LLC
+OPTOs-LLCO1-stripped: LLVMOPT = -Os
 OPTOs-LLCO1-stripped: $(patsubst %, %/OPTOs-LLCO1-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTOs-LLCO3-stripped
-OPTOs-LLCO3-stripped: LLC_FLAG_first = -O3
-OPTOs-LLCO3-stripped: LLC_FLAG_second = -O0
-OPTOs-LLCO3-stripped: OPT_FLAG = -Os
-OPTOs-LLCO3-stripped: LLVM_STRIP = $(POLYBENCH_ROOT)/external/llvm-strip/bin/llvm-strip
+OPTOs-LLCO3-stripped: LLCOPT = LLCO3
+OPTOs-LLCO3-stripped: PIPELINE = opt-LLC
+OPTOs-LLCO3-stripped: LLVMOPT = -Os
 OPTOs-LLCO3-stripped: $(patsubst %, %/OPTOs-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### HELP

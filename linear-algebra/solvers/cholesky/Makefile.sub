@@ -1,0 +1,49 @@
+$(CHOLESKY_ROOT)/clang: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(CHOLESKY_ROOT)/gcc: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(CHOLESKY_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(CHOLESKY_ROOT)/jlm-%: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(CHOLESKY_ROOT)/OPTO%: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(CHOLESKY_ROOT)/compare
+$(CHOLESKY_ROOT)/compare:
+	@echo "CHOLESKY:"
+	@echo "    Running $(COMP1) version"
+	@$(CHOLESKY_ROOT)/$(COMP1) 2> /tmp/cholesky-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(CHOLESKY_ROOT)/$(COMP2) 2> /tmp/cholesky-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/cholesky-$(COMP1).log /tmp/cholesky-$(COMP2).log
+	@rm -rf /tmp/cholesky-$(COMP1).log
+	@rm -rf /tmp/cholesky-$(COMP2).log
+
+
+.PHONY: $(CHOLESKY_ROOT)/time
+$(CHOLESKY_ROOT)/time:
+	$(CHOLESKY_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/cholesky-$(TARGET)-time.txt
+
+
+.PHONY: $(CHOLESKY_ROOT)/size
+$(CHOLESKY_ROOT)/size:
+	size $(CHOLESKY_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/cholesky-$(TARGET)-size.txt
+
+
+.PHONY: $(CHOLESKY_ROOT)/clean
+$(CHOLESKY_ROOT)/clean:
+	@rm -f $(CHOLESKY_ROOT)/clang
+	@rm -f $(CHOLESKY_ROOT)/gcc
+	@rm -f $(CHOLESKY_ROOT)/jlm-*
+	@rm -f $(CHOLESKY_ROOT)/OPTO*
+	@rm -f $(CHOLESKY_ROOT)/*.rvsdg
+	@rm -f $(CHOLESKY_ROOT)/*.ll
+	@rm -f $(CHOLESKY_ROOT)/*.o
+
+
+.PHONY: $(CHOLESKY_ROOT)/clean-target
+$(CHOLESKY_ROOT)/clean-target:
+	@rm -f $(CHOLESKY_ROOT)/$(TARGET)

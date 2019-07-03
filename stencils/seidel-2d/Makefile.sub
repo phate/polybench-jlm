@@ -1,0 +1,49 @@
+$(SEIDEL_2D_ROOT)/clang: $(SEIDEL_2D_ROOT)/seidel-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(SEIDEL_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SEIDEL_2D_ROOT)/gcc: $(SEIDEL_2D_ROOT)/seidel-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(SEIDEL_2D_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(SEIDEL_2D_ROOT)/jlm-%: $(SEIDEL_2D_ROOT)/seidel-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(SEIDEL_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SEIDEL_2D_ROOT)/OPTO%: $(SEIDEL_2D_ROOT)/seidel-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SEIDEL_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(SEIDEL_2D_ROOT)/compare
+$(SEIDEL_2D_ROOT)/compare:
+	@echo "SEIDEL_2D:"
+	@echo "    Running $(COMP1) version"
+	@$(SEIDEL_2D_ROOT)/$(COMP1) 2> /tmp/seidel-2d-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(SEIDEL_2D_ROOT)/$(COMP2) 2> /tmp/seidel-2d-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/seidel-2d-$(COMP1).log /tmp/seidel-2d-$(COMP2).log
+	@rm -rf /tmp/seidel-2d-$(COMP1).log
+	@rm -rf /tmp/seidel-2d-$(COMP2).log
+
+
+.PHONY: $(SEIDEL_2D_ROOT)/time
+$(SEIDEL_2D_ROOT)/time:
+	$(SEIDEL_2D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/seidel-2d-$(TARGET)-time.txt
+
+
+.PHONY: $(SEIDEL_2D_ROOT)/size
+$(SEIDEL_2D_ROOT)/size:
+	size $(SEIDEL_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/seidel-2d-$(TARGET)-size.txt
+
+
+.PHONY: $(SEIDEL_2D_ROOT)/clean
+$(SEIDEL_2D_ROOT)/clean:
+	@rm -f $(SEIDEL_2D_ROOT)/clang
+	@rm -f $(SEIDEL_2D_ROOT)/gcc
+	@rm -f $(SEIDEL_2D_ROOT)/jlm-*
+	@rm -f $(SEIDEL_2D_ROOT)/OPTO*
+	@rm -f $(SEIDEL_2D_ROOT)/*.rvsdg
+	@rm -f $(SEIDEL_2D_ROOT)/*.ll
+	@rm -f $(SEIDEL_2D_ROOT)/*.o
+
+
+.PHONY: $(SEIDEL_2D_ROOT)/clean-target
+$(SEIDEL_2D_ROOT)/clean-target:
+	@rm -f $(SEIDEL_2D_ROOT)/$(TARGET)

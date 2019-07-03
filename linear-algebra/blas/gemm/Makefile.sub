@@ -1,44 +1,18 @@
-### CLANG
+GEMM_SRC = \
+	$(GEMM_ROOT)/gemm.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
 
-$(GEMM_ROOT)/clang: $(GEMM_ROOT)/gemm.c $(GEMM_ROOT)/gemm.h 
-	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(GEMM_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(GEMM_ROOT)/gemm.c $(POLYBENCH_ROOT)/utilities/polybench.c $(EXTRA_FLAGS)
-	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(GEMM_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -S -emit-llvm -o $(GEMM_ROOT)/gemm-$(@F).ll $(GEMM_ROOT)/gemm.c
+$(GEMM_ROOT)/clang: $(GEMM_SRC)
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-### GCC
+$(GEMM_ROOT)/gcc: $(GEMM_SRC)
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GEMM_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(GEMM_ROOT)/gcc: $(GEMM_ROOT)/gemm.c $(GEMM_ROOT)/gemm.h
-	${VERBOSE} gcc -O3 ${CPPFLAGS} -I$(GEMM_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(GEMM_ROOT)/gemm.c $(POLYBENCH_ROOT)/utilities/polybench.c ${EXTRA_FLAGS}
+$(GEMM_ROOT)/jlm-%: $(GEMM_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-### JLM
-
-$(GEMM_ROOT)/jlm-%: $(GEMM_ROOT)/gemm.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(LLVM_STRIP) $(GEMM_ROOT)/gemm.ll > $(GEMM_ROOT)/gemm-$(@F)-rmd.ll
-	opt -mem2reg -S $(GEMM_ROOT)/gemm-$(@F)-rmd.ll > $(GEMM_ROOT)/gemm-$(@F)-opt.ll
-	$(LLVM_STRIP) $(GEMM_ROOT)/gemm-$(@F)-opt.ll > $(GEMM_ROOT)/gemm-$(@F)-opt-rmd.ll
-
-	jlm-opt $(JLMFLAGS) --xml $(GEMM_ROOT)/gemm-$(@F)-opt-rmd.ll > $(GEMM_ROOT)/gemm-$(@F).rvsdg
-	jlm-opt $(JLMFLAGS) --llvm $(GEMM_ROOT)/gemm-$(@F)-opt-rmd.ll > $(GEMM_ROOT)/gemm-$(@F).ll
-
-	llc $(LLC_FLAG_first) -filetype=obj -o $(GEMM_ROOT)/gemm-$(@F).o $(GEMM_ROOT)/gemm-$(@F).ll
-	llc $(LLC_FLAG_second) -filetype=obj -o $(GEMM_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(GEMM_ROOT)/gemm-$(@F).o $(GEMM_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
-
-### OPT
-
-$(GEMM_ROOT)/OPTO%: $(GEMM_ROOT)/gemm.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(LLVM_STRIP) $(GEMM_ROOT)/gemm.ll > $(GEMM_ROOT)/gemm-$(@F)-rmd.ll
-	opt -mem2reg -S $(GEMM_ROOT)/gemm-$(@F)-rmd.ll > $(GEMM_ROOT)/gemm-$(@F)-opt.ll
-	$(LLVM_STRIP) $(GEMM_ROOT)/gemm-$(@F)-opt.ll > $(GEMM_ROOT)/gemm-$(@F)-opt-rmd.ll
-
-	opt -mem2reg -S $(GEMM_ROOT)/gemm-$(@F)-rmd.ll > $(GEMM_ROOT)/gemm-$(@F)-opt.ll
-	$(LLVM_STRIP) $(GEMM_ROOT)/gemm-$(@F)-opt.ll > $(GEMM_ROOT)/gemm-$(@F)-opt-rmd.ll
-
-	opt $(OPT_FLAG) -S $(GEMM_ROOT)/gemm-$(@F)-opt-rmd.ll > $(GEMM_ROOT)/gemm-$(@F).ll
-	$(LLVM_STRIP) $(GEMM_ROOT)/gemm-$(@F).ll > $(GEMM_ROOT)/gemm-$(@F)-rmd.ll
-
-	llc $(LLC_FLAG_first) -filetype=obj -o $(GEMM_ROOT)/gemm-$(@F).o $(GEMM_ROOT)/gemm-$(@F)-rmd.ll
-	llc $(LLC_FLAG_second) -filetype=obj -o $(GEMM_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(GEMM_ROOT)/gemm-$(@F).o $(GEMM_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
+$(GEMM_ROOT)/OPTO%: $(GEMM_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 ### COMPARE
 
@@ -50,20 +24,20 @@ $(GEMM_ROOT)/compare:
 	@echo "    Running $(COMP2) version"
 	@$(GEMM_ROOT)/$(COMP2) 2> /tmp/gemm-$(COMP2).log
 	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/gemm-$(COMP1).log /tmp/gemm-$(COMP2).log
-	@rm -rf /tmp/gemm-$(CMOP1).log
+	@rm -rf /tmp/gemm-$(COMP1).log
 	@rm -rf /tmp/gemm-$(COMP2).log
 
 ### TIME
 
 .PHONY: $(GEMM_ROOT)/time
 $(GEMM_ROOT)/time:
-	$(GEMM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/$(TARGET)-time.txt
+	$(GEMM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gemm-$(TARGET)-time.txt
 
 ## SIZE
 
 .PHONY: $(GEMM_ROOT)/size
 $(GEMM_ROOT)/size:
-	size $(GEMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/$(TARGET)-size.txt
+	size $(GEMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gemm-$(TARGET)-size.txt
 
 ### CLEAN
 

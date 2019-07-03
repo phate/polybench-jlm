@@ -1,0 +1,49 @@
+$(NUSSINOV_ROOT)/clang: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(NUSSINOV_ROOT)/gcc: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(NUSSINOV_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(NUSSINOV_ROOT)/jlm-%: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(NUSSINOV_ROOT)/OPTO%: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(NUSSINOV_ROOT)/compare
+$(NUSSINOV_ROOT)/compare:
+	@echo "NUSSINOV:"
+	@echo "    Running $(COMP1) version"
+	@$(NUSSINOV_ROOT)/$(COMP1) 2> /tmp/nussinov-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(NUSSINOV_ROOT)/$(COMP2) 2> /tmp/nussinov-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/nussinov-$(COMP1).log /tmp/nussinov-$(COMP2).log
+	@rm -rf /tmp/nussinov-$(COMP1).log
+	@rm -rf /tmp/nussinov-$(COMP2).log
+
+
+.PHONY: $(NUSSINOV_ROOT)/time
+$(NUSSINOV_ROOT)/time:
+	$(NUSSINOV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/nussinov-$(TARGET)-time.txt
+
+
+.PHONY: $(NUSSINOV_ROOT)/size
+$(NUSSINOV_ROOT)/size:
+	size $(NUSSINOV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/nussinov-$(TARGET)-size.txt
+
+
+.PHONY: $(NUSSINOV_ROOT)/clean
+$(NUSSINOV_ROOT)/clean:
+	@rm -f $(NUSSINOV_ROOT)/clang
+	@rm -f $(NUSSINOV_ROOT)/gcc
+	@rm -f $(NUSSINOV_ROOT)/jlm-*
+	@rm -f $(NUSSINOV_ROOT)/OPTO*
+	@rm -f $(NUSSINOV_ROOT)/*.rvsdg
+	@rm -f $(NUSSINOV_ROOT)/*.ll
+	@rm -f $(NUSSINOV_ROOT)/*.o
+
+
+.PHONY: $(NUSSINOV_ROOT)/clean-target
+$(NUSSINOV_ROOT)/clean-target:
+	@rm -f $(NUSSINOV_ROOT)/$(TARGET)

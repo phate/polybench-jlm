@@ -1,0 +1,50 @@
+$(SYRK_ROOT)/clang: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYRK_ROOT)/gcc: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(SYRK_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(SYRK_ROOT)/jlm-%: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYRK_ROOT)/OPTO%: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(SYRK_ROOT)/compare
+$(SYRK_ROOT)/compare:
+	@echo "SYRK:"
+	@echo "    Running $(COMP1) version"
+	@$(SYRK_ROOT)/$(COMP1) 2> /tmp/syrk-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(SYRK_ROOT)/$(COMP2) 2> /tmp/syrk-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/syrk-$(COMP1).log /tmp/syrk-$(COMP2).log
+	@rm -rf /tmp/syrk-$(COMP1).log
+	@rm -rf /tmp/syrk-$(COMP2).log
+
+
+.PHONY: $(SYRK_ROOT)/time
+$(SYRK_ROOT)/time:
+	$(SYRK_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/syrk-$(TARGET)-time.txt
+
+
+.PHONY: $(SYRK_ROOT)/size
+$(SYRK_ROOT)/size:
+	size $(SYRK_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/syrk-$(TARGET)-size.txt
+
+
+.PHONY: $(SYRK_ROOT)/clean
+$(SYRK_ROOT)/clean:
+	@rm -f $(SYRK_ROOT)/clang
+	@rm -f $(SYRK_ROOT)/gcc
+	@rm -f $(SYRK_ROOT)/jlm-*
+	@rm -f $(SYRK_ROOT)/OPTO*
+	@rm -f $(SYRK_ROOT)/*.rvsdg
+	@rm -f $(SYRK_ROOT)/*.ll
+	@rm -f $(SYRK_ROOT)/*.o
+
+
+.PHONY: $(SYRK_ROOT)/clean-target
+$(SYRK_ROOT)/clean-target:
+	@rm -f $(SYRK_ROOT)/$(TARGET)
+

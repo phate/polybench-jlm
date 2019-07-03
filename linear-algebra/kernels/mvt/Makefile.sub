@@ -1,0 +1,49 @@
+$(MVT_ROOT)/clang: $(MVT_ROOT)/mvt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(MVT_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(MVT_ROOT)/gcc: $(MVT_ROOT)/mvt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(MVT_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(MVT_ROOT)/jlm-%: $(MVT_ROOT)/mvt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(MVT_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(MVT_ROOT)/OPTO%: $(MVT_ROOT)/mvt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(MVT_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(MVT_ROOT)/compare
+$(MVT_ROOT)/compare:
+	@echo "MVT:"
+	@echo "    Running $(COMP1) version"
+	@$(MVT_ROOT)/$(COMP1) 2> /tmp/mvt-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(MVT_ROOT)/$(COMP2) 2> /tmp/mvt-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/mvt-$(COMP1).log /tmp/mvt-$(COMP2).log
+	@rm -rf /tmp/mvt-$(COMP1).log
+	@rm -rf /tmp/mvt-$(COMP2).log
+
+
+.PHONY: $(MVT_ROOT)/time
+$(MVT_ROOT)/time:
+	$(MVT_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/mvt-$(TARGET)-time.txt
+
+
+.PHONY: $(MVT_ROOT)/size
+$(MVT_ROOT)/size:
+	size $(MVT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/mvt-$(TARGET)-size.txt
+
+
+.PHONY: $(MVT_ROOT)/clean
+$(MVT_ROOT)/clean:
+	@rm -f $(MVT_ROOT)/clang
+	@rm -f $(MVT_ROOT)/gcc
+	@rm -f $(MVT_ROOT)/jlm-*
+	@rm -f $(MVT_ROOT)/OPTO*
+	@rm -f $(MVT_ROOT)/*.rvsdg
+	@rm -f $(MVT_ROOT)/*.ll
+	@rm -f $(MVT_ROOT)/*.o
+
+
+.PHONY: $(MVT_ROOT)/clean-target
+$(MVT_ROOT)/clean-target:
+	@rm -f $(MVT_ROOT)/$(TARGET)
