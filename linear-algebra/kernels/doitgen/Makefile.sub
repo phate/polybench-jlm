@@ -1,0 +1,49 @@
+$(DOITGEN_ROOT)/clang: $(DOITGEN_ROOT)/doitgen.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(DOITGEN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DOITGEN_ROOT)/gcc: $(DOITGEN_ROOT)/doitgen.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(DOITGEN_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(DOITGEN_ROOT)/jlm-%: $(DOITGEN_ROOT)/doitgen.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DOITGEN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DOITGEN_ROOT)/OPTO%: $(DOITGEN_ROOT)/doitgen.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DOITGEN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(DOITGEN_ROOT)/compare
+$(DOITGEN_ROOT)/compare:
+	@echo "DOITGEN:"
+	@echo "    Running $(COMP1) version"
+	@$(DOITGEN_ROOT)/$(COMP1) 2> /tmp/doitgen-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(DOITGEN_ROOT)/$(COMP2) 2> /tmp/doitgen-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/doitgen-$(COMP1).log /tmp/doitgen-$(COMP2).log
+	@rm -rf /tmp/doitgen-$(COMP1).log
+	@rm -rf /tmp/doitgen-$(COMP2).log
+
+
+.PHONY: $(DOITGEN_ROOT)/time
+$(DOITGEN_ROOT)/time:
+	$(DOITGEN_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/doitgen-$(TARGET)-time.txt
+
+
+.PHONY: $(DOITGEN_ROOT)/size
+$(DOITGEN_ROOT)/size:
+	size $(DOITGEN_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/doitgen-$(TARGET)-size.txt
+
+
+.PHONY: $(DOITGEN_ROOT)/clean
+$(DOITGEN_ROOT)/clean:
+	@rm -f $(DOITGEN_ROOT)/clang
+	@rm -f $(DOITGEN_ROOT)/gcc
+	@rm -f $(DOITGEN_ROOT)/jlm-*
+	@rm -f $(DOITGEN_ROOT)/OPTO*
+	@rm -f $(DOITGEN_ROOT)/*.rvsdg
+	@rm -f $(DOITGEN_ROOT)/*.ll
+	@rm -f $(DOITGEN_ROOT)/*.o
+
+
+.PHONY: $(DOITGEN_ROOT)/clean-target
+$(DOITGEN_ROOT)/clean-target:
+	@rm -f $(DOITGEN_ROOT)/$(TARGET)

@@ -1,0 +1,50 @@
+$(SYR2K_ROOT)/clang: $(SYR2K_ROOT)/syr2k.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(SYR2K_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYR2K_ROOT)/gcc: $(SYR2K_ROOT)/syr2k.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(SYR2K_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(SYR2K_ROOT)/jlm-%: $(SYR2K_ROOT)/syr2k.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(SYR2K_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYR2K_ROOT)/OPTO%: $(SYR2K_ROOT)/syr2k.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SYR2K_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(SYR2K_ROOT)/compare
+$(SYR2K_ROOT)/compare:
+	@echo "SYR2K:"
+	@echo "    Running $(COMP1) version"
+	@$(SYR2K_ROOT)/$(COMP1) 2> /tmp/syr2k-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(SYR2K_ROOT)/$(COMP2) 2> /tmp/syr2k-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/syr2k-$(COMP1).log /tmp/syr2k-$(COMP2).log
+	@rm -rf /tmp/syr2k-$(COMP1).log
+	@rm -rf /tmp/syr2k-$(COMP2).log
+
+
+.PHONY: $(SYR2K_ROOT)/time
+$(SYR2K_ROOT)/time:
+	$(SYR2K_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/syr2k-$(TARGET)-time.txt
+
+
+.PHONY: $(SYR2K_ROOT)/size
+$(SYR2K_ROOT)/size:
+	size $(SYR2K_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/syr2k-$(TARGET)-size.txt
+
+
+.PHONY: $(SYR2K_ROOT)/clean
+$(SYR2K_ROOT)/clean:
+	@rm -f $(SYR2K_ROOT)/clang
+	@rm -f $(SYR2K_ROOT)/gcc
+	@rm -f $(SYR2K_ROOT)/jlm-*
+	@rm -f $(SYR2K_ROOT)/OPTO*
+	@rm -f $(SYR2K_ROOT)/*.rvsdg
+	@rm -f $(SYR2K_ROOT)/*.ll
+	@rm -f $(SYR2K_ROOT)/*.o
+
+
+.PHONY: $(SYR2K_ROOT)/clean-target
+$(SYR2K_ROOT)/clean-target:
+	@rm -f $(SYR2K_ROOT)/$(TARGET)
+

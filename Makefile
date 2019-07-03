@@ -16,8 +16,6 @@ help:
 POLYBENCH_ROOT ?= .
 LLVMSTRIP_ROOT = $(POLYBENCH_ROOT)/external/llvm-strip
 
-LLVMCONFIG ?= llvm-config
-
 include $(POLYBENCH_ROOT)/Makefile.sub
 ifneq ("$(wildcard $(LLVMSTRIP_ROOT)/Makefile.sub)","")
 include $(LLVMSTRIP_ROOT)/Makefile.sub

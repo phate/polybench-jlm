@@ -1,0 +1,53 @@
+GEMVER_SRC = \
+	$(GEMVER_ROOT)/gemver.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+$(GEMVER_ROOT)/clang: $(GEMVER_SRC)
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(GEMVER_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(GEMVER_ROOT)/gcc: $(GEMVER_SRC)
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GEMVER_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(GEMVER_ROOT)/jlm-%: $(GEMVER_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GEMVER_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(GEMVER_ROOT)/OPTO%: $(GEMVER_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GEMVER_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(GEMVER_ROOT)/compare
+$(GEMVER_ROOT)/compare:
+	@echo "GEMVER:"
+	@echo "    Running $(COMP1) version"
+	@$(GEMVER_ROOT)/$(COMP1) 2> /tmp/gemver-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(GEMVER_ROOT)/$(COMP2) 2> /tmp/gemver-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/gemver-$(COMP1).log /tmp/gemver-$(COMP2).log
+	@rm -rf /tmp/gemver-$(COMP1).log
+	@rm -rf /tmp/gemver-$(COMP2).log
+
+
+.PHONY: $(GEMVER_ROOT)/time
+$(GEMVER_ROOT)/time:
+	$(GEMVER_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gemver-$(TARGET)-time.txt
+
+
+.PHONY: $(GEMVER_ROOT)/size
+$(GEMVER_ROOT)/size:
+	size $(GEMVER_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gemver-$(TARGET)-size.txt
+
+
+.PHONY: $(GEMVER_ROOT)/clean
+$(GEMVER_ROOT)/clean:
+	@rm -f $(GEMVER_ROOT)/clang
+	@rm -f $(GEMVER_ROOT)/gcc
+	@rm -f $(GEMVER_ROOT)/jlm-*
+	@rm -f $(GEMVER_ROOT)/OPTO*
+	@rm -f $(GEMVER_ROOT)/*.rvsdg
+	@rm -f $(GEMVER_ROOT)/*.ll
+	@rm -f $(GEMVER_ROOT)/*.o
+
+
+.PHONY: $(GEMVER_ROOT)/clean-target
+$(GEMVER_ROOT)/clean-target:
+	@rm -f $(GEMVER_ROOT)/$(TARGET)

@@ -1,0 +1,49 @@
+$(DERICHE_ROOT)/clang: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DERICHE_ROOT)/gcc: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(DERICHE_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(DERICHE_ROOT)/jlm-%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DERICHE_ROOT)/OPTO%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(DERICHE_ROOT)/compare
+$(DERICHE_ROOT)/compare:
+	@echo "DERICHE:"
+	@echo "    Running $(COMP1) version"
+	@$(DERICHE_ROOT)/$(COMP1) 2> /tmp/deriche-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(DERICHE_ROOT)/$(COMP2) 2> /tmp/deriche-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/deriche-$(COMP1).log /tmp/deriche-$(COMP2).log
+	@rm -rf /tmp/deriche-$(COMP1).log
+	@rm -rf /tmp/deriche-$(COMP2).log
+
+
+.PHONY: $(DERICHE_ROOT)/time
+$(DERICHE_ROOT)/time:
+	$(DERICHE_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/deriche-$(TARGET)-time.txt
+
+
+.PHONY: $(DERICHE_ROOT)/size
+$(DERICHE_ROOT)/size:
+	size $(DERICHE_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/deriche-$(TARGET)-size.txt
+
+
+.PHONY: $(DERICHE_ROOT)/clean
+$(DERICHE_ROOT)/clean:
+	@rm -f $(DERICHE_ROOT)/clang
+	@rm -f $(DERICHE_ROOT)/gcc
+	@rm -f $(DERICHE_ROOT)/jlm-*
+	@rm -f $(DERICHE_ROOT)/OPTO*
+	@rm -f $(DERICHE_ROOT)/*.rvsdg
+	@rm -f $(DERICHE_ROOT)/*.ll
+	@rm -f $(DERICHE_ROOT)/*.o
+
+
+.PHONY: $(DERICHE_ROOT)/clean-target
+$(DERICHE_ROOT)/clean-target:
+	@rm -f $(DERICHE_ROOT)/$(TARGET)

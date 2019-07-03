@@ -1,0 +1,49 @@
+$(FLOYD_WARSHALL_ROOT)/clang: $(FLOYD_WARSHALL_ROOT)/floyd-warshall.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(FLOYD_WARSHALL_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(FLOYD_WARSHALL_ROOT)/gcc: $(FLOYD_WARSHALL_ROOT)/floyd-warshall.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(FLOYD_WARSHALL_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(FLOYD_WARSHALL_ROOT)/jlm-%: $(FLOYD_WARSHALL_ROOT)/floyd-warshall.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(FLOYD_WARSHALL_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(FLOYD_WARSHALL_ROOT)/OPTO%: $(FLOYD_WARSHALL_ROOT)/floyd-warshall.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(FLOYD_WARSHALL_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(FLOYD_WARSHALL_ROOT)/compare
+$(FLOYD_WARSHALL_ROOT)/compare:
+	@echo "FLOYD_WARSHALL:"
+	@echo "    Running $(COMP1) version"
+	@$(FLOYD_WARSHALL_ROOT)/$(COMP1) 2> /tmp/floyd-warshall-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(FLOYD_WARSHALL_ROOT)/$(COMP2) 2> /tmp/floyd-warshall-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/floyd-warshall-$(COMP1).log /tmp/floyd-warshall-$(COMP2).log
+	@rm -rf /tmp/floyd-warshall-$(COMP1).log
+	@rm -rf /tmp/floyd-warshall-$(COMP2).log
+
+
+.PHONY: $(FLOYD_WARSHALL_ROOT)/time
+$(FLOYD_WARSHALL_ROOT)/time:
+	$(FLOYD_WARSHALL_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/floyd-warshall-$(TARGET)-time.txt
+
+
+.PHONY: $(FLOYD_WARSHALL_ROOT)/size
+$(FLOYD_WARSHALL_ROOT)/size:
+	size $(FLOYD_WARSHALL_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/floyd-warshall-$(TARGET)-size.txt
+
+
+.PHONY: $(FLOYD_WARSHALL_ROOT)/clean
+$(FLOYD_WARSHALL_ROOT)/clean:
+	@rm -f $(FLOYD_WARSHALL_ROOT)/clang
+	@rm -f $(FLOYD_WARSHALL_ROOT)/gcc
+	@rm -f $(FLOYD_WARSHALL_ROOT)/jlm-*
+	@rm -f $(FLOYD_WARSHALL_ROOT)/OPTO*
+	@rm -f $(FLOYD_WARSHALL_ROOT)/*.rvsdg
+	@rm -f $(FLOYD_WARSHALL_ROOT)/*.ll
+	@rm -f $(FLOYD_WARSHALL_ROOT)/*.o
+
+
+.PHONY: $(FLOYD_WARSHALL_ROOT)/clean-target
+$(FLOYD_WARSHALL_ROOT)/clean-target:
+	@rm -f $(FLOYD_WARSHALL_ROOT)/$(TARGET)

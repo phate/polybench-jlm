@@ -1,0 +1,49 @@
+$(2MM_ROOT)/clang: $(2MM_ROOT)/2mm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(2MM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(2MM_ROOT)/gcc: $(2MM_ROOT)/2mm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(2MM_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(2MM_ROOT)/jlm-%: $(2MM_ROOT)/2mm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(2MM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(2MM_ROOT)/OPTO%: $(2MM_ROOT)/2mm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(2MM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(2MM_ROOT)/compare
+$(2MM_ROOT)/compare:
+	@echo "2MM:"
+	@echo "    Running $(COMP1) version"
+	@$(2MM_ROOT)/$(COMP1) 2> /tmp/2mm-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(2MM_ROOT)/$(COMP2) 2> /tmp/2mm-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/2mm-$(COMP1).log /tmp/2mm-$(COMP2).log
+	@rm -rf /tmp/2mm-$(COMP1).log
+	@rm -rf /tmp/2mm-$(COMP2).log
+
+
+.PHONY: $(2MM_ROOT)/time
+$(2MM_ROOT)/time:
+	$(2MM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/2mm-$(TARGET)-time.txt
+
+
+.PHONY: $(2MM_ROOT)/size
+$(2MM_ROOT)/size:
+	size $(2MM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/2mm-$(TARGET)-size.txt
+
+
+.PHONY: $(2MM_ROOT)/clean
+$(2MM_ROOT)/clean:
+	@rm -f $(2MM_ROOT)/clang
+	@rm -f $(2MM_ROOT)/gcc
+	@rm -f $(2MM_ROOT)/jlm-*
+	@rm -f $(2MM_ROOT)/OPTO*
+	@rm -f $(2MM_ROOT)/*.rvsdg
+	@rm -f $(2MM_ROOT)/*.ll
+	@rm -f $(2MM_ROOT)/*.o
+
+
+.PHONY: $(2MM_ROOT)/clean-target
+$(2MM_ROOT)/clean-target:
+	@rm -f $(2MM_ROOT)/$(TARGET)

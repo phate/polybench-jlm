@@ -1,0 +1,49 @@
+$(DURBIN_ROOT)/clang: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DURBIN_ROOT)/gcc: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(DURBIN_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(DURBIN_ROOT)/jlm-%: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DURBIN_ROOT)/OPTO%: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(DURBIN_ROOT)/compare
+$(DURBIN_ROOT)/compare:
+	@echo "DURBIN:"
+	@echo "    Running $(COMP1) version"
+	@$(DURBIN_ROOT)/$(COMP1) 2> /tmp/durbin-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(DURBIN_ROOT)/$(COMP2) 2> /tmp/durbin-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/durbin-$(COMP1).log /tmp/durbin-$(COMP2).log
+	@rm -rf /tmp/durbin-$(COMP1).log
+	@rm -rf /tmp/durbin-$(COMP2).log
+
+
+.PHONY: $(DURBIN_ROOT)/time
+$(DURBIN_ROOT)/time:
+	$(DURBIN_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/durbin-$(TARGET)-time.txt
+
+
+.PHONY: $(DURBIN_ROOT)/size
+$(DURBIN_ROOT)/size:
+	size $(DURBIN_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/durbin-$(TARGET)-size.txt
+
+
+.PHONY: $(DURBIN_ROOT)/clean
+$(DURBIN_ROOT)/clean:
+	@rm -f $(DURBIN_ROOT)/clang
+	@rm -f $(DURBIN_ROOT)/gcc
+	@rm -f $(DURBIN_ROOT)/jlm-*
+	@rm -f $(DURBIN_ROOT)/OPTO*
+	@rm -f $(DURBIN_ROOT)/*.rvsdg
+	@rm -f $(DURBIN_ROOT)/*.ll
+	@rm -f $(DURBIN_ROOT)/*.o
+
+
+.PHONY: $(DURBIN_ROOT)/clean-target
+$(DURBIN_ROOT)/clean-target:
+	@rm -f $(DURBIN_ROOT)/$(TARGET)

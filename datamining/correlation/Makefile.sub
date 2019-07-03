@@ -1,46 +1,18 @@
-### CLANG
+CORRELATION_SRC = \
+	$(CORRELATION_ROOT)/correlation.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
 
-$(CORRELATION_ROOT)/clang: $(CORRELATION_ROOT)/correlation.c $(CORRELATION_ROOT)/correlation.h 
-	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(CORRELATION_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(CORRELATION_ROOT)/correlation.c $(POLYBENCH_ROOT)/utilities/polybench.c $(EXTRA_FLAGS)
-	$(VERBOSE) clang -O3 $(CPPFLAGS) -I$(CORRELATION_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -S -emit-llvm -o $(CORRELATION_ROOT)/correlation-$(@F).ll $(CORRELATION_ROOT)/correlation.c
+$(CORRELATION_ROOT)/clang: $(CORRELATION_SRC)
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(CORRELATION_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-### GCC
+$(CORRELATION_ROOT)/gcc: $(CORRELATION_SRC)
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(CORRELATION_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(CORRELATION_ROOT)/gcc: $(CORRELATION_ROOT)/correlation.c $(CORRELATION_ROOT)/correlation.h
-	${VERBOSE} gcc -O3 ${CPPFLAGS} -I$(CORRELATION_ROOT)/ -I$(POLYBENCH_ROOT)/utilities -o $@ $(CORRELATION_ROOT)/correlation.c $(POLYBENCH_ROOT)/utilities/polybench.c ${EXTRA_FLAGS}
+$(CORRELATION_ROOT)/jlm-%: $(CORRELATION_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(CORRELATION_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-### JLM
-
-$(CORRELATION_ROOT)/jlm-%: $(CORRELATION_ROOT)/correlation.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation.ll > $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
-	opt -mem2reg -S $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll
-	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll
-
-	jlm-opt $(JLMFLAGS) --xml $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F).rvsdg
-	jlm-opt $(JLMFLAGS) --llvm $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F).ll
-
-	llc $(LLC_FLAG_first) -filetype=obj -o $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/correlation-$(@F).ll
-	llc $(LLC_FLAG_second) -filetype=obj -o $(CORRELATION_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
-
-### OPT
-
-$(CORRELATION_ROOT)/OPTO%: $(CORRELATION_ROOT)/correlation.ll $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation.ll > $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
-	opt -mem2reg -S $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll
-	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll
-
-	opt -mem2reg -S $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll
-	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F)-opt.ll > $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll
-
-	opt $(OPT_FLAG) -S $(CORRELATION_ROOT)/correlation-$(@F)-opt-rmd.ll > $(CORRELATION_ROOT)/correlation-$(@F).ll
-	$(LLVM_STRIP) $(CORRELATION_ROOT)/correlation-$(@F).ll > $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
-
-	llc $(LLC_FLAG_first) -filetype=obj -o $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/correlation-$(@F)-rmd.ll
-	llc $(LLC_FLAG_second) -filetype=obj -o $(CORRELATION_ROOT)/polybench-$(@F).o $(POLYBENCH_ROOT)/utilities/polybench.ll
-	$(VERBOSE) clang -O0 $(CPPFLAGS) -o $@ $(CORRELATION_ROOT)/correlation-$(@F).o $(CORRELATION_ROOT)/polybench-$(@F).o $(EXTRA_FLAGS)
-
-### COMPARE
+$(CORRELATION_ROOT)/OPTO%: $(CORRELATION_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(CORRELATION_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 .PHONY: $(CORRELATION_ROOT)/compare
 $(CORRELATION_ROOT)/compare:
@@ -50,20 +22,20 @@ $(CORRELATION_ROOT)/compare:
 	@echo "    Running $(COMP2) version"
 	@$(CORRELATION_ROOT)/$(COMP2) 2> /tmp/correlation-$(COMP2).log
 	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/correlation-$(COMP1).log /tmp/correlation-$(COMP2).log
-	@rm -rf /tmp/correlation-$(CMOP1).log
+	@rm -rf /tmp/correlation-$(COMP1).log
 	@rm -rf /tmp/correlation-$(COMP2).log
 
 ### TIME
 
 .PHONY: $(CORRELATION_ROOT)/time
 $(CORRELATION_ROOT)/time:
-	$(CORRELATION_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/$(TARGET)-time.txt
+	$(CORRELATION_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/correlation-$(TARGET)-time.txt
 
 ## SIZE
 
 .PHONY: $(CORRELATION_ROOT)/size
 $(CORRELATION_ROOT)/size:
-	size $(CORRELATION_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/$(TARGET)-size.txt
+	size $(CORRELATION_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/correlation-$(TARGET)-size.txt
 
 ### CLEAN
 

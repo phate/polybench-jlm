@@ -1,0 +1,49 @@
+$(ADI_ROOT)/clang: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(ADI_ROOT)/gcc: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(ADI_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(ADI_ROOT)/jlm-%: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(ADI_ROOT)/OPTO%: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(ADI_ROOT)/compare
+$(ADI_ROOT)/compare:
+	@echo "ADI:"
+	@echo "    Running $(COMP1) version"
+	@$(ADI_ROOT)/$(COMP1) 2> /tmp/adi-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(ADI_ROOT)/$(COMP2) 2> /tmp/adi-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/adi-$(COMP1).log /tmp/adi-$(COMP2).log
+	@rm -rf /tmp/adi-$(COMP1).log
+	@rm -rf /tmp/adi-$(COMP2).log
+
+
+.PHONY: $(ADI_ROOT)/time
+$(ADI_ROOT)/time:
+	$(ADI_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/adi-$(TARGET)-time.txt
+
+
+.PHONY: $(ADI_ROOT)/size
+$(ADI_ROOT)/size:
+	size $(ADI_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/adi-$(TARGET)-size.txt
+
+
+.PHONY: $(ADI_ROOT)/clean
+$(ADI_ROOT)/clean:
+	@rm -f $(ADI_ROOT)/clang
+	@rm -f $(ADI_ROOT)/gcc
+	@rm -f $(ADI_ROOT)/jlm-*
+	@rm -f $(ADI_ROOT)/OPTO*
+	@rm -f $(ADI_ROOT)/*.rvsdg
+	@rm -f $(ADI_ROOT)/*.ll
+	@rm -f $(ADI_ROOT)/*.o
+
+
+.PHONY: $(ADI_ROOT)/clean-target
+$(ADI_ROOT)/clean-target:
+	@rm -f $(ADI_ROOT)/$(TARGET)

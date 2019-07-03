@@ -1,0 +1,49 @@
+$(GESUMMV_ROOT)/clang: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(GESUMMV_ROOT)/gcc: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GESUMMV_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(GESUMMV_ROOT)/jlm-%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(GESUMMV_ROOT)/OPTO%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(GESUMMV_ROOT)/compare
+$(GESUMMV_ROOT)/compare:
+	@echo "GESUMMV:"
+	@echo "    Running $(COMP1) version"
+	@$(GESUMMV_ROOT)/$(COMP1) 2> /tmp/gesummv-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(GESUMMV_ROOT)/$(COMP2) 2> /tmp/gesummv-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/gesummv-$(COMP1).log /tmp/gesummv-$(COMP2).log
+	@rm -rf /tmp/gesummv-$(COMP1).log
+	@rm -rf /tmp/gesummv-$(COMP2).log
+
+
+.PHONY: $(GESUMMV_ROOT)/time
+$(GESUMMV_ROOT)/time:
+	$(GESUMMV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gesummv-$(TARGET)-time.txt
+
+
+.PHONY: $(GESUMMV_ROOT)/size
+$(GESUMMV_ROOT)/size:
+	size $(GESUMMV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gesummv-$(TARGET)-size.txt
+
+
+.PHONY: $(GESUMMV_ROOT)/clean
+$(GESUMMV_ROOT)/clean:
+	@rm -f $(GESUMMV_ROOT)/clang
+	@rm -f $(GESUMMV_ROOT)/gcc
+	@rm -f $(GESUMMV_ROOT)/jlm-*
+	@rm -f $(GESUMMV_ROOT)/OPTO*
+	@rm -f $(GESUMMV_ROOT)/*.rvsdg
+	@rm -f $(GESUMMV_ROOT)/*.ll
+	@rm -f $(GESUMMV_ROOT)/*.o
+
+
+.PHONY: $(GESUMMV_ROOT)/clean-target
+$(GESUMMV_ROOT)/clean-target:
+	@rm -f $(GESUMMV_ROOT)/$(TARGET)

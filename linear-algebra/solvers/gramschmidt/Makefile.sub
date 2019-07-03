@@ -1,0 +1,49 @@
+$(GRAMSCHMIDT_ROOT)/clang: $(GRAMSCHMIDT_ROOT)/gramschmidt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(GRAMSCHMIDT_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(GRAMSCHMIDT_ROOT)/gcc: $(GRAMSCHMIDT_ROOT)/gramschmidt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GRAMSCHMIDT_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(GRAMSCHMIDT_ROOT)/jlm-%: $(GRAMSCHMIDT_ROOT)/gramschmidt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GRAMSCHMIDT_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(GRAMSCHMIDT_ROOT)/OPTO%: $(GRAMSCHMIDT_ROOT)/gramschmidt.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GRAMSCHMIDT_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(GRAMSCHMIDT_ROOT)/compare
+$(GRAMSCHMIDT_ROOT)/compare:
+	@echo "GRAMSCHMIDT:"
+	@echo "    Running $(COMP1) version"
+	@$(GRAMSCHMIDT_ROOT)/$(COMP1) 2> /tmp/gramschmidt-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(GRAMSCHMIDT_ROOT)/$(COMP2) 2> /tmp/gramschmidt-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/gramschmidt-$(COMP1).log /tmp/gramschmidt-$(COMP2).log
+	@rm -rf /tmp/gramschmidt-$(COMP1).log
+	@rm -rf /tmp/gramschmidt-$(COMP2).log
+
+
+.PHONY: $(GRAMSCHMIDT_ROOT)/time
+$(GRAMSCHMIDT_ROOT)/time:
+	$(GRAMSCHMIDT_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gramschmidt-$(TARGET)-time.txt
+
+
+.PHONY: $(GRAMSCHMIDT_ROOT)/size
+$(GRAMSCHMIDT_ROOT)/size:
+	size $(GRAMSCHMIDT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gramschmidt-$(TARGET)-size.txt
+
+
+.PHONY: $(GRAMSCHMIDT_ROOT)/clean
+$(GRAMSCHMIDT_ROOT)/clean:
+	@rm -f $(GRAMSCHMIDT_ROOT)/clang
+	@rm -f $(GRAMSCHMIDT_ROOT)/gcc
+	@rm -f $(GRAMSCHMIDT_ROOT)/jlm-*
+	@rm -f $(GRAMSCHMIDT_ROOT)/OPTO*
+	@rm -f $(GRAMSCHMIDT_ROOT)/*.rvsdg
+	@rm -f $(GRAMSCHMIDT_ROOT)/*.ll
+	@rm -f $(GRAMSCHMIDT_ROOT)/*.o
+
+
+.PHONY: $(GRAMSCHMIDT_ROOT)/clean-target
+$(GRAMSCHMIDT_ROOT)/clean-target:
+	@rm -f $(GRAMSCHMIDT_ROOT)/$(TARGET)

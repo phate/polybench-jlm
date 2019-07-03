@@ -1,0 +1,49 @@
+$(JACOBI_2D_ROOT)/clang: $(JACOBI_2D_ROOT)/jacobi-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(JACOBI_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(JACOBI_2D_ROOT)/gcc: $(JACOBI_2D_ROOT)/jacobi-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(JACOBI_2D_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(JACOBI_2D_ROOT)/jlm-%: $(JACOBI_2D_ROOT)/jacobi-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(JACOBI_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(JACOBI_2D_ROOT)/OPTO%: $(JACOBI_2D_ROOT)/jacobi-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(JACOBI_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(JACOBI_2D_ROOT)/compare
+$(JACOBI_2D_ROOT)/compare:
+	@echo "JACOBI_2D:"
+	@echo "    Running $(COMP1) version"
+	@$(JACOBI_2D_ROOT)/$(COMP1) 2> /tmp/jacobi-2d-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(JACOBI_2D_ROOT)/$(COMP2) 2> /tmp/jacobi-2d-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/jacobi-2d-$(COMP1).log /tmp/jacobi-2d-$(COMP2).log
+	@rm -rf /tmp/jacobi-2d-$(COMP1).log
+	@rm -rf /tmp/jacobi-2d-$(COMP2).log
+
+
+.PHONY: $(JACOBI_2D_ROOT)/time
+$(JACOBI_2D_ROOT)/time:
+	$(JACOBI_2D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/jacobi-2d-$(TARGET)-time.txt
+
+
+.PHONY: $(JACOBI_2D_ROOT)/size
+$(JACOBI_2D_ROOT)/size:
+	size $(JACOBI_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/jacobi-2d-$(TARGET)-size.txt
+
+
+.PHONY: $(JACOBI_2D_ROOT)/clean
+$(JACOBI_2D_ROOT)/clean:
+	@rm -f $(JACOBI_2D_ROOT)/clang
+	@rm -f $(JACOBI_2D_ROOT)/gcc
+	@rm -f $(JACOBI_2D_ROOT)/jlm-*
+	@rm -f $(JACOBI_2D_ROOT)/OPTO*
+	@rm -f $(JACOBI_2D_ROOT)/*.rvsdg
+	@rm -f $(JACOBI_2D_ROOT)/*.ll
+	@rm -f $(JACOBI_2D_ROOT)/*.o
+
+
+.PHONY: $(JACOBI_2D_ROOT)/clean-target
+$(JACOBI_2D_ROOT)/clean-target:
+	@rm -f $(JACOBI_2D_ROOT)/$(TARGET)

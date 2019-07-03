@@ -1,0 +1,50 @@
+$(SYMM_ROOT)/clang: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(SYMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYMM_ROOT)/gcc: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(SYMM_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(SYMM_ROOT)/jlm-%: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(SYMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYMM_ROOT)/OPTO%: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SYMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+
+.PHONY: $(SYMM_ROOT)/compare
+$(SYMM_ROOT)/compare:
+	@echo "SYMM:"
+	@echo "    Running $(COMP1) version"
+	@$(SYMM_ROOT)/$(COMP1) 2> /tmp/symm-$(COMP1).log
+	@echo "    Running $(COMP2) version"
+	@$(SYMM_ROOT)/$(COMP2) 2> /tmp/symm-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/symm-$(COMP1).log /tmp/symm-$(COMP2).log
+	@rm -rf /tmp/symm-$(COMP1).log
+	@rm -rf /tmp/symm-$(COMP2).log
+
+
+.PHONY: $(SYMM_ROOT)/time
+$(SYMM_ROOT)/time:
+	$(SYMM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/symm-$(TARGET)-time.txt
+
+
+.PHONY: $(SYMM_ROOT)/size
+$(SYMM_ROOT)/size:
+	size $(SYMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/symm-$(TARGET)-size.txt
+
+
+.PHONY: $(SYMM_ROOT)/clean
+$(SYMM_ROOT)/clean:
+	@rm -f $(SYMM_ROOT)/clang
+	@rm -f $(SYMM_ROOT)/gcc
+	@rm -f $(SYMM_ROOT)/jlm-*
+	@rm -f $(SYMM_ROOT)/OPTO*
+	@rm -f $(SYMM_ROOT)/*.rvsdg
+	@rm -f $(SYMM_ROOT)/*.ll
+	@rm -f $(SYMM_ROOT)/*.o
+
+
+.PHONY: $(SYMM_ROOT)/clean-target
+$(SYMM_ROOT)/clean-target:
+	@rm -f $(SYMM_ROOT)/$(TARGET)
+
