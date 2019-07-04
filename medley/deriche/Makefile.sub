@@ -32,8 +32,3 @@ $(DERICHE_ROOT)/time:
 $(DERICHE_ROOT)/size:
 	size $(DERICHE_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/deriche-$(TARGET)-size.txt
 
-
-
-.PHONY: $(DERICHE_ROOT)/clean-target
-$(DERICHE_ROOT)/clean-target:
-	@rm -f $(DERICHE_ROOT)/$(TARGET)

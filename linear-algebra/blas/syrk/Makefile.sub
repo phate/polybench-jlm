@@ -32,9 +32,3 @@ $(SYRK_ROOT)/time:
 $(SYRK_ROOT)/size:
 	size $(SYRK_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/syrk-$(TARGET)-size.txt
 
-
-
-.PHONY: $(SYRK_ROOT)/clean-target
-$(SYRK_ROOT)/clean-target:
-	@rm -f $(SYRK_ROOT)/$(TARGET)
-

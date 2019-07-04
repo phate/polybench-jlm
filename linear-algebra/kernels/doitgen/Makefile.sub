@@ -32,8 +32,3 @@ $(DOITGEN_ROOT)/time:
 $(DOITGEN_ROOT)/size:
 	size $(DOITGEN_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/doitgen-$(TARGET)-size.txt
 
-
-
-.PHONY: $(DOITGEN_ROOT)/clean-target
-$(DOITGEN_ROOT)/clean-target:
-	@rm -f $(DOITGEN_ROOT)/$(TARGET)

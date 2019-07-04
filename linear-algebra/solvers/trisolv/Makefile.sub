@@ -32,8 +32,3 @@ $(TRISOLV_ROOT)/time:
 $(TRISOLV_ROOT)/size:
 	size $(TRISOLV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/trisolv-$(TARGET)-size.txt
 
-
-
-.PHONY: $(TRISOLV_ROOT)/clean-target
-$(TRISOLV_ROOT)/clean-target:
-	@rm -f $(TRISOLV_ROOT)/$(TARGET)

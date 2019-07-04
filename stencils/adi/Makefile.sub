@@ -32,7 +32,3 @@ $(ADI_ROOT)/time:
 $(ADI_ROOT)/size:
 	size $(ADI_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/adi-$(TARGET)-size.txt
 
-
-.PHONY: $(ADI_ROOT)/clean-target
-$(ADI_ROOT)/clean-target:
-	@rm -f $(ADI_ROOT)/$(TARGET)

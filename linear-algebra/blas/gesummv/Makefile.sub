@@ -32,8 +32,3 @@ $(GESUMMV_ROOT)/time:
 $(GESUMMV_ROOT)/size:
 	size $(GESUMMV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gesummv-$(TARGET)-size.txt
 
-
-
-.PHONY: $(GESUMMV_ROOT)/clean-target
-$(GESUMMV_ROOT)/clean-target:
-	@rm -f $(GESUMMV_ROOT)/$(TARGET)

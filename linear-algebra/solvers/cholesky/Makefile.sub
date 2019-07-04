@@ -32,8 +32,3 @@ $(CHOLESKY_ROOT)/time:
 $(CHOLESKY_ROOT)/size:
 	size $(CHOLESKY_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/cholesky-$(TARGET)-size.txt
 
-
-
-.PHONY: $(CHOLESKY_ROOT)/clean-target
-$(CHOLESKY_ROOT)/clean-target:
-	@rm -f $(CHOLESKY_ROOT)/$(TARGET)

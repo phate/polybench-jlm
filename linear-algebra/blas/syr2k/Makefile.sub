@@ -32,9 +32,3 @@ $(SYR2K_ROOT)/time:
 $(SYR2K_ROOT)/size:
 	size $(SYR2K_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/syr2k-$(TARGET)-size.txt
 
-
-
-.PHONY: $(SYR2K_ROOT)/clean-target
-$(SYR2K_ROOT)/clean-target:
-	@rm -f $(SYR2K_ROOT)/$(TARGET)
-

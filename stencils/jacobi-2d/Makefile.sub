@@ -32,8 +32,3 @@ $(JACOBI_2D_ROOT)/time:
 $(JACOBI_2D_ROOT)/size:
 	size $(JACOBI_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/jacobi-2d-$(TARGET)-size.txt
 
-
-
-.PHONY: $(JACOBI_2D_ROOT)/clean-target
-$(JACOBI_2D_ROOT)/clean-target:
-	@rm -f $(JACOBI_2D_ROOT)/$(TARGET)

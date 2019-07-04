@@ -37,8 +37,3 @@ $(CORRELATION_ROOT)/time:
 $(CORRELATION_ROOT)/size:
 	size $(CORRELATION_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/correlation-$(TARGET)-size.txt
 
-
-.PHONY: $(CORRELATION_ROOT)/clean-target
-$(CORRELATION_ROOT)/clean-target:
-	@rm -f $(CORRELATION_ROOT)/$(TARGET)
-

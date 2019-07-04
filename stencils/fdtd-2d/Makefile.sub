@@ -32,8 +32,3 @@ $(FDTD_2D_ROOT)/time:
 $(FDTD_2D_ROOT)/size:
 	size $(FDTD_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/fdtd-2d-$(TARGET)-size.txt
 
-
-
-.PHONY: $(FDTD_2D_ROOT)/clean-target
-$(FDTD_2D_ROOT)/clean-target:
-	@rm -f $(FDTD_2D_ROOT)/$(TARGET)

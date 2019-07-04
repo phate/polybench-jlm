@@ -32,8 +32,3 @@ $(TRMM_ROOT)/time:
 $(TRMM_ROOT)/size:
 	size $(TRMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/trmm-$(TARGET)-size.txt
 
-
-.PHONY: $(TRMM_ROOT)/clean-target
-$(TRMM_ROOT)/clean-target:
-	@rm -f $(TRMM_ROOT)/$(TARGET)
-

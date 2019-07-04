@@ -39,8 +39,3 @@ $(GEMM_ROOT)/time:
 $(GEMM_ROOT)/size:
 	size $(GEMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gemm-$(TARGET)-size.txt
 
-
-.PHONY: $(GEMM_ROOT)/clean-target
-$(GEMM_ROOT)/clean-target:
-	@rm -f $(GEMM_ROOT)/$(TARGET)
-

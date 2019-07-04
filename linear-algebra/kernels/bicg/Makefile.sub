@@ -32,8 +32,3 @@ $(BICG_ROOT)/time:
 $(BICG_ROOT)/size:
 	size $(BICG_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/bicg-$(TARGET)-size.txt
 
-
-
-.PHONY: $(BICG_ROOT)/clean-target
-$(BICG_ROOT)/clean-target:
-	@rm -f $(BICG_ROOT)/$(TARGET)

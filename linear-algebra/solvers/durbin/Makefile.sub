@@ -32,8 +32,3 @@ $(DURBIN_ROOT)/time:
 $(DURBIN_ROOT)/size:
 	size $(DURBIN_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/durbin-$(TARGET)-size.txt
 
-
-
-.PHONY: $(DURBIN_ROOT)/clean-target
-$(DURBIN_ROOT)/clean-target:
-	@rm -f $(DURBIN_ROOT)/$(TARGET)

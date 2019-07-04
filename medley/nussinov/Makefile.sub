@@ -32,8 +32,3 @@ $(NUSSINOV_ROOT)/time:
 $(NUSSINOV_ROOT)/size:
 	size $(NUSSINOV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/nussinov-$(TARGET)-size.txt
 
-
-
-.PHONY: $(NUSSINOV_ROOT)/clean-target
-$(NUSSINOV_ROOT)/clean-target:
-	@rm -f $(NUSSINOV_ROOT)/$(TARGET)
