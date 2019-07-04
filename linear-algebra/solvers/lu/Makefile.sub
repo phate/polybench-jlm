@@ -32,8 +32,3 @@ $(LU_ROOT)/time:
 $(LU_ROOT)/size:
 	size $(LU_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/lu-$(TARGET)-size.txt
 
-
-
-.PHONY: $(LU_ROOT)/clean-target
-$(LU_ROOT)/clean-target:
-	@rm -f $(LU_ROOT)/$(TARGET)

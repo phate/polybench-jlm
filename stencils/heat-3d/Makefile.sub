@@ -32,8 +32,3 @@ $(HEAT_3D_ROOT)/time:
 $(HEAT_3D_ROOT)/size:
 	size $(HEAT_3D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/heat-3d-$(TARGET)-size.txt
 
-
-
-.PHONY: $(HEAT_3D_ROOT)/clean-target
-$(HEAT_3D_ROOT)/clean-target:
-	@rm -f $(HEAT_3D_ROOT)/$(TARGET)

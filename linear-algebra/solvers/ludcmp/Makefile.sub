@@ -32,8 +32,3 @@ $(LUDCMP_ROOT)/time:
 $(LUDCMP_ROOT)/size:
 	size $(LUDCMP_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/ludcmp-$(TARGET)-size.txt
 
-
-
-.PHONY: $(LUDCMP_ROOT)/clean-target
-$(LUDCMP_ROOT)/clean-target:
-	@rm -f $(LUDCMP_ROOT)/$(TARGET)

@@ -32,8 +32,3 @@ $(2MM_ROOT)/time:
 $(2MM_ROOT)/size:
 	size $(2MM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/2mm-$(TARGET)-size.txt
 
-
-
-.PHONY: $(2MM_ROOT)/clean-target
-$(2MM_ROOT)/clean-target:
-	@rm -f $(2MM_ROOT)/$(TARGET)

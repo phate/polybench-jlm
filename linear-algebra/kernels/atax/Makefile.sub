@@ -32,8 +32,3 @@ $(ATAX_ROOT)/time:
 $(ATAX_ROOT)/size:
 	size $(ATAX_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/atax-$(TARGET)-size.txt
 
-
-
-.PHONY: $(ATAX_ROOT)/clean-target
-$(ATAX_ROOT)/clean-target:
-	@rm -f $(ATAX_ROOT)/$(TARGET)

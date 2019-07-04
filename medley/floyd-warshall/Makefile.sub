@@ -32,8 +32,3 @@ $(FLOYD_WARSHALL_ROOT)/time:
 $(FLOYD_WARSHALL_ROOT)/size:
 	size $(FLOYD_WARSHALL_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/floyd-warshall-$(TARGET)-size.txt
 
-
-
-.PHONY: $(FLOYD_WARSHALL_ROOT)/clean-target
-$(FLOYD_WARSHALL_ROOT)/clean-target:
-	@rm -f $(FLOYD_WARSHALL_ROOT)/$(TARGET)

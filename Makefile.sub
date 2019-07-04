@@ -173,8 +173,12 @@ polybench-clean:
 	)
 
 .PHONY: polybench-clean-target
-polybench-clean-target: $(patsubst %, %/clean-target, $(POLY_BENCHMARKS))
-	rm -f $(POLYBENCH_RESULTS)/$(TARGET)-$(TYPE).txt
+polybench-clean-target: TYPE = size
+polybench-clean-target:
+	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
+		rm -f $(BENCHMARK)/$(TARGET) ; \
+		rm -f $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-$(TYPE).txt ; \
+	)
 
 .PHONY: polybench-purge
 polybench-purge: polybench-clean llvm-strip-clean

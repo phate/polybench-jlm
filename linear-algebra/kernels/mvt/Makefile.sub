@@ -32,8 +32,3 @@ $(MVT_ROOT)/time:
 $(MVT_ROOT)/size:
 	size $(MVT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/mvt-$(TARGET)-size.txt
 
-
-
-.PHONY: $(MVT_ROOT)/clean-target
-$(MVT_ROOT)/clean-target:
-	@rm -f $(MVT_ROOT)/$(TARGET)

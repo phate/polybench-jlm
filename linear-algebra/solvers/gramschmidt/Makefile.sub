@@ -32,8 +32,3 @@ $(GRAMSCHMIDT_ROOT)/time:
 $(GRAMSCHMIDT_ROOT)/size:
 	size $(GRAMSCHMIDT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gramschmidt-$(TARGET)-size.txt
 
-
-
-.PHONY: $(GRAMSCHMIDT_ROOT)/clean-target
-$(GRAMSCHMIDT_ROOT)/clean-target:
-	@rm -f $(GRAMSCHMIDT_ROOT)/$(TARGET)
