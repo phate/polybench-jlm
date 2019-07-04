@@ -4,7 +4,7 @@ echo "Polybench Make Targets"
 echo "--------------------------------------------------------------------------------"
 echo "polybench              Compiles all targets for all benchmarks"
 echo "polybench-clean        Runs clean for each benchmark"
-echo "polybench-clean-all    Like polybench-clean but also deletes results directory"
+echo "polybench-purge        Like polybench-clean but also deletes results directory"
 echo "polybench-compare      Runs two compiled versions and compares their outputs"
 echo "                       The versions to compare is defined by COMP1 and COMP2"
 echo "polybench-time         Collects the execution time of specified target."
@@ -167,8 +167,8 @@ polybench-clean: $(patsubst %, %/clean, $(POLY_BENCHMARKS))
 polybench-clean-target: $(patsubst %, %/clean-target, $(POLY_BENCHMARKS))
 	rm -f $(POLYBENCH_RESULTS)/$(TARGET)-$(TYPE).txt
 
-.PHONY: polybench-clean-all
-polybench-clean-all: polybench-clean llvm-strip-clean
+.PHONY: polybench-purge
+polybench-purge: polybench-clean llvm-strip-clean
 	@rm -rf $(POLYBENCH_RESULTS)
 
 ### ALL
