@@ -161,7 +161,16 @@ $(POLYBENCH_RESULTS):
 ### CLEAN
 
 .PHONY: polybench-clean
-polybench-clean: $(patsubst %, %/clean, $(POLY_BENCHMARKS))
+polybench-clean:
+	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
+		rm -f $(BENCHMARK)/clang ; \
+		rm -f $(BENCHMARK)/gcc ; \
+		rm -f $(BENCHMARK)/jlm-* ; \
+		rm -f $(BENCHMARK)/OPTO* ; \
+		rm -f $(BENCHMARK)/*.rvsdg ; \
+		rm -f $(BENCHMARK)/*.ll ; \
+		rm -f $(BENCHMARK)/*.o ; \
+	)
 
 .PHONY: polybench-clean-target
 polybench-clean-target: $(patsubst %, %/clean-target, $(POLY_BENCHMARKS))

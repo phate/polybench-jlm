@@ -33,16 +33,6 @@ $(ATAX_ROOT)/size:
 	size $(ATAX_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/atax-$(TARGET)-size.txt
 
 
-.PHONY: $(ATAX_ROOT)/clean
-$(ATAX_ROOT)/clean:
-	@rm -f $(ATAX_ROOT)/clang
-	@rm -f $(ATAX_ROOT)/gcc
-	@rm -f $(ATAX_ROOT)/jlm-*
-	@rm -f $(ATAX_ROOT)/OPTO*
-	@rm -f $(ATAX_ROOT)/*.rvsdg
-	@rm -f $(ATAX_ROOT)/*.ll
-	@rm -f $(ATAX_ROOT)/*.o
-
 
 .PHONY: $(ATAX_ROOT)/clean-target
 $(ATAX_ROOT)/clean-target:

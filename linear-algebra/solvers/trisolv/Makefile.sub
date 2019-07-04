@@ -33,16 +33,6 @@ $(TRISOLV_ROOT)/size:
 	size $(TRISOLV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/trisolv-$(TARGET)-size.txt
 
 
-.PHONY: $(TRISOLV_ROOT)/clean
-$(TRISOLV_ROOT)/clean:
-	@rm -f $(TRISOLV_ROOT)/clang
-	@rm -f $(TRISOLV_ROOT)/gcc
-	@rm -f $(TRISOLV_ROOT)/jlm-*
-	@rm -f $(TRISOLV_ROOT)/OPTO*
-	@rm -f $(TRISOLV_ROOT)/*.rvsdg
-	@rm -f $(TRISOLV_ROOT)/*.ll
-	@rm -f $(TRISOLV_ROOT)/*.o
-
 
 .PHONY: $(TRISOLV_ROOT)/clean-target
 $(TRISOLV_ROOT)/clean-target:

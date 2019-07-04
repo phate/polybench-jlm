@@ -33,16 +33,6 @@ $(LU_ROOT)/size:
 	size $(LU_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/lu-$(TARGET)-size.txt
 
 
-.PHONY: $(LU_ROOT)/clean
-$(LU_ROOT)/clean:
-	@rm -f $(LU_ROOT)/clang
-	@rm -f $(LU_ROOT)/gcc
-	@rm -f $(LU_ROOT)/jlm-*
-	@rm -f $(LU_ROOT)/OPTO*
-	@rm -f $(LU_ROOT)/*.rvsdg
-	@rm -f $(LU_ROOT)/*.ll
-	@rm -f $(LU_ROOT)/*.o
-
 
 .PHONY: $(LU_ROOT)/clean-target
 $(LU_ROOT)/clean-target:

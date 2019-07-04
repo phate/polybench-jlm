@@ -33,16 +33,6 @@ $(DERICHE_ROOT)/size:
 	size $(DERICHE_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/deriche-$(TARGET)-size.txt
 
 
-.PHONY: $(DERICHE_ROOT)/clean
-$(DERICHE_ROOT)/clean:
-	@rm -f $(DERICHE_ROOT)/clang
-	@rm -f $(DERICHE_ROOT)/gcc
-	@rm -f $(DERICHE_ROOT)/jlm-*
-	@rm -f $(DERICHE_ROOT)/OPTO*
-	@rm -f $(DERICHE_ROOT)/*.rvsdg
-	@rm -f $(DERICHE_ROOT)/*.ll
-	@rm -f $(DERICHE_ROOT)/*.o
-
 
 .PHONY: $(DERICHE_ROOT)/clean-target
 $(DERICHE_ROOT)/clean-target:

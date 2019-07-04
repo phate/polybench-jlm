@@ -33,16 +33,6 @@ $(DURBIN_ROOT)/size:
 	size $(DURBIN_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/durbin-$(TARGET)-size.txt
 
 
-.PHONY: $(DURBIN_ROOT)/clean
-$(DURBIN_ROOT)/clean:
-	@rm -f $(DURBIN_ROOT)/clang
-	@rm -f $(DURBIN_ROOT)/gcc
-	@rm -f $(DURBIN_ROOT)/jlm-*
-	@rm -f $(DURBIN_ROOT)/OPTO*
-	@rm -f $(DURBIN_ROOT)/*.rvsdg
-	@rm -f $(DURBIN_ROOT)/*.ll
-	@rm -f $(DURBIN_ROOT)/*.o
-
 
 .PHONY: $(DURBIN_ROOT)/clean-target
 $(DURBIN_ROOT)/clean-target:

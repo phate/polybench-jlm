@@ -33,16 +33,6 @@ $(HEAT_3D_ROOT)/size:
 	size $(HEAT_3D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/heat-3d-$(TARGET)-size.txt
 
 
-.PHONY: $(HEAT_3D_ROOT)/clean
-$(HEAT_3D_ROOT)/clean:
-	@rm -f $(HEAT_3D_ROOT)/clang
-	@rm -f $(HEAT_3D_ROOT)/gcc
-	@rm -f $(HEAT_3D_ROOT)/jlm-*
-	@rm -f $(HEAT_3D_ROOT)/OPTO*
-	@rm -f $(HEAT_3D_ROOT)/*.rvsdg
-	@rm -f $(HEAT_3D_ROOT)/*.ll
-	@rm -f $(HEAT_3D_ROOT)/*.o
-
 
 .PHONY: $(HEAT_3D_ROOT)/clean-target
 $(HEAT_3D_ROOT)/clean-target:

@@ -33,16 +33,6 @@ $(CHOLESKY_ROOT)/size:
 	size $(CHOLESKY_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/cholesky-$(TARGET)-size.txt
 
 
-.PHONY: $(CHOLESKY_ROOT)/clean
-$(CHOLESKY_ROOT)/clean:
-	@rm -f $(CHOLESKY_ROOT)/clang
-	@rm -f $(CHOLESKY_ROOT)/gcc
-	@rm -f $(CHOLESKY_ROOT)/jlm-*
-	@rm -f $(CHOLESKY_ROOT)/OPTO*
-	@rm -f $(CHOLESKY_ROOT)/*.rvsdg
-	@rm -f $(CHOLESKY_ROOT)/*.ll
-	@rm -f $(CHOLESKY_ROOT)/*.o
-
 
 .PHONY: $(CHOLESKY_ROOT)/clean-target
 $(CHOLESKY_ROOT)/clean-target:

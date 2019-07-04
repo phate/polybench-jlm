@@ -33,17 +33,6 @@ $(TRMM_ROOT)/size:
 	size $(TRMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/trmm-$(TARGET)-size.txt
 
 
-.PHONY: $(TRMM_ROOT)/clean
-$(TRMM_ROOT)/clean:
-	@rm -f $(TRMM_ROOT)/clang
-	@rm -f $(TRMM_ROOT)/gcc
-	@rm -f $(TRMM_ROOT)/jlm-*
-	@rm -f $(TRMM_ROOT)/OPTO*
-	@rm -f $(TRMM_ROOT)/*.rvsdg
-	@rm -f $(TRMM_ROOT)/*.ll
-	@rm -f $(TRMM_ROOT)/*.o
-
-
 .PHONY: $(TRMM_ROOT)/clean-target
 $(TRMM_ROOT)/clean-target:
 	@rm -f $(TRMM_ROOT)/$(TARGET)

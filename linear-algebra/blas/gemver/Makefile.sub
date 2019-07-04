@@ -37,16 +37,6 @@ $(GEMVER_ROOT)/size:
 	size $(GEMVER_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gemver-$(TARGET)-size.txt
 
 
-.PHONY: $(GEMVER_ROOT)/clean
-$(GEMVER_ROOT)/clean:
-	@rm -f $(GEMVER_ROOT)/clang
-	@rm -f $(GEMVER_ROOT)/gcc
-	@rm -f $(GEMVER_ROOT)/jlm-*
-	@rm -f $(GEMVER_ROOT)/OPTO*
-	@rm -f $(GEMVER_ROOT)/*.rvsdg
-	@rm -f $(GEMVER_ROOT)/*.ll
-	@rm -f $(GEMVER_ROOT)/*.o
-
 
 .PHONY: $(GEMVER_ROOT)/clean-target
 $(GEMVER_ROOT)/clean-target:

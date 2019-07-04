@@ -33,16 +33,6 @@ $(FLOYD_WARSHALL_ROOT)/size:
 	size $(FLOYD_WARSHALL_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/floyd-warshall-$(TARGET)-size.txt
 
 
-.PHONY: $(FLOYD_WARSHALL_ROOT)/clean
-$(FLOYD_WARSHALL_ROOT)/clean:
-	@rm -f $(FLOYD_WARSHALL_ROOT)/clang
-	@rm -f $(FLOYD_WARSHALL_ROOT)/gcc
-	@rm -f $(FLOYD_WARSHALL_ROOT)/jlm-*
-	@rm -f $(FLOYD_WARSHALL_ROOT)/OPTO*
-	@rm -f $(FLOYD_WARSHALL_ROOT)/*.rvsdg
-	@rm -f $(FLOYD_WARSHALL_ROOT)/*.ll
-	@rm -f $(FLOYD_WARSHALL_ROOT)/*.o
-
 
 .PHONY: $(FLOYD_WARSHALL_ROOT)/clean-target
 $(FLOYD_WARSHALL_ROOT)/clean-target:

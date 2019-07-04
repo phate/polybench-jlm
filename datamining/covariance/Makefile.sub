@@ -37,17 +37,6 @@ $(COVARIANCE_ROOT)/time:
 $(COVARIANCE_ROOT)/size:
 	size $(COVARIANCE_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/covariance-$(TARGET)-size.txt
 
-### CLEAN
-
-.PHONY: $(COVARIANCE_ROOT)/clean
-$(COVARIANCE_ROOT)/clean:
-	@rm -f $(COVARIANCE_ROOT)/clang
-	@rm -f $(COVARIANCE_ROOT)/gcc
-	@rm -f $(COVARIANCE_ROOT)/jlm-*
-	@rm -f $(COVARIANCE_ROOT)/OPTO*
-	@rm -f $(COVARIANCE_ROOT)/*.rvsdg
-	@rm -f $(COVARIANCE_ROOT)/*.ll
-	@rm -f $(COVARIANCE_ROOT)/*.o
 
 .PHONY: $(COVARIANCE_ROOT)/clean-target
 $(COVARIANCE_ROOT)/clean-target:

@@ -33,16 +33,6 @@ $(LUDCMP_ROOT)/size:
 	size $(LUDCMP_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/ludcmp-$(TARGET)-size.txt
 
 
-.PHONY: $(LUDCMP_ROOT)/clean
-$(LUDCMP_ROOT)/clean:
-	@rm -f $(LUDCMP_ROOT)/clang
-	@rm -f $(LUDCMP_ROOT)/gcc
-	@rm -f $(LUDCMP_ROOT)/jlm-*
-	@rm -f $(LUDCMP_ROOT)/OPTO*
-	@rm -f $(LUDCMP_ROOT)/*.rvsdg
-	@rm -f $(LUDCMP_ROOT)/*.ll
-	@rm -f $(LUDCMP_ROOT)/*.o
-
 
 .PHONY: $(LUDCMP_ROOT)/clean-target
 $(LUDCMP_ROOT)/clean-target:
