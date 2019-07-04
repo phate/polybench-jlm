@@ -31,8 +31,8 @@ submodule:
 .PHONY: clean
 clean: polybench-clean
 
-.PHONY: clean-all
-clean-all: polybench-clean-all llvm-strip-clean
+.PHONY: purge
+purge: polybench-purge llvm-strip-clean
 
 .PHONY: compare
 compare: polybench-compare
