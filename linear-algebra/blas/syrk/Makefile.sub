@@ -33,16 +33,6 @@ $(SYRK_ROOT)/size:
 	size $(SYRK_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/syrk-$(TARGET)-size.txt
 
 
-.PHONY: $(SYRK_ROOT)/clean
-$(SYRK_ROOT)/clean:
-	@rm -f $(SYRK_ROOT)/clang
-	@rm -f $(SYRK_ROOT)/gcc
-	@rm -f $(SYRK_ROOT)/jlm-*
-	@rm -f $(SYRK_ROOT)/OPTO*
-	@rm -f $(SYRK_ROOT)/*.rvsdg
-	@rm -f $(SYRK_ROOT)/*.ll
-	@rm -f $(SYRK_ROOT)/*.o
-
 
 .PHONY: $(SYRK_ROOT)/clean-target
 $(SYRK_ROOT)/clean-target:

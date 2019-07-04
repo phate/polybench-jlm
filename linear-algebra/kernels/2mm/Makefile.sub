@@ -33,16 +33,6 @@ $(2MM_ROOT)/size:
 	size $(2MM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/2mm-$(TARGET)-size.txt
 
 
-.PHONY: $(2MM_ROOT)/clean
-$(2MM_ROOT)/clean:
-	@rm -f $(2MM_ROOT)/clang
-	@rm -f $(2MM_ROOT)/gcc
-	@rm -f $(2MM_ROOT)/jlm-*
-	@rm -f $(2MM_ROOT)/OPTO*
-	@rm -f $(2MM_ROOT)/*.rvsdg
-	@rm -f $(2MM_ROOT)/*.ll
-	@rm -f $(2MM_ROOT)/*.o
-
 
 .PHONY: $(2MM_ROOT)/clean-target
 $(2MM_ROOT)/clean-target:

@@ -33,16 +33,6 @@ $(FDTD_2D_ROOT)/size:
 	size $(FDTD_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/fdtd-2d-$(TARGET)-size.txt
 
 
-.PHONY: $(FDTD_2D_ROOT)/clean
-$(FDTD_2D_ROOT)/clean:
-	@rm -f $(FDTD_2D_ROOT)/clang
-	@rm -f $(FDTD_2D_ROOT)/gcc
-	@rm -f $(FDTD_2D_ROOT)/jlm-*
-	@rm -f $(FDTD_2D_ROOT)/OPTO*
-	@rm -f $(FDTD_2D_ROOT)/*.rvsdg
-	@rm -f $(FDTD_2D_ROOT)/*.ll
-	@rm -f $(FDTD_2D_ROOT)/*.o
-
 
 .PHONY: $(FDTD_2D_ROOT)/clean-target
 $(FDTD_2D_ROOT)/clean-target:

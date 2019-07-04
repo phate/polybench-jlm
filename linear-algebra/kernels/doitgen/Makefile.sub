@@ -33,16 +33,6 @@ $(DOITGEN_ROOT)/size:
 	size $(DOITGEN_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/doitgen-$(TARGET)-size.txt
 
 
-.PHONY: $(DOITGEN_ROOT)/clean
-$(DOITGEN_ROOT)/clean:
-	@rm -f $(DOITGEN_ROOT)/clang
-	@rm -f $(DOITGEN_ROOT)/gcc
-	@rm -f $(DOITGEN_ROOT)/jlm-*
-	@rm -f $(DOITGEN_ROOT)/OPTO*
-	@rm -f $(DOITGEN_ROOT)/*.rvsdg
-	@rm -f $(DOITGEN_ROOT)/*.ll
-	@rm -f $(DOITGEN_ROOT)/*.o
-
 
 .PHONY: $(DOITGEN_ROOT)/clean-target
 $(DOITGEN_ROOT)/clean-target:

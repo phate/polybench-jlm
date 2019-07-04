@@ -33,16 +33,6 @@ $(MVT_ROOT)/size:
 	size $(MVT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/mvt-$(TARGET)-size.txt
 
 
-.PHONY: $(MVT_ROOT)/clean
-$(MVT_ROOT)/clean:
-	@rm -f $(MVT_ROOT)/clang
-	@rm -f $(MVT_ROOT)/gcc
-	@rm -f $(MVT_ROOT)/jlm-*
-	@rm -f $(MVT_ROOT)/OPTO*
-	@rm -f $(MVT_ROOT)/*.rvsdg
-	@rm -f $(MVT_ROOT)/*.ll
-	@rm -f $(MVT_ROOT)/*.o
-
 
 .PHONY: $(MVT_ROOT)/clean-target
 $(MVT_ROOT)/clean-target:

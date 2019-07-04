@@ -39,17 +39,6 @@ $(GEMM_ROOT)/time:
 $(GEMM_ROOT)/size:
 	size $(GEMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gemm-$(TARGET)-size.txt
 
-### CLEAN
-
-.PHONY: $(GEMM_ROOT)/clean
-$(GEMM_ROOT)/clean:
-	@rm -f $(GEMM_ROOT)/clang
-	@rm -f $(GEMM_ROOT)/gcc
-	@rm -f $(GEMM_ROOT)/jlm-*
-	@rm -f $(GEMM_ROOT)/OPTO*
-	@rm -f $(GEMM_ROOT)/*.rvsdg
-	@rm -f $(GEMM_ROOT)/*.ll
-	@rm -f $(GEMM_ROOT)/*.o
 
 .PHONY: $(GEMM_ROOT)/clean-target
 $(GEMM_ROOT)/clean-target:

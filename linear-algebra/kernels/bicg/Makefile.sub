@@ -33,16 +33,6 @@ $(BICG_ROOT)/size:
 	size $(BICG_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/bicg-$(TARGET)-size.txt
 
 
-.PHONY: $(BICG_ROOT)/clean
-$(BICG_ROOT)/clean:
-	@rm -f $(BICG_ROOT)/clang
-	@rm -f $(BICG_ROOT)/gcc
-	@rm -f $(BICG_ROOT)/jlm-*
-	@rm -f $(BICG_ROOT)/OPTO*
-	@rm -f $(BICG_ROOT)/*.rvsdg
-	@rm -f $(BICG_ROOT)/*.ll
-	@rm -f $(BICG_ROOT)/*.o
-
 
 .PHONY: $(BICG_ROOT)/clean-target
 $(BICG_ROOT)/clean-target:

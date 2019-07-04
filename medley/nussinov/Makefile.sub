@@ -33,16 +33,6 @@ $(NUSSINOV_ROOT)/size:
 	size $(NUSSINOV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/nussinov-$(TARGET)-size.txt
 
 
-.PHONY: $(NUSSINOV_ROOT)/clean
-$(NUSSINOV_ROOT)/clean:
-	@rm -f $(NUSSINOV_ROOT)/clang
-	@rm -f $(NUSSINOV_ROOT)/gcc
-	@rm -f $(NUSSINOV_ROOT)/jlm-*
-	@rm -f $(NUSSINOV_ROOT)/OPTO*
-	@rm -f $(NUSSINOV_ROOT)/*.rvsdg
-	@rm -f $(NUSSINOV_ROOT)/*.ll
-	@rm -f $(NUSSINOV_ROOT)/*.o
-
 
 .PHONY: $(NUSSINOV_ROOT)/clean-target
 $(NUSSINOV_ROOT)/clean-target:

@@ -33,16 +33,6 @@ $(JACOBI_1D_ROOT)/size:
 	size $(JACOBI_1D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/jacobi-1d-$(TARGET)-size.txt
 
 
-.PHONY: $(JACOBI_1D_ROOT)/clean
-$(JACOBI_1D_ROOT)/clean:
-	@rm -f $(JACOBI_1D_ROOT)/clang
-	@rm -f $(JACOBI_1D_ROOT)/gcc
-	@rm -f $(JACOBI_1D_ROOT)/jlm-*
-	@rm -f $(JACOBI_1D_ROOT)/OPTO*
-	@rm -f $(JACOBI_1D_ROOT)/*.rvsdg
-	@rm -f $(JACOBI_1D_ROOT)/*.ll
-	@rm -f $(JACOBI_1D_ROOT)/*.o
-
 
 .PHONY: $(JACOBI_1D_ROOT)/clean-target
 $(JACOBI_1D_ROOT)/clean-target:

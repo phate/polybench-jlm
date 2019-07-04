@@ -33,16 +33,6 @@ $(SEIDEL_2D_ROOT)/size:
 	size $(SEIDEL_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/seidel-2d-$(TARGET)-size.txt
 
 
-.PHONY: $(SEIDEL_2D_ROOT)/clean
-$(SEIDEL_2D_ROOT)/clean:
-	@rm -f $(SEIDEL_2D_ROOT)/clang
-	@rm -f $(SEIDEL_2D_ROOT)/gcc
-	@rm -f $(SEIDEL_2D_ROOT)/jlm-*
-	@rm -f $(SEIDEL_2D_ROOT)/OPTO*
-	@rm -f $(SEIDEL_2D_ROOT)/*.rvsdg
-	@rm -f $(SEIDEL_2D_ROOT)/*.ll
-	@rm -f $(SEIDEL_2D_ROOT)/*.o
-
 
 .PHONY: $(SEIDEL_2D_ROOT)/clean-target
 $(SEIDEL_2D_ROOT)/clean-target:

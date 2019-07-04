@@ -37,17 +37,6 @@ $(CORRELATION_ROOT)/time:
 $(CORRELATION_ROOT)/size:
 	size $(CORRELATION_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/correlation-$(TARGET)-size.txt
 
-### CLEAN
-
-.PHONY: $(CORRELATION_ROOT)/clean
-$(CORRELATION_ROOT)/clean:
-	@rm -f $(CORRELATION_ROOT)/clang
-	@rm -f $(CORRELATION_ROOT)/gcc
-	@rm -f $(CORRELATION_ROOT)/jlm-*
-	@rm -f $(CORRELATION_ROOT)/OPTO*
-	@rm -f $(CORRELATION_ROOT)/*.rvsdg
-	@rm -f $(CORRELATION_ROOT)/*.ll
-	@rm -f $(CORRELATION_ROOT)/*.o
 
 .PHONY: $(CORRELATION_ROOT)/clean-target
 $(CORRELATION_ROOT)/clean-target:

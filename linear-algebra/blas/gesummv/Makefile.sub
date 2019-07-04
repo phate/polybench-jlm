@@ -33,16 +33,6 @@ $(GESUMMV_ROOT)/size:
 	size $(GESUMMV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gesummv-$(TARGET)-size.txt
 
 
-.PHONY: $(GESUMMV_ROOT)/clean
-$(GESUMMV_ROOT)/clean:
-	@rm -f $(GESUMMV_ROOT)/clang
-	@rm -f $(GESUMMV_ROOT)/gcc
-	@rm -f $(GESUMMV_ROOT)/jlm-*
-	@rm -f $(GESUMMV_ROOT)/OPTO*
-	@rm -f $(GESUMMV_ROOT)/*.rvsdg
-	@rm -f $(GESUMMV_ROOT)/*.ll
-	@rm -f $(GESUMMV_ROOT)/*.o
-
 
 .PHONY: $(GESUMMV_ROOT)/clean-target
 $(GESUMMV_ROOT)/clean-target:

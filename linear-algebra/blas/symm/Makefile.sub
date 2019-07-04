@@ -33,16 +33,6 @@ $(SYMM_ROOT)/size:
 	size $(SYMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/symm-$(TARGET)-size.txt
 
 
-.PHONY: $(SYMM_ROOT)/clean
-$(SYMM_ROOT)/clean:
-	@rm -f $(SYMM_ROOT)/clang
-	@rm -f $(SYMM_ROOT)/gcc
-	@rm -f $(SYMM_ROOT)/jlm-*
-	@rm -f $(SYMM_ROOT)/OPTO*
-	@rm -f $(SYMM_ROOT)/*.rvsdg
-	@rm -f $(SYMM_ROOT)/*.ll
-	@rm -f $(SYMM_ROOT)/*.o
-
 
 .PHONY: $(SYMM_ROOT)/clean-target
 $(SYMM_ROOT)/clean-target:

@@ -33,16 +33,6 @@ $(GRAMSCHMIDT_ROOT)/size:
 	size $(GRAMSCHMIDT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gramschmidt-$(TARGET)-size.txt
 
 
-.PHONY: $(GRAMSCHMIDT_ROOT)/clean
-$(GRAMSCHMIDT_ROOT)/clean:
-	@rm -f $(GRAMSCHMIDT_ROOT)/clang
-	@rm -f $(GRAMSCHMIDT_ROOT)/gcc
-	@rm -f $(GRAMSCHMIDT_ROOT)/jlm-*
-	@rm -f $(GRAMSCHMIDT_ROOT)/OPTO*
-	@rm -f $(GRAMSCHMIDT_ROOT)/*.rvsdg
-	@rm -f $(GRAMSCHMIDT_ROOT)/*.ll
-	@rm -f $(GRAMSCHMIDT_ROOT)/*.o
-
 
 .PHONY: $(GRAMSCHMIDT_ROOT)/clean-target
 $(GRAMSCHMIDT_ROOT)/clean-target:
