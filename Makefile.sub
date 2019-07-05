@@ -14,6 +14,7 @@ echo "polybench-timetable    Collects the excution time for all benchmarks and t
 echo "polybench-size         Collects the text size of sepcified target."
 echo "                       Default target is COMP1 but can also be set by TARGET"
 echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
+echo "polybench-sizetable    Collects the text size for all benchmarks and targets"
 echo "polybench-jlmstats     Collects JLM compilation metrics for all benchmarks."
 echo "polybench-help         Prints possible options for COMP1, COMP2, and TARGET"
 endef
@@ -243,6 +244,25 @@ polybench-timetable: polybench-clean polybench
 		$(foreach TARGET, $(COMPILATION_TARGETS), \
 			TIME=`$(BENCHMARK_ROOT)/$(TARGET)` ; \
 			echo -n " $${TIME}" ; \
+		) \
+		echo "" ; \
+	)
+
+.PHONY: polybench-sizetable
+polybench-sizetable: CPPFLAGS += -DPOLYBENCH_USE_C99_PROTO
+polybench-sizetable: polybench-clean polybench
+	@echo -n "# benchmark "
+	@$(foreach TARGET, $(COMPILATION_TARGETS), \
+		echo -n "$(TARGET)" ; \
+	)
+	@echo ""
+	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
+		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
+		\
+		echo -n "$(BENCHMARK)" ; \
+		$(foreach TARGET, $(COMPILATION_TARGETS), \
+			SIZE=`size $(BENCHMARK_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs`; \
+			echo -n " $${SIZE}" ; \
 		) \
 		echo "" ; \
 	)
