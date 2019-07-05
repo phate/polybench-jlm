@@ -27,8 +27,3 @@ $(BICG_ROOT)/compare:
 $(BICG_ROOT)/time:
 	$(BICG_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/bicg-$(TARGET)-time.txt
 
-
-.PHONY: $(BICG_ROOT)/size
-$(BICG_ROOT)/size:
-	size $(BICG_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/bicg-$(TARGET)-size.txt
-

@@ -27,8 +27,3 @@ $(TRMM_ROOT)/compare:
 $(TRMM_ROOT)/time:
 	$(TRMM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/trmm-$(TARGET)-time.txt
 
-
-.PHONY: $(TRMM_ROOT)/size
-$(TRMM_ROOT)/size:
-	size $(TRMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/trmm-$(TARGET)-size.txt
-

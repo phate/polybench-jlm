@@ -27,8 +27,3 @@ $(GESUMMV_ROOT)/compare:
 $(GESUMMV_ROOT)/time:
 	$(GESUMMV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gesummv-$(TARGET)-time.txt
 
-
-.PHONY: $(GESUMMV_ROOT)/size
-$(GESUMMV_ROOT)/size:
-	size $(GESUMMV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gesummv-$(TARGET)-size.txt
-

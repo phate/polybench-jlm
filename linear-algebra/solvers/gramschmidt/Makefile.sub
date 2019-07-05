@@ -27,8 +27,3 @@ $(GRAMSCHMIDT_ROOT)/compare:
 $(GRAMSCHMIDT_ROOT)/time:
 	$(GRAMSCHMIDT_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gramschmidt-$(TARGET)-time.txt
 
-
-.PHONY: $(GRAMSCHMIDT_ROOT)/size
-$(GRAMSCHMIDT_ROOT)/size:
-	size $(GRAMSCHMIDT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gramschmidt-$(TARGET)-size.txt
-

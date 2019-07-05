@@ -27,8 +27,3 @@ $(SEIDEL_2D_ROOT)/compare:
 $(SEIDEL_2D_ROOT)/time:
 	$(SEIDEL_2D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/seidel-2d-$(TARGET)-time.txt
 
-
-.PHONY: $(SEIDEL_2D_ROOT)/size
-$(SEIDEL_2D_ROOT)/size:
-	size $(SEIDEL_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/seidel-2d-$(TARGET)-size.txt
-

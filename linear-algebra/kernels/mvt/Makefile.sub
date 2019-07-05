@@ -27,8 +27,3 @@ $(MVT_ROOT)/compare:
 $(MVT_ROOT)/time:
 	$(MVT_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/mvt-$(TARGET)-time.txt
 
-
-.PHONY: $(MVT_ROOT)/size
-$(MVT_ROOT)/size:
-	size $(MVT_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/mvt-$(TARGET)-size.txt
-

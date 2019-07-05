@@ -27,8 +27,3 @@ $(CHOLESKY_ROOT)/compare:
 $(CHOLESKY_ROOT)/time:
 	$(CHOLESKY_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/cholesky-$(TARGET)-time.txt
 
-
-.PHONY: $(CHOLESKY_ROOT)/size
-$(CHOLESKY_ROOT)/size:
-	size $(CHOLESKY_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/cholesky-$(TARGET)-size.txt
-

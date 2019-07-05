@@ -129,6 +129,7 @@ POLY_BENCHMARKS = \
 
 COMP1 ?= jlm-LLCO0
 COMP2 ?= OPTO3-LLCO3
+TARGET ?= $(COMP1)
 
 .PHONY: polybench-compare
 polybench-compare: llvm-strip $(COMP1) $(COMP2)
@@ -146,14 +147,14 @@ polybench-time: $(POLYBENCH_RESULTS)                       # Create result direc
 polybench-time: $(patsubst %, %/time, $(POLY_BENCHMARKS))  # Time the target
 
 .PHONY: polybench-size
-polybench-size: llvm-strip
 polybench-size: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-size: TARGET ?= $(COMP1)
-polybench-size: TYPE = size
-polybench-size: polybench-clean-target                     # Clean the target
-polybench-size: $(TARGET)                                  # Build the target
-polybench-size: $(POLYBENCH_RESULTS)                       # Create result directory
-polybench-size: $(patsubst %, %/size, $(POLY_BENCHMARKS))  # Time the target
+polybench-size: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
+	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
+		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-size.txt) \
+		\
+		size $(BENCHMARK)/$(TARGET) | tail -1 | cut -f1 | xargs > $(RESULTFILE) ; \
+	)
+
 
 $(POLYBENCH_RESULTS):
 	mkdir -p $(POLYBENCH_RESULTS)

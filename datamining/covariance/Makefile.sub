@@ -31,9 +31,3 @@ $(COVARIANCE_ROOT)/compare:
 $(COVARIANCE_ROOT)/time:
 	$(COVARIANCE_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/covariance-$(TARGET)-time.txt
 
-## SIZE
-
-.PHONY: $(COVARIANCE_ROOT)/size
-$(COVARIANCE_ROOT)/size:
-	size $(COVARIANCE_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/covariance-$(TARGET)-size.txt
-

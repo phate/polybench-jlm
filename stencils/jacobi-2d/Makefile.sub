@@ -27,8 +27,3 @@ $(JACOBI_2D_ROOT)/compare:
 $(JACOBI_2D_ROOT)/time:
 	$(JACOBI_2D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/jacobi-2d-$(TARGET)-time.txt
 
-
-.PHONY: $(JACOBI_2D_ROOT)/size
-$(JACOBI_2D_ROOT)/size:
-	size $(JACOBI_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/jacobi-2d-$(TARGET)-size.txt
-
