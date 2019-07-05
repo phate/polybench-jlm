@@ -22,8 +22,3 @@ $(3MM_ROOT)/compare:
 	@rm -rf /tmp/3mm-$(COMP1).log
 	@rm -rf /tmp/3mm-$(COMP2).log
 
-
-.PHONY: $(3MM_ROOT)/time
-$(3MM_ROOT)/time:
-	$(3MM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/3mm-$(TARGET)-time.txt
-

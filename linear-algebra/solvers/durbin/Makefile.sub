@@ -22,8 +22,3 @@ $(DURBIN_ROOT)/compare:
 	@rm -rf /tmp/durbin-$(COMP1).log
 	@rm -rf /tmp/durbin-$(COMP2).log
 
-
-.PHONY: $(DURBIN_ROOT)/time
-$(DURBIN_ROOT)/time:
-	$(DURBIN_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/durbin-$(TARGET)-time.txt
-

@@ -22,8 +22,3 @@ $(JACOBI_1D_ROOT)/compare:
 	@rm -rf /tmp/jacobi-1d-$(COMP1).log
 	@rm -rf /tmp/jacobi-1d-$(COMP2).log
 
-
-.PHONY: $(JACOBI_1D_ROOT)/time
-$(JACOBI_1D_ROOT)/time:
-	$(JACOBI_1D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/jacobi-1d-$(TARGET)-time.txt
-

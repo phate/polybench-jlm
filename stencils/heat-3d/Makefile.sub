@@ -22,8 +22,3 @@ $(HEAT_3D_ROOT)/compare:
 	@rm -rf /tmp/heat-3d-$(COMP1).log
 	@rm -rf /tmp/heat-3d-$(COMP2).log
 
-
-.PHONY: $(HEAT_3D_ROOT)/time
-$(HEAT_3D_ROOT)/time:
-	$(HEAT_3D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/heat-3d-$(TARGET)-time.txt
-

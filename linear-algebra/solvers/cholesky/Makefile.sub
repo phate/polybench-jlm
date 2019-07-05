@@ -22,8 +22,3 @@ $(CHOLESKY_ROOT)/compare:
 	@rm -rf /tmp/cholesky-$(COMP1).log
 	@rm -rf /tmp/cholesky-$(COMP2).log
 
-
-.PHONY: $(CHOLESKY_ROOT)/time
-$(CHOLESKY_ROOT)/time:
-	$(CHOLESKY_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/cholesky-$(TARGET)-time.txt
-

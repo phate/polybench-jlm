@@ -22,8 +22,3 @@ $(SYR2K_ROOT)/compare:
 	@rm -rf /tmp/syr2k-$(COMP1).log
 	@rm -rf /tmp/syr2k-$(COMP2).log
 
-
-.PHONY: $(SYR2K_ROOT)/time
-$(SYR2K_ROOT)/time:
-	$(SYR2K_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/syr2k-$(TARGET)-time.txt
-

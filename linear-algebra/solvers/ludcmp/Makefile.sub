@@ -22,8 +22,3 @@ $(LUDCMP_ROOT)/compare:
 	@rm -rf /tmp/ludcmp-$(COMP1).log
 	@rm -rf /tmp/ludcmp-$(COMP2).log
 
-
-.PHONY: $(LUDCMP_ROOT)/time
-$(LUDCMP_ROOT)/time:
-	$(LUDCMP_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/ludcmp-$(TARGET)-time.txt
-

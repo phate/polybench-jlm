@@ -22,8 +22,3 @@ $(DOITGEN_ROOT)/compare:
 	@rm -rf /tmp/doitgen-$(COMP1).log
 	@rm -rf /tmp/doitgen-$(COMP2).log
 
-
-.PHONY: $(DOITGEN_ROOT)/time
-$(DOITGEN_ROOT)/time:
-	$(DOITGEN_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/doitgen-$(TARGET)-time.txt
-

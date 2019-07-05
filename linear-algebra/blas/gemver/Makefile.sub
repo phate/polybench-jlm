@@ -26,8 +26,3 @@ $(GEMVER_ROOT)/compare:
 	@rm -rf /tmp/gemver-$(COMP1).log
 	@rm -rf /tmp/gemver-$(COMP2).log
 
-
-.PHONY: $(GEMVER_ROOT)/time
-$(GEMVER_ROOT)/time:
-	$(GEMVER_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gemver-$(TARGET)-time.txt
-

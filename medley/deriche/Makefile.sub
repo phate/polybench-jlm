@@ -22,8 +22,3 @@ $(DERICHE_ROOT)/compare:
 	@rm -rf /tmp/deriche-$(COMP1).log
 	@rm -rf /tmp/deriche-$(COMP2).log
 
-
-.PHONY: $(DERICHE_ROOT)/time
-$(DERICHE_ROOT)/time:
-	$(DERICHE_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/deriche-$(TARGET)-time.txt
-

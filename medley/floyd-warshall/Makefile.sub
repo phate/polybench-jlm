@@ -22,8 +22,3 @@ $(FLOYD_WARSHALL_ROOT)/compare:
 	@rm -rf /tmp/floyd-warshall-$(COMP1).log
 	@rm -rf /tmp/floyd-warshall-$(COMP2).log
 
-
-.PHONY: $(FLOYD_WARSHALL_ROOT)/time
-$(FLOYD_WARSHALL_ROOT)/time:
-	$(FLOYD_WARSHALL_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/floyd-warshall-$(TARGET)-time.txt
-

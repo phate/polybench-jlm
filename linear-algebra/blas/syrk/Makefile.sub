@@ -22,8 +22,3 @@ $(SYRK_ROOT)/compare:
 	@rm -rf /tmp/syrk-$(COMP1).log
 	@rm -rf /tmp/syrk-$(COMP2).log
 
-
-.PHONY: $(SYRK_ROOT)/time
-$(SYRK_ROOT)/time:
-	$(SYRK_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/syrk-$(TARGET)-time.txt
-

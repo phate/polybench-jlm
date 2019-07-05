@@ -22,8 +22,3 @@ $(LU_ROOT)/compare:
 	@rm -rf /tmp/lu-$(COMP1).log
 	@rm -rf /tmp/lu-$(COMP2).log
 
-
-.PHONY: $(LU_ROOT)/time
-$(LU_ROOT)/time:
-	$(LU_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/lu-$(TARGET)-time.txt
-

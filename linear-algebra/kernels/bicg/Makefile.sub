@@ -22,8 +22,3 @@ $(BICG_ROOT)/compare:
 	@rm -rf /tmp/bicg-$(COMP1).log
 	@rm -rf /tmp/bicg-$(COMP2).log
 
-
-.PHONY: $(BICG_ROOT)/time
-$(BICG_ROOT)/time:
-	$(BICG_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/bicg-$(TARGET)-time.txt
-
