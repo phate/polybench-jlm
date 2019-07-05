@@ -14,14 +14,3 @@ $(CORRELATION_ROOT)/jlm-%: $(CORRELATION_SRC)
 $(CORRELATION_ROOT)/OPTO%: $(CORRELATION_SRC)
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(CORRELATION_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-.PHONY: $(CORRELATION_ROOT)/compare
-$(CORRELATION_ROOT)/compare:
-	@echo "CORRELATION:"
-	@echo "    Running $(COMP1) version"
-	@$(CORRELATION_ROOT)/$(COMP1) 2> /tmp/correlation-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(CORRELATION_ROOT)/$(COMP2) 2> /tmp/correlation-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/correlation-$(COMP1).log /tmp/correlation-$(COMP2).log
-	@rm -rf /tmp/correlation-$(COMP1).log
-	@rm -rf /tmp/correlation-$(COMP2).log
-

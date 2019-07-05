@@ -10,15 +10,3 @@ $(SYRK_ROOT)/jlm-%: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
 $(SYRK_ROOT)/OPTO%: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(SYRK_ROOT)/compare
-$(SYRK_ROOT)/compare:
-	@echo "SYRK:"
-	@echo "    Running $(COMP1) version"
-	@$(SYRK_ROOT)/$(COMP1) 2> /tmp/syrk-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(SYRK_ROOT)/$(COMP2) 2> /tmp/syrk-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/syrk-$(COMP1).log /tmp/syrk-$(COMP2).log
-	@rm -rf /tmp/syrk-$(COMP1).log
-	@rm -rf /tmp/syrk-$(COMP2).log
-

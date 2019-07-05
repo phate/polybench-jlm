@@ -14,14 +14,3 @@ $(COVARIANCE_ROOT)/jlm-%: $(COVARIANCE_SRC)
 $(COVARIANCE_ROOT)/OPTO%: $(COVARIANCE_SRC)
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(COVARIANCE_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-.PHONY: $(COVARIANCE_ROOT)/compare
-$(COVARIANCE_ROOT)/compare:
-	@echo "COVARIANCE:"
-	@echo "    Running $(COMP1) version"
-	@$(COVARIANCE_ROOT)/$(COMP1) 2> /tmp/covariance-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(COVARIANCE_ROOT)/$(COMP2) 2> /tmp/covariance-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/covariance-$(COMP1).log /tmp/covariance-$(COMP2).log
-	@rm -rf /tmp/covariance-$(COMP1).log
-	@rm -rf /tmp/covariance-$(COMP2).log
-

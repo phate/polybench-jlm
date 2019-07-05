@@ -10,15 +10,3 @@ $(TRISOLV_ROOT)/jlm-%: $(TRISOLV_ROOT)/trisolv.c $(POLYBENCH_ROOT)/utilities/pol
 $(TRISOLV_ROOT)/OPTO%: $(TRISOLV_ROOT)/trisolv.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(TRISOLV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(TRISOLV_ROOT)/compare
-$(TRISOLV_ROOT)/compare:
-	@echo "TRISOLV:"
-	@echo "    Running $(COMP1) version"
-	@$(TRISOLV_ROOT)/$(COMP1) 2> /tmp/trisolv-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(TRISOLV_ROOT)/$(COMP2) 2> /tmp/trisolv-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/trisolv-$(COMP1).log /tmp/trisolv-$(COMP2).log
-	@rm -rf /tmp/trisolv-$(COMP1).log
-	@rm -rf /tmp/trisolv-$(COMP2).log
-

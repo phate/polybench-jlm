@@ -10,15 +10,3 @@ $(GRAMSCHMIDT_ROOT)/jlm-%: $(GRAMSCHMIDT_ROOT)/gramschmidt.c $(POLYBENCH_ROOT)/u
 $(GRAMSCHMIDT_ROOT)/OPTO%: $(GRAMSCHMIDT_ROOT)/gramschmidt.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GRAMSCHMIDT_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(GRAMSCHMIDT_ROOT)/compare
-$(GRAMSCHMIDT_ROOT)/compare:
-	@echo "GRAMSCHMIDT:"
-	@echo "    Running $(COMP1) version"
-	@$(GRAMSCHMIDT_ROOT)/$(COMP1) 2> /tmp/gramschmidt-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(GRAMSCHMIDT_ROOT)/$(COMP2) 2> /tmp/gramschmidt-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/gramschmidt-$(COMP1).log /tmp/gramschmidt-$(COMP2).log
-	@rm -rf /tmp/gramschmidt-$(COMP1).log
-	@rm -rf /tmp/gramschmidt-$(COMP2).log
-

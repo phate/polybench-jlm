@@ -132,9 +132,21 @@ COMP2 ?= OPTO3-LLCO3
 TARGET ?= $(COMP1)
 
 .PHONY: polybench-compare
-polybench-compare: llvm-strip $(COMP1) $(COMP2)
 polybench-compare: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-compare: $(patsubst %, %/compare, $(POLY_BENCHMARKS)) # Compare the two targets of all benchmarks
+polybench-compare: llvm-strip polybench-clean $(COMP1) $(COMP2)
+	@$(foreach BENCHMARKDIR, $(POLY_BENCHMARKS), \
+		$(eval BENCHMARK = $(notdir $(BENCHMARKDIR))) \
+		$(eval DIFF = $(POLYBENCH_ROOT)/utilities/diff.sh) \
+		\
+		echo "$(BENCHMARK):" ; \
+		echo "    Running $(COMP1) version" ; \
+		$(BENCHMARKDIR)/$(COMP1) 2> /tmp/$(notdir $(BENCHMARK))-$(COMP1).log ; \
+		echo "    Running $(COMP2) version" ; \
+		$(BENCHMARKDIR)/$(COMP2) 2> /tmp/$(notdir $(BENCHMARK))-$(COMP2).log ; \
+		$(DIFF) /tmp/$(BENCHMARK)-$(COMP1).log /tmp/$(BENCHMARK)-$(COMP2).log ; \
+		rm -f /tmp/$(BENCHMARK)-$(COMP1).log ; \
+		rm -f /tmp/$(BENCHMARK)-$(COMP2).log ; \
+	)
 
 .PHONY: polybench-time
 polybench-time: CPPFLAGS += -DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME

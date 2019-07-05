@@ -10,15 +10,3 @@ $(FLOYD_WARSHALL_ROOT)/jlm-%: $(FLOYD_WARSHALL_ROOT)/floyd-warshall.c $(POLYBENC
 $(FLOYD_WARSHALL_ROOT)/OPTO%: $(FLOYD_WARSHALL_ROOT)/floyd-warshall.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(FLOYD_WARSHALL_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(FLOYD_WARSHALL_ROOT)/compare
-$(FLOYD_WARSHALL_ROOT)/compare:
-	@echo "FLOYD_WARSHALL:"
-	@echo "    Running $(COMP1) version"
-	@$(FLOYD_WARSHALL_ROOT)/$(COMP1) 2> /tmp/floyd-warshall-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(FLOYD_WARSHALL_ROOT)/$(COMP2) 2> /tmp/floyd-warshall-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/floyd-warshall-$(COMP1).log /tmp/floyd-warshall-$(COMP2).log
-	@rm -rf /tmp/floyd-warshall-$(COMP1).log
-	@rm -rf /tmp/floyd-warshall-$(COMP2).log
-

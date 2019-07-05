@@ -10,15 +10,3 @@ $(GESUMMV_ROOT)/jlm-%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/pol
 $(GESUMMV_ROOT)/OPTO%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(GESUMMV_ROOT)/compare
-$(GESUMMV_ROOT)/compare:
-	@echo "GESUMMV:"
-	@echo "    Running $(COMP1) version"
-	@$(GESUMMV_ROOT)/$(COMP1) 2> /tmp/gesummv-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(GESUMMV_ROOT)/$(COMP2) 2> /tmp/gesummv-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/gesummv-$(COMP1).log /tmp/gesummv-$(COMP2).log
-	@rm -rf /tmp/gesummv-$(COMP1).log
-	@rm -rf /tmp/gesummv-$(COMP2).log
-

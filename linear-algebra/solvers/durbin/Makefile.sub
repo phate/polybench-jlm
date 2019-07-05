@@ -10,15 +10,3 @@ $(DURBIN_ROOT)/jlm-%: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybe
 $(DURBIN_ROOT)/OPTO%: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(DURBIN_ROOT)/compare
-$(DURBIN_ROOT)/compare:
-	@echo "DURBIN:"
-	@echo "    Running $(COMP1) version"
-	@$(DURBIN_ROOT)/$(COMP1) 2> /tmp/durbin-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(DURBIN_ROOT)/$(COMP2) 2> /tmp/durbin-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/durbin-$(COMP1).log /tmp/durbin-$(COMP2).log
-	@rm -rf /tmp/durbin-$(COMP1).log
-	@rm -rf /tmp/durbin-$(COMP2).log
-

@@ -10,15 +10,3 @@ $(SYMM_ROOT)/jlm-%: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
 $(SYMM_ROOT)/OPTO%: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SYMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(SYMM_ROOT)/compare
-$(SYMM_ROOT)/compare:
-	@echo "SYMM:"
-	@echo "    Running $(COMP1) version"
-	@$(SYMM_ROOT)/$(COMP1) 2> /tmp/symm-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(SYMM_ROOT)/$(COMP2) 2> /tmp/symm-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/symm-$(COMP1).log /tmp/symm-$(COMP2).log
-	@rm -rf /tmp/symm-$(COMP1).log
-	@rm -rf /tmp/symm-$(COMP2).log
-

@@ -10,15 +10,3 @@ $(CHOLESKY_ROOT)/jlm-%: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/
 $(CHOLESKY_ROOT)/OPTO%: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(CHOLESKY_ROOT)/compare
-$(CHOLESKY_ROOT)/compare:
-	@echo "CHOLESKY:"
-	@echo "    Running $(COMP1) version"
-	@$(CHOLESKY_ROOT)/$(COMP1) 2> /tmp/cholesky-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(CHOLESKY_ROOT)/$(COMP2) 2> /tmp/cholesky-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/cholesky-$(COMP1).log /tmp/cholesky-$(COMP2).log
-	@rm -rf /tmp/cholesky-$(COMP1).log
-	@rm -rf /tmp/cholesky-$(COMP2).log
-

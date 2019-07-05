@@ -10,15 +10,3 @@ $(MVT_ROOT)/jlm-%: $(MVT_ROOT)/mvt.c $(POLYBENCH_ROOT)/utilities/polybench.c
 $(MVT_ROOT)/OPTO%: $(MVT_ROOT)/mvt.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(MVT_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(MVT_ROOT)/compare
-$(MVT_ROOT)/compare:
-	@echo "MVT:"
-	@echo "    Running $(COMP1) version"
-	@$(MVT_ROOT)/$(COMP1) 2> /tmp/mvt-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(MVT_ROOT)/$(COMP2) 2> /tmp/mvt-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/mvt-$(COMP1).log /tmp/mvt-$(COMP2).log
-	@rm -rf /tmp/mvt-$(COMP1).log
-	@rm -rf /tmp/mvt-$(COMP2).log
-

@@ -10,15 +10,3 @@ $(TRMM_ROOT)/jlm-%: $(TRMM_ROOT)/trmm.c $(POLYBENCH_ROOT)/utilities/polybench.c
 $(TRMM_ROOT)/OPTO%: $(TRMM_ROOT)/trmm.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(TRMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(TRMM_ROOT)/compare
-$(TRMM_ROOT)/compare:
-	@echo "TRMM:"
-	@echo "    Running $(COMP1) version"
-	@$(TRMM_ROOT)/$(COMP1) 2> /tmp/trmm-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(TRMM_ROOT)/$(COMP2) 2> /tmp/trmm-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/trmm-$(COMP1).log /tmp/trmm-$(COMP2).log
-	@rm -rf /tmp/trmm-$(COMP1).log
-	@rm -rf /tmp/trmm-$(COMP2).log
-

@@ -10,15 +10,3 @@ $(ADI_ROOT)/jlm-%: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
 $(ADI_ROOT)/OPTO%: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(ADI_ROOT)/compare
-$(ADI_ROOT)/compare:
-	@echo "ADI:"
-	@echo "    Running $(COMP1) version"
-	@$(ADI_ROOT)/$(COMP1) 2> /tmp/adi-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(ADI_ROOT)/$(COMP2) 2> /tmp/adi-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/adi-$(COMP1).log /tmp/adi-$(COMP2).log
-	@rm -rf /tmp/adi-$(COMP1).log
-	@rm -rf /tmp/adi-$(COMP2).log
-
