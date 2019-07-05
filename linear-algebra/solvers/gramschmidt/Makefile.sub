@@ -22,8 +22,3 @@ $(GRAMSCHMIDT_ROOT)/compare:
 	@rm -rf /tmp/gramschmidt-$(COMP1).log
 	@rm -rf /tmp/gramschmidt-$(COMP2).log
 
-
-.PHONY: $(GRAMSCHMIDT_ROOT)/time
-$(GRAMSCHMIDT_ROOT)/time:
-	$(GRAMSCHMIDT_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gramschmidt-$(TARGET)-time.txt
-

@@ -22,8 +22,3 @@ $(TRISOLV_ROOT)/compare:
 	@rm -rf /tmp/trisolv-$(COMP1).log
 	@rm -rf /tmp/trisolv-$(COMP2).log
 
-
-.PHONY: $(TRISOLV_ROOT)/time
-$(TRISOLV_ROOT)/time:
-	$(TRISOLV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/trisolv-$(TARGET)-time.txt
-

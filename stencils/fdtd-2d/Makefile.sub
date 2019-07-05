@@ -22,8 +22,3 @@ $(FDTD_2D_ROOT)/compare:
 	@rm -rf /tmp/fdtd-2d-$(COMP1).log
 	@rm -rf /tmp/fdtd-2d-$(COMP2).log
 
-
-.PHONY: $(FDTD_2D_ROOT)/time
-$(FDTD_2D_ROOT)/time:
-	$(FDTD_2D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/fdtd-2d-$(TARGET)-time.txt
-

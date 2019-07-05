@@ -22,8 +22,3 @@ $(MVT_ROOT)/compare:
 	@rm -rf /tmp/mvt-$(COMP1).log
 	@rm -rf /tmp/mvt-$(COMP2).log
 
-
-.PHONY: $(MVT_ROOT)/time
-$(MVT_ROOT)/time:
-	$(MVT_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/mvt-$(TARGET)-time.txt
-

@@ -22,8 +22,3 @@ $(ATAX_ROOT)/compare:
 	@rm -rf /tmp/atax-$(COMP1).log
 	@rm -rf /tmp/atax-$(COMP2).log
 
-
-.PHONY: $(ATAX_ROOT)/time
-$(ATAX_ROOT)/time:
-	$(ATAX_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/atax-$(TARGET)-time.txt
-

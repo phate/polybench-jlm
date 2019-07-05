@@ -22,8 +22,3 @@ $(GESUMMV_ROOT)/compare:
 	@rm -rf /tmp/gesummv-$(COMP1).log
 	@rm -rf /tmp/gesummv-$(COMP2).log
 
-
-.PHONY: $(GESUMMV_ROOT)/time
-$(GESUMMV_ROOT)/time:
-	$(GESUMMV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gesummv-$(TARGET)-time.txt
-

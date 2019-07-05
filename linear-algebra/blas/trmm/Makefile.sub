@@ -22,8 +22,3 @@ $(TRMM_ROOT)/compare:
 	@rm -rf /tmp/trmm-$(COMP1).log
 	@rm -rf /tmp/trmm-$(COMP2).log
 
-
-.PHONY: $(TRMM_ROOT)/time
-$(TRMM_ROOT)/time:
-	$(TRMM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/trmm-$(TARGET)-time.txt
-

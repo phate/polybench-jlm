@@ -22,8 +22,3 @@ $(SYMM_ROOT)/compare:
 	@rm -rf /tmp/symm-$(COMP1).log
 	@rm -rf /tmp/symm-$(COMP2).log
 
-
-.PHONY: $(SYMM_ROOT)/time
-$(SYMM_ROOT)/time:
-	$(SYMM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/symm-$(TARGET)-time.txt
-

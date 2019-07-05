@@ -25,9 +25,3 @@ $(CORRELATION_ROOT)/compare:
 	@rm -rf /tmp/correlation-$(COMP1).log
 	@rm -rf /tmp/correlation-$(COMP2).log
 
-### TIME
-
-.PHONY: $(CORRELATION_ROOT)/time
-$(CORRELATION_ROOT)/time:
-	$(CORRELATION_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/correlation-$(TARGET)-time.txt
-

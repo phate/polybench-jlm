@@ -22,8 +22,3 @@ $(NUSSINOV_ROOT)/compare:
 	@rm -rf /tmp/nussinov-$(COMP1).log
 	@rm -rf /tmp/nussinov-$(COMP2).log
 
-
-.PHONY: $(NUSSINOV_ROOT)/time
-$(NUSSINOV_ROOT)/time:
-	$(NUSSINOV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/nussinov-$(TARGET)-time.txt
-

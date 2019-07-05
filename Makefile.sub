@@ -137,14 +137,14 @@ polybench-compare: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
 polybench-compare: $(patsubst %, %/compare, $(POLY_BENCHMARKS)) # Compare the two targets of all benchmarks
 
 .PHONY: polybench-time
-polybench-time: llvm-strip
 polybench-time: CPPFLAGS += -DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
-polybench-time: TARGET ?= $(COMP1)
-polybench-time: TYPE = time
-polybench-time: polybench-clean-target                     # Clean the target
-polybench-time: $(TARGET)                                  # Build the target
-polybench-time: $(POLYBENCH_RESULTS)                       # Create result directory
-polybench-time: $(patsubst %, %/time, $(POLY_BENCHMARKS))  # Time the target
+polybench-time: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
+	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
+		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-time.txt) \
+		\
+		echo "$(BENCHMARK)/$(TARGET) > $(RESULTFILE)" ; \
+		$(BENCHMARK)/$(TARGET) > $(RESULTFILE) ; \
+	)
 
 .PHONY: polybench-size
 polybench-size: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO

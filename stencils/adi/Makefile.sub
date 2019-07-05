@@ -22,8 +22,3 @@ $(ADI_ROOT)/compare:
 	@rm -rf /tmp/adi-$(COMP1).log
 	@rm -rf /tmp/adi-$(COMP2).log
 
-
-.PHONY: $(ADI_ROOT)/time
-$(ADI_ROOT)/time:
-	$(ADI_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/adi-$(TARGET)-time.txt
-

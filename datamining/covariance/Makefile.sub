@@ -25,9 +25,3 @@ $(COVARIANCE_ROOT)/compare:
 	@rm -rf /tmp/covariance-$(COMP1).log
 	@rm -rf /tmp/covariance-$(COMP2).log
 
-### TIME
-
-.PHONY: $(COVARIANCE_ROOT)/time
-$(COVARIANCE_ROOT)/time:
-	$(COVARIANCE_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/covariance-$(TARGET)-time.txt
-
