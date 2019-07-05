@@ -10,6 +10,7 @@ echo "                       The versions to compare is defined by COMP1 and COM
 echo "polybench-time         Collects the execution time of specified target."
 echo "                       Default target is COMP1 but can also be set by TARGET"
 echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
+echo "polybench-timetable    Collects the excution time for all benchmarks and targets"
 echo "polybench-size         Collects the text size of sepcified target."
 echo "                       Default target is COMP1 but can also be set by TARGET"
 echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
@@ -127,6 +128,51 @@ POLY_BENCHMARKS = \
 	$(JACOBI_2D_ROOT) \
 	$(SEIDEL_2D_ROOT)
 
+COMPILATION_TARGETS = \
+	OPTO0-LLCO0 \
+	OPTO0-LLCO1 \
+	OPTO0-LLCO3 \
+	OPTO0-LLCO0-stripped \
+	OPTO0-LLCO3-stripped \
+	\
+	OPTO1-LLCO0 \
+	OPTO1-LLCO1 \
+	OPTO1-LLCO3 \
+	OPTO1-LLCO0-stripped \
+	OPTO1-LLCO3-stripped \
+	\
+	OPTO2-LLCO0 \
+	OPTO2-LLCO1 \
+	OPTO2-LLCO3 \
+	OPTO2-LLCO0-stripped \
+	OPTO2-LLCO3-stripped \
+	\
+	OPTO3-LLCO0 \
+	OPTO3-LLCO1 \
+	OPTO3-LLCO3 \
+	OPTO3-LLCO0-stripped \
+	OPTO3-LLCO3-stripped \
+	\
+	OPTO3-no-vec-LLCO0 \
+	OPTO3-no-vec-LLCO3 \
+	OPTO3-no-vec-LLCO0-stripped \
+	OPTO3-no-vec-LLCO3-stripped \
+	\
+	OPTOs-LLCO0 \
+	OPTOs-LLCO1 \
+	OPTOs-LLCO3 \
+	OPTOs-LLCO0-stripped \
+	OPTOs-LLCO3-stripped \
+	\
+	jlm-LLCO0 \
+	jlm-LLCO1 \
+	jlm-LLCO3 \
+	\
+	jlm-no-unroll-LLCO3 \
+	jlm-no-opt-LLCO3 \
+	clang \
+	gcc \
+
 ### COMPARE, TIME, SIZE
 
 COMP1 ?= jlm-LLCO0
@@ -182,6 +228,25 @@ polybench-jlmstats: llvm-strip polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
 		cat $(BENCHMARK_ROOT)/jlmstats.log >> $(POLYBENCH_JLMSTATS) ; \
 	)
 
+.PHONY: polybench-timetable
+polybench-timetable: CPPFLAGS += -DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
+polybench-timetable: polybench-clean polybench
+	@echo -n "# benchmark "
+	@$(foreach TARGET, $(COMPILATION_TARGETS), \
+		echo -n "$(TARGET)" ; \
+	)
+	@echo ""
+	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
+		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
+		\
+		echo -n "$(BENCHMARK)" ; \
+		$(foreach TARGET, $(COMPILATION_TARGETS), \
+			TIME=`$(BENCHMARK_ROOT)/$(TARGET)` ; \
+			echo -n " $${TIME}" ; \
+		) \
+		echo "" ; \
+	)
+
 $(POLYBENCH_RESULTS):
 	mkdir -p $(POLYBENCH_RESULTS)
 
@@ -213,50 +278,7 @@ polybench-purge: polybench-clean llvm-strip-clean
 ### ALL
 
 .PHONY: polybench
-polybench: llvm-strip
-polybench:	OPTO0-LLCO0 \
-		OPTO0-LLCO1 \
-		OPTO0-LLCO3 \
-		OPTO0-LLCO0-stripped \
-		OPTO0-LLCO3-stripped \
-		\
-		OPTO1-LLCO0 \
-		OPTO1-LLCO1 \
-		OPTO1-LLCO3 \
-		OPTO1-LLCO0-stripped \
-		OPTO1-LLCO3-stripped \
-		\
-		OPTO2-LLCO0 \
-		OPTO2-LLCO1 \
-		OPTO2-LLCO3 \
-		OPTO2-LLCO0-stripped \
-		OPTO2-LLCO3-stripped \
-		\
-		OPTO3-LLCO0 \
-		OPTO3-LLCO1 \
-		OPTO3-LLCO3 \
-		OPTO3-LLCO0-stripped \
-		OPTO3-LLCO3-stripped \
-		\
-		OPTO3-no-vec-LLCO0 \
-		OPTO3-no-vec-LLCO3 \
-		OPTO3-no-vec-LLCO0-stripped \
-		OPTO3-no-vec-LLCO3-stripped \
-		\
-		OPTOs-LLCO0 \
-		OPTOs-LLCO1 \
-		OPTOs-LLCO3 \
-		OPTOs-LLCO0-stripped \
-		OPTOs-LLCO3-stripped \
-		\
-		jlm-LLCO0 \
-		jlm-LLCO1 \
-		jlm-LLCO3 \
-		\
-		jlm-no-unroll-LLCO3 \
-		jlm-no-opt-LLCO3 \
-		clang \
-		gcc \
+polybench: llvm-strip $(COMPILATION_TARGETS)
 
 ############################################################################
 # TARGETS FOR COMPILING ALL BENCHMARKS WITH DIFFERENT OPTIMIZATION OPTIONS #
