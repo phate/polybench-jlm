@@ -5,8 +5,7 @@ $(HEAT_3D_ROOT)/gcc: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polyb
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(HEAT_3D_ROOT)/$(@F) ${EXTRA_FLAGS}
 
 $(HEAT_3D_ROOT)/jlm-%: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
+	${POLYBENCH_ROOT}/jlc.py -s $(HEAT_3D_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(HEAT_3D_ROOT)/OPTO%: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
-

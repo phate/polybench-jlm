@@ -5,8 +5,7 @@ $(DERICHE_ROOT)/gcc: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polyb
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(DERICHE_ROOT)/$(@F) ${EXTRA_FLAGS}
 
 $(DERICHE_ROOT)/jlm-%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
+	${POLYBENCH_ROOT}/jlc.py -s $(DERICHE_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(DERICHE_ROOT)/OPTO%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
-

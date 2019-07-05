@@ -76,3 +76,4 @@ config.mk
 results
 */*/Makefile
 */*/*/Makefile
+jlmstats.log

@@ -5,8 +5,7 @@ $(CHOLESKY_ROOT)/gcc: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/po
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(CHOLESKY_ROOT)/$(@F) ${EXTRA_FLAGS}
 
 $(CHOLESKY_ROOT)/jlm-%: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
+	${POLYBENCH_ROOT}/jlc.py -s $(CHOLESKY_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(CHOLESKY_ROOT)/OPTO%: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
-

@@ -5,8 +5,7 @@ $(DURBIN_ROOT)/gcc: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybenc
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(DURBIN_ROOT)/$(@F) ${EXTRA_FLAGS}
 
 $(DURBIN_ROOT)/jlm-%: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
+	${POLYBENCH_ROOT}/jlc.py -s $(DURBIN_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(DURBIN_ROOT)/OPTO%: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
-
