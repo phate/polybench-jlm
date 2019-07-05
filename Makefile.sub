@@ -24,7 +24,6 @@ polybench-help:
 	@$(HELP_TEXT_POLYBENCH_TARGETS)
 
 CC=clang
-CPPFLAGS = -I. -Iutilities/
 
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
 POLYBENCH_JLMSTATS = $(POLYBENCH_RESULTS)/jlmstats.log
@@ -181,7 +180,8 @@ COMP2 ?= OPTO3-LLCO3
 TARGET ?= $(COMP1)
 
 .PHONY: polybench-compare
-polybench-compare: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
+polybench-compare: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
 polybench-compare: llvm-strip polybench-clean $(COMP1) $(COMP2)
 	@$(foreach BENCHMARKDIR, $(POLY_BENCHMARKS), \
 		$(eval BENCHMARK = $(notdir $(BENCHMARKDIR))) \
@@ -198,7 +198,8 @@ polybench-compare: llvm-strip polybench-clean $(COMP1) $(COMP2)
 	)
 
 .PHONY: polybench-time
-polybench-time: CPPFLAGS += -DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
+polybench-time: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
 polybench-time: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-time.txt) \
@@ -208,7 +209,8 @@ polybench-time: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 	)
 
 .PHONY: polybench-size
-polybench-size: CPPFLAGS += -DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
+polybench-size: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
 polybench-size: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-size.txt) \
@@ -219,7 +221,7 @@ polybench-size: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 .PHONY: polybench-jlmstats
 polybench-jlmstats: LLCOPT = LLCO0
 polybench-jlmstats: PIPELINE = jlm-LLC
-polybench-jlmstats: CPPFLAGS += --print-cfr-time
+polybench-jlmstats: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities --print-cfr-time
 polybench-jlmstats: llvm-strip polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
 	@rm -f $(POLYBENCH_JLMSTATS)
 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
@@ -297,6 +299,7 @@ polybench-purge: polybench-clean llvm-strip-clean
 ### ALL
 
 .PHONY: polybench
+polybench: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
 polybench: llvm-strip $(COMPILATION_TARGETS)
 
 ############################################################################
