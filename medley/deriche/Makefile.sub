@@ -10,15 +10,3 @@ $(DERICHE_ROOT)/jlm-%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/pol
 $(DERICHE_ROOT)/OPTO%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(DERICHE_ROOT)/compare
-$(DERICHE_ROOT)/compare:
-	@echo "DERICHE:"
-	@echo "    Running $(COMP1) version"
-	@$(DERICHE_ROOT)/$(COMP1) 2> /tmp/deriche-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(DERICHE_ROOT)/$(COMP2) 2> /tmp/deriche-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/deriche-$(COMP1).log /tmp/deriche-$(COMP2).log
-	@rm -rf /tmp/deriche-$(COMP1).log
-	@rm -rf /tmp/deriche-$(COMP2).log
-

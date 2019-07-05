@@ -10,15 +10,3 @@ $(LUDCMP_ROOT)/jlm-%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybe
 $(LUDCMP_ROOT)/OPTO%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(LUDCMP_ROOT)/compare
-$(LUDCMP_ROOT)/compare:
-	@echo "LUDCMP:"
-	@echo "    Running $(COMP1) version"
-	@$(LUDCMP_ROOT)/$(COMP1) 2> /tmp/ludcmp-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(LUDCMP_ROOT)/$(COMP2) 2> /tmp/ludcmp-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/ludcmp-$(COMP1).log /tmp/ludcmp-$(COMP2).log
-	@rm -rf /tmp/ludcmp-$(COMP1).log
-	@rm -rf /tmp/ludcmp-$(COMP2).log
-

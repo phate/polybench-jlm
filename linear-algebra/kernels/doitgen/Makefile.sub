@@ -10,15 +10,3 @@ $(DOITGEN_ROOT)/jlm-%: $(DOITGEN_ROOT)/doitgen.c $(POLYBENCH_ROOT)/utilities/pol
 $(DOITGEN_ROOT)/OPTO%: $(DOITGEN_ROOT)/doitgen.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DOITGEN_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(DOITGEN_ROOT)/compare
-$(DOITGEN_ROOT)/compare:
-	@echo "DOITGEN:"
-	@echo "    Running $(COMP1) version"
-	@$(DOITGEN_ROOT)/$(COMP1) 2> /tmp/doitgen-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(DOITGEN_ROOT)/$(COMP2) 2> /tmp/doitgen-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/doitgen-$(COMP1).log /tmp/doitgen-$(COMP2).log
-	@rm -rf /tmp/doitgen-$(COMP1).log
-	@rm -rf /tmp/doitgen-$(COMP2).log
-

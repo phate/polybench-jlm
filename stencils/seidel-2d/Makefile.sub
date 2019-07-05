@@ -10,15 +10,3 @@ $(SEIDEL_2D_ROOT)/jlm-%: $(SEIDEL_2D_ROOT)/seidel-2d.c $(POLYBENCH_ROOT)/utiliti
 $(SEIDEL_2D_ROOT)/OPTO%: $(SEIDEL_2D_ROOT)/seidel-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SEIDEL_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(SEIDEL_2D_ROOT)/compare
-$(SEIDEL_2D_ROOT)/compare:
-	@echo "SEIDEL_2D:"
-	@echo "    Running $(COMP1) version"
-	@$(SEIDEL_2D_ROOT)/$(COMP1) 2> /tmp/seidel-2d-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(SEIDEL_2D_ROOT)/$(COMP2) 2> /tmp/seidel-2d-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/seidel-2d-$(COMP1).log /tmp/seidel-2d-$(COMP2).log
-	@rm -rf /tmp/seidel-2d-$(COMP1).log
-	@rm -rf /tmp/seidel-2d-$(COMP2).log
-

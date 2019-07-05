@@ -10,15 +10,3 @@ $(NUSSINOV_ROOT)/jlm-%: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/
 $(NUSSINOV_ROOT)/OPTO%: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(NUSSINOV_ROOT)/compare
-$(NUSSINOV_ROOT)/compare:
-	@echo "NUSSINOV:"
-	@echo "    Running $(COMP1) version"
-	@$(NUSSINOV_ROOT)/$(COMP1) 2> /tmp/nussinov-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(NUSSINOV_ROOT)/$(COMP2) 2> /tmp/nussinov-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/nussinov-$(COMP1).log /tmp/nussinov-$(COMP2).log
-	@rm -rf /tmp/nussinov-$(COMP1).log
-	@rm -rf /tmp/nussinov-$(COMP2).log
-

@@ -14,16 +14,3 @@ $(GEMM_ROOT)/jlm-%: $(GEMM_SRC)
 $(GEMM_ROOT)/OPTO%: $(GEMM_SRC)
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-### COMPARE
-
-.PHONY: $(GEMM_ROOT)/compare
-$(GEMM_ROOT)/compare:
-	@echo "GEMM:"
-	@echo "    Running $(COMP1) version"
-	@$(GEMM_ROOT)/$(COMP1) 2> /tmp/gemm-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(GEMM_ROOT)/$(COMP2) 2> /tmp/gemm-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/gemm-$(COMP1).log /tmp/gemm-$(COMP2).log
-	@rm -rf /tmp/gemm-$(COMP1).log
-	@rm -rf /tmp/gemm-$(COMP2).log
-

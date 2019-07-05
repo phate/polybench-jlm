@@ -10,15 +10,3 @@ $(LU_ROOT)/jlm-%: $(LU_ROOT)/lu.c $(POLYBENCH_ROOT)/utilities/polybench.c
 $(LU_ROOT)/OPTO%: $(LU_ROOT)/lu.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(LU_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(LU_ROOT)/compare
-$(LU_ROOT)/compare:
-	@echo "LU:"
-	@echo "    Running $(COMP1) version"
-	@$(LU_ROOT)/$(COMP1) 2> /tmp/lu-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(LU_ROOT)/$(COMP2) 2> /tmp/lu-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/lu-$(COMP1).log /tmp/lu-$(COMP2).log
-	@rm -rf /tmp/lu-$(COMP1).log
-	@rm -rf /tmp/lu-$(COMP2).log
-

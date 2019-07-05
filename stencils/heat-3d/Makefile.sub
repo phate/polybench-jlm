@@ -10,15 +10,3 @@ $(HEAT_3D_ROOT)/jlm-%: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/pol
 $(HEAT_3D_ROOT)/OPTO%: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(HEAT_3D_ROOT)/compare
-$(HEAT_3D_ROOT)/compare:
-	@echo "HEAT_3D:"
-	@echo "    Running $(COMP1) version"
-	@$(HEAT_3D_ROOT)/$(COMP1) 2> /tmp/heat-3d-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(HEAT_3D_ROOT)/$(COMP2) 2> /tmp/heat-3d-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/heat-3d-$(COMP1).log /tmp/heat-3d-$(COMP2).log
-	@rm -rf /tmp/heat-3d-$(COMP1).log
-	@rm -rf /tmp/heat-3d-$(COMP2).log
-

@@ -10,15 +10,3 @@ $(FDTD_2D_ROOT)/jlm-%: $(FDTD_2D_ROOT)/fdtd-2d.c $(POLYBENCH_ROOT)/utilities/pol
 $(FDTD_2D_ROOT)/OPTO%: $(FDTD_2D_ROOT)/fdtd-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(FDTD_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(FDTD_2D_ROOT)/compare
-$(FDTD_2D_ROOT)/compare:
-	@echo "FDTD_2D:"
-	@echo "    Running $(COMP1) version"
-	@$(FDTD_2D_ROOT)/$(COMP1) 2> /tmp/fdtd-2d-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(FDTD_2D_ROOT)/$(COMP2) 2> /tmp/fdtd-2d-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/fdtd-2d-$(COMP1).log /tmp/fdtd-2d-$(COMP2).log
-	@rm -rf /tmp/fdtd-2d-$(COMP1).log
-	@rm -rf /tmp/fdtd-2d-$(COMP2).log
-

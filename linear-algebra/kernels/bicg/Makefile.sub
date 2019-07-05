@@ -10,15 +10,3 @@ $(BICG_ROOT)/jlm-%: $(BICG_ROOT)/bicg.c $(POLYBENCH_ROOT)/utilities/polybench.c
 $(BICG_ROOT)/OPTO%: $(BICG_ROOT)/bicg.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(BICG_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-
-.PHONY: $(BICG_ROOT)/compare
-$(BICG_ROOT)/compare:
-	@echo "BICG:"
-	@echo "    Running $(COMP1) version"
-	@$(BICG_ROOT)/$(COMP1) 2> /tmp/bicg-$(COMP1).log
-	@echo "    Running $(COMP2) version"
-	@$(BICG_ROOT)/$(COMP2) 2> /tmp/bicg-$(COMP2).log
-	@$(POLYBENCH_ROOT)/utilities/diff.sh /tmp/bicg-$(COMP1).log /tmp/bicg-$(COMP2).log
-	@rm -rf /tmp/bicg-$(COMP1).log
-	@rm -rf /tmp/bicg-$(COMP2).log
-
