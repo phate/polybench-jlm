@@ -31,9 +31,3 @@ $(CORRELATION_ROOT)/compare:
 $(CORRELATION_ROOT)/time:
 	$(CORRELATION_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/correlation-$(TARGET)-time.txt
 
-## SIZE
-
-.PHONY: $(CORRELATION_ROOT)/size
-$(CORRELATION_ROOT)/size:
-	size $(CORRELATION_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/correlation-$(TARGET)-size.txt
-

@@ -27,8 +27,3 @@ $(ADI_ROOT)/compare:
 $(ADI_ROOT)/time:
 	$(ADI_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/adi-$(TARGET)-time.txt
 
-
-.PHONY: $(ADI_ROOT)/size
-$(ADI_ROOT)/size:
-	size $(ADI_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/adi-$(TARGET)-size.txt
-

@@ -27,8 +27,3 @@ $(2MM_ROOT)/compare:
 $(2MM_ROOT)/time:
 	$(2MM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/2mm-$(TARGET)-time.txt
 
-
-.PHONY: $(2MM_ROOT)/size
-$(2MM_ROOT)/size:
-	size $(2MM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/2mm-$(TARGET)-size.txt
-

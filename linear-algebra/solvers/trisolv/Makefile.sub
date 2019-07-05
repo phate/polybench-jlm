@@ -27,8 +27,3 @@ $(TRISOLV_ROOT)/compare:
 $(TRISOLV_ROOT)/time:
 	$(TRISOLV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/trisolv-$(TARGET)-time.txt
 
-
-.PHONY: $(TRISOLV_ROOT)/size
-$(TRISOLV_ROOT)/size:
-	size $(TRISOLV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/trisolv-$(TARGET)-size.txt
-

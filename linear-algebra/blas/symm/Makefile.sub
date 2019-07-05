@@ -27,8 +27,3 @@ $(SYMM_ROOT)/compare:
 $(SYMM_ROOT)/time:
 	$(SYMM_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/symm-$(TARGET)-time.txt
 
-
-.PHONY: $(SYMM_ROOT)/size
-$(SYMM_ROOT)/size:
-	size $(SYMM_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/symm-$(TARGET)-size.txt
-

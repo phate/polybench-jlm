@@ -27,8 +27,3 @@ $(ATAX_ROOT)/compare:
 $(ATAX_ROOT)/time:
 	$(ATAX_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/atax-$(TARGET)-time.txt
 
-
-.PHONY: $(ATAX_ROOT)/size
-$(ATAX_ROOT)/size:
-	size $(ATAX_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/atax-$(TARGET)-size.txt
-

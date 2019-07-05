@@ -27,8 +27,3 @@ $(NUSSINOV_ROOT)/compare:
 $(NUSSINOV_ROOT)/time:
 	$(NUSSINOV_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/nussinov-$(TARGET)-time.txt
 
-
-.PHONY: $(NUSSINOV_ROOT)/size
-$(NUSSINOV_ROOT)/size:
-	size $(NUSSINOV_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/nussinov-$(TARGET)-size.txt
-

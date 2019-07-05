@@ -27,8 +27,3 @@ $(FDTD_2D_ROOT)/compare:
 $(FDTD_2D_ROOT)/time:
 	$(FDTD_2D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/fdtd-2d-$(TARGET)-time.txt
 
-
-.PHONY: $(FDTD_2D_ROOT)/size
-$(FDTD_2D_ROOT)/size:
-	size $(FDTD_2D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/fdtd-2d-$(TARGET)-size.txt
-

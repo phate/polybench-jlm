@@ -27,8 +27,3 @@ $(DURBIN_ROOT)/compare:
 $(DURBIN_ROOT)/time:
 	$(DURBIN_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/durbin-$(TARGET)-time.txt
 
-
-.PHONY: $(DURBIN_ROOT)/size
-$(DURBIN_ROOT)/size:
-	size $(DURBIN_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/durbin-$(TARGET)-size.txt
-

@@ -27,8 +27,3 @@ $(HEAT_3D_ROOT)/compare:
 $(HEAT_3D_ROOT)/time:
 	$(HEAT_3D_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/heat-3d-$(TARGET)-time.txt
 
-
-.PHONY: $(HEAT_3D_ROOT)/size
-$(HEAT_3D_ROOT)/size:
-	size $(HEAT_3D_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/heat-3d-$(TARGET)-size.txt
-

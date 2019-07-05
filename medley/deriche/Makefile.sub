@@ -27,8 +27,3 @@ $(DERICHE_ROOT)/compare:
 $(DERICHE_ROOT)/time:
 	$(DERICHE_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/deriche-$(TARGET)-time.txt
 
-
-.PHONY: $(DERICHE_ROOT)/size
-$(DERICHE_ROOT)/size:
-	size $(DERICHE_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/deriche-$(TARGET)-size.txt
-

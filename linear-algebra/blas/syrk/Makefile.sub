@@ -27,8 +27,3 @@ $(SYRK_ROOT)/compare:
 $(SYRK_ROOT)/time:
 	$(SYRK_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/syrk-$(TARGET)-time.txt
 
-
-.PHONY: $(SYRK_ROOT)/size
-$(SYRK_ROOT)/size:
-	size $(SYRK_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/syrk-$(TARGET)-size.txt
-

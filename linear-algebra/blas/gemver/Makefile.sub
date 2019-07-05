@@ -31,8 +31,3 @@ $(GEMVER_ROOT)/compare:
 $(GEMVER_ROOT)/time:
 	$(GEMVER_ROOT)/$(TARGET) >> $(POLYBENCH_RESULTS)/gemver-$(TARGET)-time.txt
 
-
-.PHONY: $(GEMVER_ROOT)/size
-$(GEMVER_ROOT)/size:
-	size $(GEMVER_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs >> $(POLYBENCH_RESULTS)/gemver-$(TARGET)-size.txt
-
