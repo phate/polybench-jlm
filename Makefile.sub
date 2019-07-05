@@ -13,6 +13,7 @@ echo "                       Collected results are stored in $(POLYBENCH_RESULTS
 echo "polybench-size         Collects the text size of sepcified target."
 echo "                       Default target is COMP1 but can also be set by TARGET"
 echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
+echo "polybench-jlmstats     Collects JLM compilation metrics for all benchmarks."
 echo "polybench-help         Prints possible options for COMP1, COMP2, and TARGET"
 endef
 
@@ -24,6 +25,7 @@ CC=clang
 CPPFLAGS = -I. -Iutilities/
 
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
+POLYBENCH_JLMSTATS = $(POLYBENCH_RESULTS)/jlmstats.log
 
 CORRELATION_ROOT = $(POLYBENCH_ROOT)/datamining/correlation
 include $(CORRELATION_ROOT)/Makefile.sub
@@ -167,6 +169,18 @@ polybench-size: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 		size $(BENCHMARK)/$(TARGET) | tail -1 | cut -f1 | xargs > $(RESULTFILE) ; \
 	)
 
+.PHONY: polybench-jlmstats
+polybench-jlmstats: LLCOPT = LLCO0
+polybench-jlmstats: PIPELINE = jlm-LLC
+polybench-jlmstats: CPPFLAGS += --print-cfr-time
+polybench-jlmstats: llvm-strip polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
+	@rm -f $(POLYBENCH_JLMSTATS)
+	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
+		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
+		\
+		sed -e 's/$$/ $(BENCHMARK)/' -i $(BENCHMARK_ROOT)/jlmstats.log ; \
+		cat $(BENCHMARK_ROOT)/jlmstats.log >> $(POLYBENCH_JLMSTATS) ; \
+	)
 
 $(POLYBENCH_RESULTS):
 	mkdir -p $(POLYBENCH_RESULTS)
@@ -175,14 +189,15 @@ $(POLYBENCH_RESULTS):
 
 .PHONY: polybench-clean
 polybench-clean:
-	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
-		rm -f $(BENCHMARK)/clang ; \
-		rm -f $(BENCHMARK)/gcc ; \
-		rm -f $(BENCHMARK)/jlm-* ; \
-		rm -f $(BENCHMARK)/OPTO* ; \
-		rm -f $(BENCHMARK)/*.rvsdg ; \
-		rm -f $(BENCHMARK)/*.ll ; \
-		rm -f $(BENCHMARK)/*.o ; \
+	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
+		rm -f $(BENCHMARK_ROOT)/clang ; \
+		rm -f $(BENCHMARK_ROOT)/gcc ; \
+		rm -f $(BENCHMARK_ROOT)/jlm-* ; \
+		rm -f $(BENCHMARK_ROOT)/OPTO* ; \
+		rm -f $(BENCHMARK_ROOT)/*.rvsdg ; \
+		rm -f $(BENCHMARK_ROOT)/*.ll ; \
+		rm -f $(BENCHMARK_ROOT)/*.o ; \
+		rm -f $(BENCHMARK_ROOT)/jlmstats.log ; \
 	)
 
 .PHONY: polybench-clean-target

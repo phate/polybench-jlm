@@ -5,8 +5,7 @@ $(FDTD_2D_ROOT)/gcc: $(FDTD_2D_ROOT)/fdtd-2d.c $(POLYBENCH_ROOT)/utilities/polyb
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(FDTD_2D_ROOT)/$(@F) ${EXTRA_FLAGS}
 
 $(FDTD_2D_ROOT)/jlm-%: $(FDTD_2D_ROOT)/fdtd-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(FDTD_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
+	${POLYBENCH_ROOT}/jlc.py -s $(FDTD_2D_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(FDTD_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(FDTD_2D_ROOT)/OPTO%: $(FDTD_2D_ROOT)/fdtd-2d.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(FDTD_2D_ROOT)/$(@F) $(EXTRA_FLAGS)
-

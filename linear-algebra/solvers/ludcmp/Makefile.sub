@@ -5,8 +5,7 @@ $(LUDCMP_ROOT)/gcc: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybenc
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(LUDCMP_ROOT)/$(@F) ${EXTRA_FLAGS}
 
 $(LUDCMP_ROOT)/jlm-%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
+	${POLYBENCH_ROOT}/jlc.py -s $(LUDCMP_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(LUDCMP_ROOT)/OPTO%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
-

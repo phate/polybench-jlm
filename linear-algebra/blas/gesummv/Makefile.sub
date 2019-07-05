@@ -5,8 +5,7 @@ $(GESUMMV_ROOT)/gcc: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polyb
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GESUMMV_ROOT)/$(@F) ${EXTRA_FLAGS}
 
 $(GESUMMV_ROOT)/jlm-%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
+	${POLYBENCH_ROOT}/jlc.py -s $(GESUMMV_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(GESUMMV_ROOT)/OPTO%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
-
