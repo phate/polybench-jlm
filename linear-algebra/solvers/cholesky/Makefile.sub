@@ -1,0 +1,15 @@
+CHOLESKY_SRC = \
+	$(CHOLESKY_ROOT)/cholesky.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+$(CHOLESKY_ROOT)/clang: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(CHOLESKY_ROOT)/gcc: $(CHOLESKY_ROOT)/cholesky.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(CHOLESKY_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(CHOLESKY_ROOT)/jlm-%: llvm-strip $(CHOLESKY_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(CHOLESKY_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(CHOLESKY_SRC) -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(CHOLESKY_ROOT)/OPTO%: llvm-strip $(CHOLESKY_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(CHOLESKY_SRC) -o $(CHOLESKY_ROOT)/$(@F) $(EXTRA_FLAGS)

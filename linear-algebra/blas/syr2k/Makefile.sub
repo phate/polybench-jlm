@@ -1,0 +1,15 @@
+SYR2K_SRC = \
+	$(SYR2K_ROOT)/syr2k.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+$(SYR2K_ROOT)/clang: $(SYR2K_ROOT)/syr2k.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(SYR2K_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYR2K_ROOT)/gcc: $(SYR2K_ROOT)/syr2k.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(SYR2K_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(SYR2K_ROOT)/jlm-%: llvm-strip $(SYR2K_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(SYR2K_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(SYR2K_SRC) -o $(SYR2K_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYR2K_ROOT)/OPTO%: llvm-strip $(SYR2K_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(SYR2K_SRC) -o $(SYR2K_ROOT)/$(@F) $(EXTRA_FLAGS)

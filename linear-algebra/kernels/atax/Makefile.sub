@@ -1,0 +1,15 @@
+ATAX_SRC = \
+	$(ATAX_ROOT)/atax.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+$(ATAX_ROOT)/clang: $(ATAX_ROOT)/atax.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(ATAX_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(ATAX_ROOT)/gcc: $(ATAX_ROOT)/atax.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(ATAX_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(ATAX_ROOT)/jlm-%: llvm-strip $(ATAX_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(ATAX_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(ATAX_SRC) -o $(ATAX_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(ATAX_ROOT)/OPTO%: llvm-strip $(ATAX_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(ATAX_SRC) -o $(ATAX_ROOT)/$(@F) $(EXTRA_FLAGS)

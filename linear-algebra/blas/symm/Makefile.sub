@@ -1,0 +1,15 @@
+SYMM_SRC = \
+	$(SYMM_ROOT)/symm.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+$(SYMM_ROOT)/clang: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(SYMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYMM_ROOT)/gcc: $(SYMM_ROOT)/symm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(SYMM_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(SYMM_ROOT)/jlm-%: llvm-strip $(SYMM_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(SYMM_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(SYMM_SRC) -o $(SYMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(SYMM_ROOT)/OPTO%: llvm-strip $(SYMM_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(SYMM_SRC) -o $(SYMM_ROOT)/$(@F) $(EXTRA_FLAGS)

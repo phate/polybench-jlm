@@ -1,0 +1,16 @@
+3MM_SRC = \
+	$(3MM_ROOT)/3mm.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+
+$(3MM_ROOT)/clang: $(3MM_ROOT)/3mm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(3MM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(3MM_ROOT)/gcc: $(3MM_ROOT)/3mm.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(3MM_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(3MM_ROOT)/jlm-%: llvm-strip $(3MM_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(3MM_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(3MM_SRC) -o $(3MM_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(3MM_ROOT)/OPTO%: llvm-strip $(3MM_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(3MM_SRC) -o $(3MM_ROOT)/$(@F) $(EXTRA_FLAGS)

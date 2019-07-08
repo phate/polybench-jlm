@@ -1,0 +1,15 @@
+DURBIN_SRC = \
+	$(DURBIN_ROOT)/durbin.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+$(DURBIN_ROOT)/clang: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DURBIN_ROOT)/gcc: $(DURBIN_ROOT)/durbin.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(DURBIN_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(DURBIN_ROOT)/jlm-%: llvm-strip $(DURBIN_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(DURBIN_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(DURBIN_SRC) -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(DURBIN_ROOT)/OPTO%: llvm-strip $(DURBIN_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(DURBIN_SRC) -o $(DURBIN_ROOT)/$(@F) $(EXTRA_FLAGS)

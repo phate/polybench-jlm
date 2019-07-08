@@ -1,0 +1,15 @@
+BICG_SRC = \
+	$(BICG_ROOT)/bicg.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
+$(BICG_ROOT)/clang: $(BICG_ROOT)/bicg.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(BICG_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(BICG_ROOT)/gcc: $(BICG_ROOT)/bicg.c $(POLYBENCH_ROOT)/utilities/polybench.c
+	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(BICG_ROOT)/$(@F) ${EXTRA_FLAGS}
+
+$(BICG_ROOT)/jlm-%: llvm-strip $(BICG_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(BICG_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(BICG_SRC) -o $(BICG_ROOT)/$(@F) $(EXTRA_FLAGS)
+
+$(BICG_ROOT)/OPTO%: llvm-strip $(BICG_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(BICG_SRC) -o $(BICG_ROOT)/$(@F) $(EXTRA_FLAGS)
