@@ -1,11 +1,15 @@
+TRISOLV_SRC = \
+	$(TRISOLV_ROOT)/trisolv.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(TRISOLV_ROOT)/clang: $(TRISOLV_ROOT)/trisolv.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(TRISOLV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(TRISOLV_ROOT)/gcc: $(TRISOLV_ROOT)/trisolv.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(TRISOLV_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(TRISOLV_ROOT)/jlm-%: $(TRISOLV_ROOT)/trisolv.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(TRISOLV_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(TRISOLV_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(TRISOLV_ROOT)/jlm-%: llvm-strip $(TRISOLV_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(TRISOLV_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(TRISOLV_SRC) -o $(TRISOLV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(TRISOLV_ROOT)/OPTO%: $(TRISOLV_ROOT)/trisolv.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(TRISOLV_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(TRISOLV_ROOT)/OPTO%: llvm-strip $(TRISOLV_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(TRISOLV_SRC) -o $(TRISOLV_ROOT)/$(@F) $(EXTRA_FLAGS)

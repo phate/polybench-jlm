@@ -1,11 +1,15 @@
+DERICHE_SRC = \
+	$(DERICHE_ROOT)/deriche.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(DERICHE_ROOT)/clang: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(DERICHE_ROOT)/gcc: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(DERICHE_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(DERICHE_ROOT)/jlm-%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(DERICHE_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(DERICHE_ROOT)/jlm-%: llvm-strip $(DERICHE_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(DERICHE_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(DERICHE_SRC) -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(DERICHE_ROOT)/OPTO%: $(DERICHE_ROOT)/deriche.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(DERICHE_ROOT)/OPTO%: llvm-strip $(DERICHE_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(DERICHE_SRC) -o $(DERICHE_ROOT)/$(@F) $(EXTRA_FLAGS)

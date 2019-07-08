@@ -1,11 +1,15 @@
+SYRK_SRC = \
+	$(SYRK_ROOT)/syrk.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(SYRK_ROOT)/clang: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(SYRK_ROOT)/gcc: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(SYRK_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(SYRK_ROOT)/jlm-%: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(SYRK_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(SYRK_ROOT)/jlm-%: llvm-strip $(SYRK_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(SYRK_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(SYRK_SRC) -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(SYRK_ROOT)/OPTO%: $(SYRK_ROOT)/syrk.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(SYRK_ROOT)/OPTO%: llvm-strip $(SYRK_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(SYRK_SRC) -o $(SYRK_ROOT)/$(@F) $(EXTRA_FLAGS)

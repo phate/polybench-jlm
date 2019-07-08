@@ -1,11 +1,15 @@
+ADI_SRC = \
+	$(ADI_ROOT)/adi.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(ADI_ROOT)/clang: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(ADI_ROOT)/gcc: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(ADI_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(ADI_ROOT)/jlm-%: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(ADI_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(ADI_ROOT)/jlm-%: llvm-strip $(ADI_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(ADI_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(ADI_SRC) -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(ADI_ROOT)/OPTO%: $(ADI_ROOT)/adi.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(ADI_ROOT)/OPTO%: llvm-strip $(ADI_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(ADI_SRC) -o $(ADI_ROOT)/$(@F) $(EXTRA_FLAGS)

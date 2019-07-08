@@ -1,11 +1,15 @@
+HEAT_3D_SRC = \
+	$(HEAT_3D_ROOT)/heat-3d.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(HEAT_3D_ROOT)/clang: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(HEAT_3D_ROOT)/gcc: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(HEAT_3D_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(HEAT_3D_ROOT)/jlm-%: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(HEAT_3D_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(HEAT_3D_ROOT)/jlm-%: llvm-strip $(HEAT_3D_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(HEAT_3D_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(HEAT_3D_SRC) -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(HEAT_3D_ROOT)/OPTO%: $(HEAT_3D_ROOT)/heat-3d.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(HEAT_3D_ROOT)/OPTO%: llvm-strip $(HEAT_3D_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(HEAT_3D_SRC) -o $(HEAT_3D_ROOT)/$(@F) $(EXTRA_FLAGS)

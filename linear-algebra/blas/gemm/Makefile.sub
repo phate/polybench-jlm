@@ -8,8 +8,8 @@ $(GEMM_ROOT)/clang: $(GEMM_SRC)
 $(GEMM_ROOT)/gcc: $(GEMM_SRC)
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GEMM_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(GEMM_ROOT)/jlm-%: $(GEMM_SRC)
-	${POLYBENCH_ROOT}/jlc.py -s $(GEMM_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(GEMM_ROOT)/jlm-%: llvm-strip
+	${POLYBENCH_ROOT}/jlc.py -s $(GEMM_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(GEMM_SRC) -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(GEMM_ROOT)/OPTO%: $(GEMM_SRC)
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(GEMM_ROOT)/OPTO%: llvm-strip
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(GEMM_SRC) -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)

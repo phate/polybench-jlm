@@ -1,11 +1,15 @@
+GESUMMV_SRC = \
+	$(GESUMMV_ROOT)/gesummv.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(GESUMMV_ROOT)/clang: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(GESUMMV_ROOT)/gcc: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GESUMMV_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(GESUMMV_ROOT)/jlm-%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(GESUMMV_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(GESUMMV_ROOT)/jlm-%: llvm-strip $(GESUMMV_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(GESUMMV_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(GESUMMV_SRC) -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(GESUMMV_ROOT)/OPTO%: $(GESUMMV_ROOT)/gesummv.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(GESUMMV_ROOT)/OPTO%: llvm-strip $(GESUMMV_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(GESUMMV_SRC) -o $(GESUMMV_ROOT)/$(@F) $(EXTRA_FLAGS)

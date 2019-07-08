@@ -1,11 +1,15 @@
+TRMM_SRC = \
+	$(TRMM_ROOT)/trmm.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(TRMM_ROOT)/clang: $(TRMM_ROOT)/trmm.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(TRMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(TRMM_ROOT)/gcc: $(TRMM_ROOT)/trmm.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(TRMM_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(TRMM_ROOT)/jlm-%: $(TRMM_ROOT)/trmm.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(TRMM_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(TRMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(TRMM_ROOT)/jlm-%: llvm-strip $(TRMM_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(TRMM_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(TRMM_SRC) -o $(TRMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(TRMM_ROOT)/OPTO%: $(TRMM_ROOT)/trmm.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(TRMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(TRMM_ROOT)/OPTO%: llvm-strip $(TRMM_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(TRMM_SRC) -o $(TRMM_ROOT)/$(@F) $(EXTRA_FLAGS)

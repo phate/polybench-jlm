@@ -1,11 +1,15 @@
+LUDCMP_SRC = \
+	$(LUDCMP_ROOT)/ludcmp.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(LUDCMP_ROOT)/clang: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(LUDCMP_ROOT)/gcc: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(LUDCMP_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(LUDCMP_ROOT)/jlm-%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(LUDCMP_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(LUDCMP_ROOT)/jlm-%: llvm-strip $(LUDCMP_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(LUDCMP_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(LUDCMP_SRC) -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(LUDCMP_ROOT)/OPTO%: $(LUDCMP_ROOT)/ludcmp.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(LUDCMP_ROOT)/OPTO%: llvm-strip $(LUDCMP_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(LUDCMP_SRC) -o $(LUDCMP_ROOT)/$(@F) $(EXTRA_FLAGS)

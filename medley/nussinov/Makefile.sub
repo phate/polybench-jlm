@@ -1,11 +1,15 @@
+NUSSINOV_SRC = \
+	$(NUSSINOV_ROOT)/nussinov.c \
+	$(POLYBENCH_ROOT)/utilities/polybench.c
+
 $(NUSSINOV_ROOT)/clang: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
 $(NUSSINOV_ROOT)/gcc: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
 	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(NUSSINOV_ROOT)/$(@F) ${EXTRA_FLAGS}
 
-$(NUSSINOV_ROOT)/jlm-%: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py -s $(NUSSINOV_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $? -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(NUSSINOV_ROOT)/jlm-%: llvm-strip $(NUSSINOV_SRC)
+	${POLYBENCH_ROOT}/jlc.py -s $(NUSSINOV_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(NUSSINOV_SRC) -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(NUSSINOV_ROOT)/OPTO%: $(NUSSINOV_ROOT)/nussinov.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $? -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(NUSSINOV_ROOT)/OPTO%: llvm-strip $(NUSSINOV_SRC)
+	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(NUSSINOV_SRC) -o $(NUSSINOV_ROOT)/$(@F) $(EXTRA_FLAGS)

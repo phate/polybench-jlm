@@ -185,7 +185,7 @@ TARGET ?= $(COMP1)
 .PHONY: polybench-compare
 polybench-compare: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-compare: llvm-strip polybench-clean $(COMP1) $(COMP2)
+polybench-compare: polybench-clean $(COMP1) $(COMP2)
 	@$(foreach BENCHMARKDIR, $(POLY_BENCHMARKS), \
 		$(eval BENCHMARK = $(notdir $(BENCHMARKDIR))) \
 		$(eval DIFF = $(POLYBENCH_ROOT)/utilities/diff.sh) \
@@ -203,7 +203,7 @@ polybench-compare: llvm-strip polybench-clean $(COMP1) $(COMP2)
 .PHONY: polybench-time
 polybench-time: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
-polybench-time: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
+polybench-time: polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-time.txt) \
 		\
@@ -214,7 +214,7 @@ polybench-time: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 .PHONY: polybench-size
 polybench-size: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-size: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
+polybench-size: polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-size.txt) \
 		\
@@ -225,7 +225,7 @@ polybench-size: llvm-strip polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 polybench-jlmstats: LLCOPT = LLCO0
 polybench-jlmstats: PIPELINE = jlm-LLC
 polybench-jlmstats: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities --print-cfr-time
-polybench-jlmstats: llvm-strip polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
+polybench-jlmstats: polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
 	@rm -f $(POLYBENCH_JLMSTATS)
 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
 		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
@@ -306,7 +306,7 @@ polybench-purge: polybench-clean llvm-strip-clean
 
 .PHONY: polybench
 polybench: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
-polybench: llvm-strip $(COMPILATION_TARGETS)
+polybench: $(COMPILATION_TARGETS)
 
 ############################################################################
 # TARGETS FOR COMPILING ALL BENCHMARKS WITH DIFFERENT OPTIMIZATION OPTIONS #
