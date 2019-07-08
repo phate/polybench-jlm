@@ -25,6 +25,9 @@ polybench-help:
 
 CC=clang
 
+export PATH := $(POLYBENCH_ROOT)/external/llvm-strip/bin:$(PATH)
+
+
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
 POLYBENCH_JLMSTATS = $(POLYBENCH_RESULTS)/jlmstats.log
 
