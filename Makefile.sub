@@ -527,13 +527,13 @@ OPTO3-no-vec-LLCO0: $(patsubst %, %/OPTO3-no-vec-LLCO0, $(POLY_BENCHMARKS))
 .PHONY: OPTO3-no-vec-LLCO1
 OPTO3-no-vec-LLCO1: LLCOPT = LLCO1
 OPTO3-no-vec-LLCO1: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
+OPTO3-no-vec-LLCO1: LLVMOPT = $(NO_VEC) --no-strip
 OPTO3-no-vec-LLCO1: $(patsubst %, %/OPTO3-no-vec-LLCO1, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-no-vec-LLCO3
 OPTO3-no-vec-LLCO3: LLCOPT = LLCO3
 OPTO3-no-vec-LLCO3: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
+OPTO3-no-vec-LLCO3: LLVMOPT = $(NO_VEC) --no-strip
 OPTO3-no-vec-LLCO3: $(patsubst %, %/OPTO3-no-vec-LLCO3, $(POLY_BENCHMARKS))
 
 ### OPT3 no-vec stripped
@@ -547,13 +547,13 @@ OPTO3-no-vec-LLCO0-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO0-stripped, $(POLY
 .PHONY: OPTO3-no-vec-LLCO1-stripped
 OPTO3-no-vec-LLCO1-stripped: LLCOPT = LLCO1
 OPTO3-no-vec-LLCO1-stripped: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
+OPTO3-no-vec-LLCO1-stripped: LLVMOPT = $(NO_VEC)
 OPTO3-no-vec-LLCO1-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO1-stripped, $(POLY_BENCHMARKS))
 
 .PHONY: OPTO3-no-vec-LLCO3-stripped
 OPTO3-no-vec-LLCO3-stripped: LLCOPT = LLCO3
 OPTO3-no-vec-LLCO3-stripped: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
+OPTO3-no-vec-LLCO3-stripped: LLVMOPT = $(NO_VEC)
 OPTO3-no-vec-LLCO3-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### OPTs
