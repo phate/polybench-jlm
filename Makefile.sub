@@ -238,9 +238,9 @@ polybench-jlmstats: polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
 polybench-timetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
 polybench-timetable: polybench-clean polybench
-	@echo -n "# benchmark "
+	@echo -n "# benchmark"
 	@$(foreach TARGET, $(COMPILATION_TARGETS), \
-		echo -n "$(TARGET)" ; \
+		echo -n " $(TARGET)" ; \
 	)
 	@echo ""
 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
@@ -258,9 +258,9 @@ polybench-timetable: polybench-clean polybench
 polybench-sizetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_USE_C99_PROTO
 polybench-sizetable: polybench-clean polybench
-	@echo -n "# benchmark "
+	@echo -n "# benchmark"
 	@$(foreach TARGET, $(COMPILATION_TARGETS), \
-		echo -n "$(TARGET)" ; \
+		echo -n " $(TARGET)" ; \
 	)
 	@echo ""
 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
