@@ -133,7 +133,7 @@ class lnk(Command):
 
 pipelines = {
 		"jlm-LLC" : CommandList([
-			clang(["-O0", "-S", "-emit-llvm"])
+			clang(["-S", "-emit-llvm", "-Xclang", "-disable-llvm-passes"])
 		, llvm_strip([])
 		, mem2reg([])
 		, llvm_strip([])
@@ -141,7 +141,7 @@ pipelines = {
 		, llc(["-filetype=obj"])
 		])
 	, "opt-LLC" : CommandList([
-	    clang(["-O0", "-S", "-emit-llvm"])
+	    clang(["-S", "-emit-llvm", "-Xclang", "-disable-llvm-passes"])
 	  , llvm_strip([])
 	  , mem2reg([])
 	  , llvm_strip([])
@@ -299,10 +299,18 @@ def parse_args():
 				cmd.append_args(["-O"+args.llvmoptflags])
 
 			###
+			# Set clang optimization flags
+			###
+			if isinstance(cmd, clang) and args.llvmoptflags:
+				cmd.append_args(["-O"+args.llvmoptflags])
+
+			###
 			# Set individual llvm-opt optimization flags
 			###
 			if isinstance(cmd, llvm_opt) and args.indvllvmoptflags:
 				cmd.append_args([flag for flag in args.indvllvmoptflags])
+			if isinstance(cmd, clang) and args.indvllvmoptflags:
+				cmd.append_args(["-O3"])
 
 			###
 			# Set input files
