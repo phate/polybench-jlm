@@ -212,6 +212,11 @@ parser.add_argument(
 	, dest='print_cfr_time'
 	, help="Write CFR time to stats file.")
 parser.add_argument(
+	  '--print-rvsdg-construction'
+	, action='store_true'
+	, dest='print_rvsdg_construction'
+	, help='Write RVSDG construction stats to file.')
+parser.add_argument(
 	  '-c'
 	, action='store_true'
 	, dest='c'
@@ -291,6 +296,8 @@ def parse_args():
 			if isinstance(cmd, jlm_opt) and args.print_cfr_time:
 				cmd.append_args(["--print-cfr-time"])
 
+			if isinstance(cmd, jlm_opt) and args.print_rvsdg_construction:
+				cmd.append_args(["--print-rvsdg-construction"])
 
 			###
 			# Set llvm-opt optimization flags
