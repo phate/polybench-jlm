@@ -1,0 +1,189 @@
+out_llvm = ${OUTPUT_LLVM}/$(notdir $(basename $(1))).ll
+out_xml  = ${OUTPUT_XML}/$(notdir $(basename $(1))).xml
+
+define create_target
+$(VERBOSE) clang $(CPPFLAGS) $? -o $(call out_llvm,$1)
+$(VERBOSE) jlm-print --j2rx --file $(call out_llvm,$1) > $(call out_xml,$1)
+endef
+
+CORRELATION_ROOT = $(POLYBENCH_ROOT)/datamining/correlation
+CORRELATION_SRC = $(CORRELATION_ROOT)/correlation.c
+$(CORRELATION_ROOT)/clang: $(CORRELATION_SRC)
+	$(call create_target,$<)
+
+COVARIANCE_ROOT = $(POLYBENCH_ROOT)/datamining/covariance
+COVARIANCE_SRC = $(COVARIANCE_ROOT)/covariance.c
+$(COVARIANCE_ROOT)/clang: $(COVARIANCE_SRC)
+	$(call create_target,$<)
+
+GEMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gemm
+GEMM_SRC = $(GEMM_ROOT)/gemm.c
+$(GEMM_ROOT)/clang: $(GEMM_SRC)
+	$(call create_target,$<)
+
+GEMVER_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gemver
+GEMVER_SRC = $(GEMVER_ROOT)/gemver.c
+$(GEMVER_ROOT)/clang: $(GEMVER_SRC)
+	$(call create_target,$<)
+
+GESUMMV_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gesummv
+GESUMMV_SRC = $(GESUMMV_ROOT)/gesummv.c
+$(GESUMMV_ROOT)/clang: $(GESUMMV_SRC)
+	$(call create_target,$<)
+
+SYMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/symm
+SYMM_SRC = $(SYMM_ROOT)/symm.c
+$(SYMM_ROOT)/clang: $(SYMM_SRC)
+	$(call create_target,$<)
+
+SYR2K_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/syr2k
+SYR2K_SRC = $(SYR2K_ROOT)/syr2k.c
+$(SYR2K_ROOT)/clang: $(SYR2K_SRC)
+	$(call create_target,$<)
+
+SYRK_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/syrk
+SYRK_SRC = $(SYRK_ROOT)/syrk.c
+$(SYRK_ROOT)/clang: $(SYRK_SRC)
+	$(call create_target,$<)
+
+TRMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/trmm
+TRMM_SRC = $(TRMM_ROOT)/trmm.c
+$(TRMM_ROOT)/clang: $(TRMM_SRC)
+	$(call create_target,$<)
+
+2MM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/2mm
+2MM_SRC = $(2MM_ROOT)/2mm.c
+$(2MM_ROOT)/clang: $(2MM_SRC)
+	$(call create_target,$<)
+
+3MM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/3mm
+3MM_SRC = $(3MM_ROOT)/3mm.c
+$(3MM_ROOT)/clang: $(3MM_SRC)
+	$(call create_target,$<)
+
+ATAX_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/atax
+ATAX_SRC = $(ATAX_ROOT)/atax.c
+$(ATAX_ROOT)/clang: $(ATAX_SRC)
+	$(call create_target,$<)
+
+BICG_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/bicg
+BICG_SRC = $(BICG_ROOT)/bicg.c
+$(BICG_ROOT)/clang: $(BICG_SRC)
+	$(call create_target,$<)
+
+DOITGEN_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/doitgen
+DOITGEN_SRC = $(DOITGEN_ROOT)/doitgen.c
+$(DOITGEN_ROOT)/clang: $(DOITGEN_SRC)
+	$(call create_target,$<)
+
+MVT_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/mvt
+MVT_SRC = $(MVT_ROOT)/mvt.c
+$(MVT_ROOT)/clang: $(MVT_SRC)
+	$(call create_target,$<)
+
+CHOLESKY_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/cholesky
+CHOLESKY_SRC = $(CHOLESKY_ROOT)/cholesky.c
+$(CHOLESKY_ROOT)/clang: $(CHOLESKY_SRC)
+	$(call create_target,$<)
+
+DURBIN_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/durbin
+DURBIN_SRC = $(DURBIN_ROOT)/durbin.c
+$(DURBIN_ROOT)/clang: $(DURBIN_SRC)
+	$(call create_target,$<)
+
+GRAMSCHMIDT_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/gramschmidt
+GRAMSCHMIDT_SRC = $(GRAMSCHMIDT_ROOT)/gramschmidt.c
+$(GRAMSCHMIDT_ROOT)/clang: $(GRAMSCHMIDT_SRC)
+	$(call create_target,$<)
+
+LU_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/lu
+LU_SRC = $(LU_ROOT)/lu.c
+$(LU_ROOT)/clang: $(LU_SRC)
+	$(call create_target,$<)
+
+LUDCMP_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/ludcmp
+LUDCMP_SRC = $(LUDCMP_ROOT)/ludcmp.c
+$(LUDCMP_ROOT)/clang: $(LUDCMP_SRC)
+	$(call create_target,$<)
+
+TRISOLV_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/trisolv
+TRISOLV_SRC = $(TRISOLV_ROOT)/trisolv.c
+$(TRISOLV_ROOT)/clang: $(TRISOLV_SRC)
+	$(call create_target,$<)
+
+DERICHE_ROOT = $(POLYBENCH_ROOT)/medley/deriche
+DERICHE_SRC = $(DERICHE_ROOT)/deriche.c
+$(DERICHE_ROOT)/clang: $(DERICHE_SRC)
+	$(call create_target,$<)
+
+FLOYD_WARSHALL_ROOT = $(POLYBENCH_ROOT)/medley/floyd-warshall
+FLOYD_WARSHALL_SRC = $(FLOYD_WARSHALL_ROOT)/floyd-warshall.c
+$(FLOYD_WARSHALL_ROOT)/clang: $(FLOYD_WARSHALL_SRC)
+	$(call create_target,$<)
+
+NUSSINOV_ROOT = $(POLYBENCH_ROOT)/medley/nussinov
+NUSSINOV_SRC = $(NUSSINOV_ROOT)/nussinov.c
+$(NUSSINOV_ROOT)/clang: $(NUSSINOV_SRC)
+	$(call create_target,$<)
+
+ADI_ROOT = $(POLYBENCH_ROOT)/stencils/adi
+ADI_SRC = $(ADI_ROOT)/adi.c
+$(ADI_ROOT)/clang: $(ADI_SRC)
+	$(call create_target,$<)
+
+FDTD_2D_ROOT = $(POLYBENCH_ROOT)/stencils/fdtd-2d
+FDTD_2D_SRC = $(FDTD_2D_ROOT)/fdtd-2d.c
+$(FDTD_2D_ROOT)/clang: $(FDTD_2D_SRC)
+	$(call create_target,$<)
+
+HEAT_3D_ROOT = $(POLYBENCH_ROOT)/stencils/heat-3d
+HEAT_3D_SRC = $(HEAT_3D_ROOT)/heat-3d.c
+$(HEAT_3D_ROOT)/clang: $(HEAT_3D_SRC)
+	$(call create_target,$<)
+
+JACOBI_1D_ROOT = $(POLYBENCH_ROOT)/stencils/jacobi-1d
+JACOBI_1D_SRC = $(JACOBI_1D_ROOT)/jacobi-1d.c
+$(JACOBI_1D_ROOT)/clang: $(JACOBI_1D_SRC)
+	$(call create_target,$<)
+
+JACOBI_2D_ROOT = $(POLYBENCH_ROOT)/stencils/jacobi-2d
+JACOBI_2D_SRC = $(JACOBI_2D_ROOT)/jacobi-2d.c
+$(JACOBI_2D_ROOT)/clang: $(JACOBI_2D_SRC)
+	$(call create_target,$<)
+
+SEIDEL_2D_ROOT = $(POLYBENCH_ROOT)/stencils/seidel-2d
+SEIDEL_2D_SRC = $(SEIDEL_2D_ROOT)/seidel-2d.c
+$(SEIDEL_2D_ROOT)/clang: $(SEIDEL_2D_SRC)
+	$(call create_target,$<)
+
+POLY_BENCHMARKS = \
+				  $(CORRELATION_ROOT) \
+				  $(COVARIANCE_ROOT) \
+				  $(GEMVER_ROOT)\
+				  $(GESUMMV_ROOT) \
+				  $(GEMM_ROOT) \
+				  $(SYMM_ROOT) \
+				  $(SYR2K_ROOT) \
+				  $(SYRK_ROOT) \
+				  $(TRMM_ROOT) \
+				  $(2MM_ROOT) \
+				  $(3MM_ROOT) \
+				  $(ATAX_ROOT) \
+				  $(BICG_ROOT) \
+				  $(DOITGEN_ROOT) \
+				  $(MVT_ROOT) \
+				  $(CHOLESKY_ROOT) \
+				  $(DURBIN_ROOT) \
+				  $(GRAMSCHMIDT_ROOT) \
+				  $(LU_ROOT) \
+				  $(LUDCMP_ROOT) \
+				  $(TRISOLV_ROOT) \
+				  $(DERICHE_ROOT) \
+				  $(FLOYD_WARSHALL_ROOT) \
+				  $(NUSSINOV_ROOT) \
+				  $(ADI_ROOT) \
+				  $(FDTD_2D_ROOT) \
+				  $(HEAT_3D_ROOT) \
+				  $(JACOBI_1D_ROOT) \
+				  $(JACOBI_2D_ROOT) \
+				  $(SEIDEL_2D_ROOT)
