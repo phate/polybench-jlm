@@ -487,7 +487,7 @@ OPTO3-LLCO3-stripped: $(patsubst %, %/OPTO3-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### OPT3 no-vec
 
-NO_VEC ?= $(shell $(POLYBENCH_ROOT)/print-llvm-opts.py | sed 's/-V-loop-vectorize //' | sed 's/-V-slp-vectorize //')
+NO_VEC ?= $(shell $(POLYBENCH_ROOT)/scripts/print-llvm-opts.py | sed 's/-V-loop-vectorize //' | sed 's/-V-slp-vectorize //')
 
 .PHONY: OPTO3-no-vec-LLCO0
 OPTO3-no-vec-LLCO0: LLCOPT = LLCO0

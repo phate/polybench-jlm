@@ -5,7 +5,7 @@ import sys
 
 def main():
 	opts = os.popen(
-		'llvm-as-7 < /dev/null | opt-7 -O3 -disable-output -debug-pass=Arguments 2>&1').read().split()
+		'llvm-as < /dev/null | opt -O3 -disable-output -debug-pass=Arguments 2>&1').read().split()
 
 	###
 	# Remove help text
