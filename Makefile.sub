@@ -224,7 +224,7 @@ polybench-size: polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
 .PHONY: polybench-jlmstats
 polybench-jlmstats: LLCOPT = LLCO0
 polybench-jlmstats: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
-	--print-rvsdg-construction --print-rvsdg-optimization
+	--print-rvsdg-construction --print-rvsdg-destruction --print-rvsdg-optimization
 polybench-jlmstats: polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
 	@rm -f $(POLYBENCH_JLMSTATS)
 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
