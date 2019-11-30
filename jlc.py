@@ -217,6 +217,11 @@ parser.add_argument(
 	, dest='print_rvsdg_construction'
 	, help='Write RVSDG construction stats to file.')
 parser.add_argument(
+	  '--print-rvsdg-destruction'
+	, action='store_true'
+	, dest='print_rvsdg_destruction'
+	, help='Write RVSDG destruction stats to file.')
+parser.add_argument(
 	  '--print-rvsdg-optimization'
 	, action='store_true'
 	, dest='print_rvsdg_optimization'
@@ -303,6 +308,9 @@ def parse_args():
 
 			if isinstance(cmd, jlm_opt) and args.print_rvsdg_construction:
 				cmd.append_args(["--print-rvsdg-construction"])
+
+			if isinstance(cmd, jlm_opt) and args.print_rvsdg_destruction:
+				cmd.append_args(["--print-rvsdg-destruction"])
 
 			if isinstance(cmd, jlm_opt) and args.print_rvsdg_optimization:
 				cmd.append_args(["--print-rvsdg-optimization"])
