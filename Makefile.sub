@@ -28,6 +28,7 @@ CC=clang
 export PATH := $(POLYBENCH_ROOT)/external/llvm-strip/bin:$(PATH)
 
 
+POLYBENCH_UTILITIES = $(POLYBENCH_ROOT)/utilities
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
 POLYBENCH_JLMSTATS = $(POLYBENCH_RESULTS)/jlmstats.log
 
@@ -291,6 +292,7 @@ polybench-clean:
 		rm -f $(BENCHMARK_ROOT)/*.o ; \
 		rm -f $(BENCHMARK_ROOT)/jlmstats.log ; \
 	)
+	@rm -rf $(POLYBENCH_UTILITIES)/*.ll
 
 .PHONY: polybench-clean-target
 polybench-clean-target:
