@@ -1,15 +1,9 @@
 JACOBI_1D_SRC = \
-	$(JACOBI_1D_ROOT)/jacobi-1d.c \
+	$(POLYBENCH_ROOT)/$(JACOBI_1D_ROOT)/jacobi-1d.c \
 	$(POLYBENCH_ROOT)/utilities/polybench.c
 
-$(JACOBI_1D_ROOT)/clang: $(JACOBI_1D_ROOT)/jacobi-1d.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(JACOBI_1D_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(POLYBENCH_BUILD)/$(JACOBI_1D_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(JACOBI_1D_ROOT)
+	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(JACOBI_1D_SRC) -o $@ $(EXTRA_FLAGS)
 
-$(JACOBI_1D_ROOT)/gcc: $(JACOBI_1D_ROOT)/jacobi-1d.c $(POLYBENCH_ROOT)/utilities/polybench.c
-	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(JACOBI_1D_ROOT)/$(@F) ${EXTRA_FLAGS}
-
-$(JACOBI_1D_ROOT)/jlm-%: llvm-strip $(JACOBI_1D_SRC)
-	${POLYBENCH_ROOT}/jlc.py -s $(JACOBI_1D_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(JACOBI_1D_SRC) -o $(JACOBI_1D_ROOT)/$(@F) $(EXTRA_FLAGS)
-
-$(JACOBI_1D_ROOT)/OPTO%: llvm-strip $(JACOBI_1D_SRC)
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(JACOBI_1D_SRC) -o $(JACOBI_1D_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(POLYBENCH_BUILD)/$(JACOBI_1D_ROOT):
+	@mkdir -p $@

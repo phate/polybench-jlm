@@ -15,7 +15,7 @@ echo "polybench-size         Collects the text size of sepcified target."
 echo "                       Default target is COMP1 but can also be set by TARGET"
 echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
 echo "polybench-sizetable    Collects the text size for all benchmarks and targets"
-echo "polybench-jlmstats     Collects JLM compilation metrics for all benchmarks."
+#echo "polybench-jlmstats     Collects JLM compilation metrics for all benchmarks."
 echo "polybench-help         Prints possible options for COMP1, COMP2, and TARGET"
 endef
 
@@ -25,77 +25,76 @@ polybench-help:
 
 CC=clang
 
-export PATH := $(POLYBENCH_ROOT)/external/llvm-strip/bin:$(PATH)
-
+POLYBENCH_BUILD = $(POLYBENCH_ROOT)/build
 
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
 POLYBENCH_JLMSTATS = $(POLYBENCH_RESULTS)/jlmstats.log
 
-CORRELATION_ROOT = $(POLYBENCH_ROOT)/datamining/correlation
-include $(CORRELATION_ROOT)/Makefile.sub
-COVARIANCE_ROOT = $(POLYBENCH_ROOT)/datamining/covariance
-include $(COVARIANCE_ROOT)/Makefile.sub
+CORRELATION_ROOT = datamining/correlation
+include $(POLYBENCH_ROOT)/$(CORRELATION_ROOT)/Makefile.sub
+COVARIANCE_ROOT = datamining/covariance
+include $(POLYBENCH_ROOT)/$(COVARIANCE_ROOT)/Makefile.sub
 
-GEMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gemm
-include $(GEMM_ROOT)/Makefile.sub
-GEMVER_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gemver
-include $(GEMVER_ROOT)/Makefile.sub
-GESUMMV_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/gesummv
-include $(GESUMMV_ROOT)/Makefile.sub
-SYMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/symm
-include $(SYMM_ROOT)/Makefile.sub
-SYR2K_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/syr2k
-include $(SYR2K_ROOT)/Makefile.sub
-SYRK_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/syrk
-include $(SYRK_ROOT)/Makefile.sub
-TRMM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/blas/trmm
-include $(TRMM_ROOT)/Makefile.sub
+GEMM_ROOT = linear-algebra/blas/gemm
+include $(POLYBENCH_ROOT)/$(GEMM_ROOT)/Makefile.sub
+GEMVER_ROOT = linear-algebra/blas/gemver
+include $(POLYBENCH_ROOT)/$(GEMVER_ROOT)/Makefile.sub
+GESUMMV_ROOT = linear-algebra/blas/gesummv
+include $(POLYBENCH_ROOT)/$(GESUMMV_ROOT)/Makefile.sub
+SYMM_ROOT = linear-algebra/blas/symm
+include $(POLYBENCH_ROOT)/$(SYMM_ROOT)/Makefile.sub
+SYR2K_ROOT = linear-algebra/blas/syr2k
+include $(POLYBENCH_ROOT)/$(SYR2K_ROOT)/Makefile.sub
+SYRK_ROOT = linear-algebra/blas/syrk
+include $(POLYBENCH_ROOT)/$(SYRK_ROOT)/Makefile.sub
+TRMM_ROOT = linear-algebra/blas/trmm
+include $(POLYBENCH_ROOT)/$(TRMM_ROOT)/Makefile.sub
 
-2MM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/2mm
-include $(2MM_ROOT)/Makefile.sub
-3MM_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/3mm
-include $(3MM_ROOT)/Makefile.sub
-ATAX_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/atax
-include $(ATAX_ROOT)/Makefile.sub
-BICG_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/bicg
-include $(BICG_ROOT)/Makefile.sub
-DOITGEN_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/doitgen
-include $(DOITGEN_ROOT)/Makefile.sub
-MVT_ROOT = $(POLYBENCH_ROOT)/linear-algebra/kernels/mvt
-include $(MVT_ROOT)/Makefile.sub
+2MM_ROOT = linear-algebra/kernels/2mm
+include $(POLYBENCH_ROOT)/$(2MM_ROOT)/Makefile.sub
+3MM_ROOT = linear-algebra/kernels/3mm
+include $(POLYBENCH_ROOT)/$(3MM_ROOT)/Makefile.sub
+ATAX_ROOT = linear-algebra/kernels/atax
+include $(POLYBENCH_ROOT)/$(ATAX_ROOT)/Makefile.sub
+BICG_ROOT = linear-algebra/kernels/bicg
+include $(POLYBENCH_ROOT)/$(BICG_ROOT)/Makefile.sub
+DOITGEN_ROOT = linear-algebra/kernels/doitgen
+include $(POLYBENCH_ROOT)/$(DOITGEN_ROOT)/Makefile.sub
+MVT_ROOT = linear-algebra/kernels/mvt
+include $(POLYBENCH_ROOT)/$(MVT_ROOT)/Makefile.sub
 
-CHOLESKY_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/cholesky
-include $(CHOLESKY_ROOT)/Makefile.sub
-DURBIN_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/durbin
-include $(DURBIN_ROOT)/Makefile.sub
-GRAMSCHMIDT_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/gramschmidt
-include $(GRAMSCHMIDT_ROOT)/Makefile.sub
-LU_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/lu
-include $(LU_ROOT)/Makefile.sub
-LUDCMP_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/ludcmp
-include $(LUDCMP_ROOT)/Makefile.sub
-TRISOLV_ROOT = $(POLYBENCH_ROOT)/linear-algebra/solvers/trisolv
-include $(TRISOLV_ROOT)/Makefile.sub
+CHOLESKY_ROOT = linear-algebra/solvers/cholesky
+include $(POLYBENCH_ROOT)/$(CHOLESKY_ROOT)/Makefile.sub
+DURBIN_ROOT = linear-algebra/solvers/durbin
+include $(POLYBENCH_ROOT)/$(DURBIN_ROOT)/Makefile.sub
+GRAMSCHMIDT_ROOT = linear-algebra/solvers/gramschmidt
+include $(POLYBENCH_ROOT)/$(GRAMSCHMIDT_ROOT)/Makefile.sub
+LU_ROOT = linear-algebra/solvers/lu
+include $(POLYBENCH_ROOT)/$(LU_ROOT)/Makefile.sub
+LUDCMP_ROOT = linear-algebra/solvers/ludcmp
+include $(POLYBENCH_ROOT)/$(LUDCMP_ROOT)/Makefile.sub
+TRISOLV_ROOT = linear-algebra/solvers/trisolv
+include $(POLYBENCH_ROOT)/$(TRISOLV_ROOT)/Makefile.sub
 
-DERICHE_ROOT = $(POLYBENCH_ROOT)/medley/deriche
-include $(DERICHE_ROOT)/Makefile.sub
-FLOYD_WARSHALL_ROOT = $(POLYBENCH_ROOT)/medley/floyd-warshall
-include $(FLOYD_WARSHALL_ROOT)/Makefile.sub
-NUSSINOV_ROOT = $(POLYBENCH_ROOT)/medley/nussinov
-include $(NUSSINOV_ROOT)/Makefile.sub
+DERICHE_ROOT = medley/deriche
+include $(POLYBENCH_ROOT)/$(DERICHE_ROOT)/Makefile.sub
+FLOYD_WARSHALL_ROOT = medley/floyd-warshall
+include $(POLYBENCH_ROOT)/$(FLOYD_WARSHALL_ROOT)/Makefile.sub
+NUSSINOV_ROOT = medley/nussinov
+include $(POLYBENCH_ROOT)/$(NUSSINOV_ROOT)/Makefile.sub
 
-ADI_ROOT = $(POLYBENCH_ROOT)/stencils/adi
-include $(ADI_ROOT)/Makefile.sub
-FDTD_2D_ROOT = $(POLYBENCH_ROOT)/stencils/fdtd-2d
-include $(FDTD_2D_ROOT)/Makefile.sub
-HEAT_3D_ROOT = $(POLYBENCH_ROOT)/stencils/heat-3d
-include $(HEAT_3D_ROOT)/Makefile.sub
-JACOBI_1D_ROOT = $(POLYBENCH_ROOT)/stencils/jacobi-1d
-include $(JACOBI_1D_ROOT)/Makefile.sub
-JACOBI_2D_ROOT = $(POLYBENCH_ROOT)/stencils/jacobi-2d
-include $(JACOBI_2D_ROOT)/Makefile.sub
-SEIDEL_2D_ROOT = $(POLYBENCH_ROOT)/stencils/seidel-2d
-include $(SEIDEL_2D_ROOT)/Makefile.sub
+ADI_ROOT = stencils/adi
+include $(POLYBENCH_ROOT)/$(ADI_ROOT)/Makefile.sub
+FDTD_2D_ROOT = stencils/fdtd-2d
+include $(POLYBENCH_ROOT)/$(FDTD_2D_ROOT)/Makefile.sub
+HEAT_3D_ROOT = stencils/heat-3d
+include $(POLYBENCH_ROOT)/$(HEAT_3D_ROOT)/Makefile.sub
+JACOBI_1D_ROOT = stencils/jacobi-1d
+include $(POLYBENCH_ROOT)/$(JACOBI_1D_ROOT)/Makefile.sub
+JACOBI_2D_ROOT = stencils/jacobi-2d
+include $(POLYBENCH_ROOT)/$(JACOBI_2D_ROOT)/Makefile.sub
+SEIDEL_2D_ROOT = stencils/seidel-2d
+include $(POLYBENCH_ROOT)/$(SEIDEL_2D_ROOT)/Makefile.sub
 
 EXTRA_FLAGS=-lm
 
@@ -131,70 +130,31 @@ POLY_BENCHMARKS = \
 	$(JACOBI_2D_ROOT) \
 	$(SEIDEL_2D_ROOT)
 
-COMPILATION_TARGETS = \
-	OPTO0-LLCO0 \
-	OPTO0-LLCO1 \
-	OPTO0-LLCO3 \
-	OPTO0-LLCO0-stripped \
-	OPTO0-LLCO3-stripped \
-	\
-	OPTO1-LLCO0 \
-	OPTO1-LLCO1 \
-	OPTO1-LLCO3 \
-	OPTO1-LLCO0-stripped \
-	OPTO1-LLCO3-stripped \
-	\
-	OPTO2-LLCO0 \
-	OPTO2-LLCO1 \
-	OPTO2-LLCO3 \
-	OPTO2-LLCO0-stripped \
-	OPTO2-LLCO3-stripped \
-	\
-	OPTO3-LLCO0 \
-	OPTO3-LLCO1 \
-	OPTO3-LLCO3 \
-	OPTO3-LLCO0-stripped \
-	OPTO3-LLCO3-stripped \
-	\
-	OPTO3-no-vec-LLCO0 \
-	OPTO3-no-vec-LLCO3 \
-	OPTO3-no-vec-LLCO0-stripped \
-	OPTO3-no-vec-LLCO3-stripped \
-	\
-	OPTOs-LLCO0 \
-	OPTOs-LLCO1 \
-	OPTOs-LLCO3 \
-	OPTOs-LLCO0-stripped \
-	OPTOs-LLCO3-stripped \
-	\
-	jlm-LLCO0 \
-	jlm-LLCO1 \
-	jlm-LLCO3 \
-	\
-	jlm-no-unroll-LLCO3 \
-	jlm-no-opt-LLCO3 \
-	clang \
-	gcc \
 
 ### COMPARE, TIME, SIZE
 
-COMP1 ?= jlm-LLCO0
-COMP2 ?= OPTO3-LLCO3
+COMPILATION_TARGETS = \
+	clang \
+	gcc \
+	jlc
+
+COMP1 ?= jlc
+COMP2 ?= clang
 TARGET ?= $(COMP1)
 
 .PHONY: polybench-compare
 polybench-compare: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-compare: polybench-clean $(COMP1) $(COMP2)
+polybench-compare: polybench-clean polybench-$(COMP1) polybench-$(COMP2)
 	@$(foreach BENCHMARKDIR, $(POLY_BENCHMARKS), \
 		$(eval BENCHMARK = $(notdir $(BENCHMARKDIR))) \
 		$(eval DIFF = $(POLYBENCH_ROOT)/utilities/diff.sh) \
 		\
 		echo "$(BENCHMARK):" ; \
 		echo "    Running $(COMP1) version" ; \
-		$(BENCHMARKDIR)/$(COMP1) 2> /tmp/$(notdir $(BENCHMARK))-$(COMP1).log ; \
+		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP1).bin 2> /tmp/$(notdir $(BENCHMARK))-$(COMP1).log ; \
 		echo "    Running $(COMP2) version" ; \
-		$(BENCHMARKDIR)/$(COMP2) 2> /tmp/$(notdir $(BENCHMARK))-$(COMP2).log ; \
+		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP2).bin 2> /tmp/$(notdir $(BENCHMARK))-$(COMP2).log ; \
 		$(DIFF) /tmp/$(BENCHMARK)-$(COMP1).log /tmp/$(BENCHMARK)-$(COMP2).log ; \
 		rm -f /tmp/$(BENCHMARK)-$(COMP1).log ; \
 		rm -f /tmp/$(BENCHMARK)-$(COMP2).log ; \
@@ -203,44 +163,44 @@ polybench-compare: polybench-clean $(COMP1) $(COMP2)
 .PHONY: polybench-time
 polybench-time: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
-polybench-time: polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
+polybench-time: polybench-clean-target $(POLYBENCH_RESULTS) polybench-$(TARGET)
 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-time.txt) \
 		\
 		echo "$(BENCHMARK)/$(TARGET) > $(RESULTFILE)" ; \
-		$(BENCHMARK)/$(TARGET) > $(RESULTFILE) ; \
+		$(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin > $(RESULTFILE) ; \
 	)
 
 .PHONY: polybench-size
 polybench-size: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-size: polybench-clean-target $(POLYBENCH_RESULTS) $(TARGET)
+polybench-size: polybench-clean-target $(POLYBENCH_RESULTS) polybench-$(TARGET)
 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-size.txt) \
 		\
-		size $(BENCHMARK)/$(TARGET) | tail -1 | cut -f1 | xargs > $(RESULTFILE) ; \
+		size $(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin | tail -1 | cut -f1 | xargs > $(RESULTFILE) ; \
 	)
 
-.PHONY: polybench-jlmstats
-polybench-jlmstats: LLCOPT = LLCO0
-polybench-jlmstats: PIPELINE = jlm-LLC
-polybench-jlmstats: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities --print-cfr-time
-polybench-jlmstats: polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
-	@rm -f $(POLYBENCH_JLMSTATS)
-	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
-		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
-		\
-		sed -e 's/$$/ $(BENCHMARK)/' -i $(BENCHMARK_ROOT)/jlmstats.log ; \
-		cat $(BENCHMARK_ROOT)/jlmstats.log >> $(POLYBENCH_JLMSTATS) ; \
-	)
+# .PHONY: polybench-jlmstats
+# polybench-jlmstats: LLCOPT = LLCO0
+# polybench-jlmstats: PIPELINE = jlm-LLC
+# polybench-jlmstats: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities --print-cfr-time
+# polybench-jlmstats: polybench-clean $(POLYBENCH_RESULTS) jlm-LLCO0
+# 	@rm -f $(POLYBENCH_JLMSTATS)
+# 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
+# 		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
+# 		\
+# 		sed -e 's/$$/ $(BENCHMARK)/' -i $(BENCHMARK_ROOT)/jlmstats.log ; \
+# 		cat $(BENCHMARK_ROOT)/jlmstats.log >> $(POLYBENCH_JLMSTATS) ; \
+# 	)
 
 .PHONY: polybench-timetable
 polybench-timetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
 polybench-timetable: polybench-clean polybench
-	@echo -n "# benchmark "
+	@echo -n "# benchmark"
 	@$(foreach TARGET, $(COMPILATION_TARGETS), \
-		echo -n "$(TARGET)" ; \
+		echo -n " $(TARGET)" ; \
 	)
 	@echo ""
 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
@@ -248,7 +208,7 @@ polybench-timetable: polybench-clean polybench
 		\
 		echo -n "$(BENCHMARK)" ; \
 		$(foreach TARGET, $(COMPILATION_TARGETS), \
-			TIME=`$(BENCHMARK_ROOT)/$(TARGET)` ; \
+			TIME=`$(POLYBENCH_BUILD)/$(BENCHMARK_ROOT)/$(TARGET).bin` ; \
 			echo -n " $${TIME}" ; \
 		) \
 		echo "" ; \
@@ -260,7 +220,7 @@ polybench-sizetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utiliti
 polybench-sizetable: polybench-clean polybench
 	@echo -n "# benchmark "
 	@$(foreach TARGET, $(COMPILATION_TARGETS), \
-		echo -n "$(TARGET)" ; \
+		echo -n " $(TARGET)" ; \
 	)
 	@echo ""
 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
@@ -268,7 +228,7 @@ polybench-sizetable: polybench-clean polybench
 		\
 		echo -n "$(BENCHMARK)" ; \
 		$(foreach TARGET, $(COMPILATION_TARGETS), \
-			SIZE=`size $(BENCHMARK_ROOT)/$(TARGET) | tail -1 | cut -f1 | xargs`; \
+			SIZE=`size $(POLYBENCH_BUILD)/$(BENCHMARK_ROOT)/$(TARGET).bin | tail -1 | cut -f1 | xargs`; \
 			echo -n " $${SIZE}" ; \
 		) \
 		echo "" ; \
@@ -281,369 +241,49 @@ $(POLYBENCH_RESULTS):
 
 .PHONY: polybench-clean
 polybench-clean:
-	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
-		rm -f $(BENCHMARK_ROOT)/clang ; \
-		rm -f $(BENCHMARK_ROOT)/gcc ; \
-		rm -f $(BENCHMARK_ROOT)/jlm-* ; \
-		rm -f $(BENCHMARK_ROOT)/OPTO* ; \
-		rm -f $(BENCHMARK_ROOT)/*.rvsdg ; \
-		rm -f $(BENCHMARK_ROOT)/*.ll ; \
-		rm -f $(BENCHMARK_ROOT)/*.o ; \
-		rm -f $(BENCHMARK_ROOT)/jlmstats.log ; \
-	)
+	@rm -rf $(POLYBENCH_BUILD)
+	@rm -rf $(POLYBENCH_ROOT)/*/*/*.o
+	@rm -rf $(POLYBENCH_ROOT)/*/*/*/*.o
 
 .PHONY: polybench-clean-target
 polybench-clean-target:
 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
-		rm -f $(BENCHMARK)/$(TARGET) ; \
+		rm -f $(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin ; \
 	)
 
 .PHONY: polybench-purge
-polybench-purge: polybench-clean llvm-strip-clean
+polybench-purge: polybench-clean
 	@rm -rf $(POLYBENCH_RESULTS)
-
-### ALL
-
-.PHONY: polybench
-polybench: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
-polybench: $(COMPILATION_TARGETS)
-
-############################################################################
-# TARGETS FOR COMPILING ALL BENCHMARKS WITH DIFFERENT OPTIMIZATION OPTIONS #
-############################################################################
-
-### CLANG
-
-.PHONY: clang
-clang: $(patsubst %, %/clang, $(POLY_BENCHMARKS))
-
-### GCC
-
-.PHONY: gcc
-gcc: $(patsubst %, %/gcc, $(POLY_BENCHMARKS))
-
-### JLM
-
-.PHONY: jlm-LLCO0
-jlm-LLCO0: LLCOPT=LLCO0
-jlm-LLCO0: PIPELINE=jlm-LLC
-jlm-LLCO0: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jurl -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
-jlm-LLCO0: $(patsubst %, %/jlm-LLCO0, $(POLY_BENCHMARKS))
-
-.PHONY: jlm-LLCO1
-jlm-LLCO1: LLCOPT=LLCO1
-jlm-LLCO1: PIPELINE=jlm-LLC
-jlm-LLCO1: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jurl -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
-jlm-LLCO1: $(patsubst %, %/jlm-LLCO1, $(POLY_BENCHMARKS))
-
-.PHONY: jlm-LLCO3
-jlm-LLCO3: LLCOPT=LLCO3
-jlm-LLCO3: PIPELINE=jlm-LLC
-jlm-LLCO3: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jurl -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
-jlm-LLCO3: $(patsubst %, %/jlm-LLCO3, $(POLY_BENCHMARKS))
-
-.PHONY: jlm-no-unroll-LLCO3
-jlm-no-unroll-LLCO3: LLCOPT = LLCO3
-jlm-no-unroll-LLCO3: PIPELINE = jlm-LLC
-jlm-no-unroll-LLCO3: JLMFLAGS ?= -Jiln -Jinv -Jred -Jdne -Jivt -Jinv -Jdne -Jpsh -Jinv -Jdne -Jinv -Jred -Jcne -Jdne -Jpll -Jinv -Jdne
-jlm-no-unroll-LLCO3: $(patsubst %, %/jlm-no-unroll-LLCO3, $(POLY_BENCHMARKS))
-
-.PHONY: jlm-LLCO3
-jlm-no-opt-LLCO3: LLCOPT = LLCO3
-jlm-no-opt-LLCO3: PIPELINE = jlm-LLC
-jlm-no-opt-LLCO3: JLMFLAGS =
-jlm-no-opt-LLCO3: $(patsubst %, %/jlm-no-opt-LLCO3, $(POLY_BENCHMARKS))
-
-### OPT0
-
-.PHONY: OPTO0-LLCO0
-OPTO0-LLCO0: LLCOPT = LLCO0
-OPTO0-LLCO0: PIPELINE = opt-LLC
-OPTO0-LLCO0: LLVMOPT = -O0 --no-strip
-OPTO0-LLCO0: $(patsubst %, %/OPTO0-LLCO0, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO0-LLCO1
-OPTO0-LLCO1: LLCOPT = LLCO1
-OPTO0-LLCO1: PIPELINE = opt-LLC
-OPTO0-LLCO1: LLVMOPT = -O0 --no-strip
-OPTO0-LLCO1: $(patsubst %, %/OPTO0-LLCO1, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO0-LLCO3
-OPTO0-LLCO3: LLCOPT = LLCO3
-OPTO0-LLCO3: PIPELINE = opt-LLC
-OPTO0-LLCO3: LLVMOPT = -O0 --no-strip
-OPTO0-LLCO3: $(patsubst %, %/OPTO0-LLCO3, $(POLY_BENCHMARKS))
-
-### OPT0 stripped
-
-.PHONY: OPTO0-LLCO0-stripped
-OPTO0-LLCO0-stripped: LLCOPT = LLCO0
-OPTO0-LLCO0-stripped: PIPELINE = opt-LLC
-OPTO0-LLCO0-stripped: LLVMOPT = -O0
-OPTO0-LLCO0-stripped: $(patsubst %, %/OPTO0-LLCO0-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO0-LLCO1-stripped
-OPTO0-LLCO1-stripped: LLCOPT = LLCO1
-OPTO0-LLCO1-stripped: PIPELINE = opt-LLC
-OPTO0-LLCO1-stripped: LLVMOPT = -O0
-OPTO0-LLCO1-stripped: $(patsubst %, %/OPTO0-LLCO1-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO0-LLCO3-stripped
-OPTO0-LLCO3-stripped: LLCOPT = LLCO3
-OPTO0-LLCO3-stripped: PIPELINE = opt-LLC
-OPTO0-LLCO3-stripped: LLVMOPT = -O0
-OPTO0-LLCO3-stripped: $(patsubst %, %/OPTO0-LLCO3-stripped, $(POLY_BENCHMARKS))
-
-### OPT1
-
-.PHONY: OPTO1-LLCO0
-OPTO1-LLCO0: LLCOPT = LLCO0
-OPTO1-LLCO0: PIPELINE = opt-LLC
-OPTO1-LLCO0: LLVMOPT = -O1 --no-strip
-OPTO1-LLCO0: $(patsubst %, %/OPTO1-LLCO0, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO1-LLCO1
-OPTO1-LLCO1: LLCOPT = LLCO1
-OPTO1-LLCO1: PIPELINE = opt-LLC
-OPTO1-LLCO1: LLVMOPT = -O1 --no-strip
-OPTO1-LLCO1: $(patsubst %, %/OPTO1-LLCO1, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO1-LLCO3
-OPTO1-LLCO3: LLCOPT = LLCO3
-OPTO1-LLCO3: PIPELINE = opt-LLC
-OPTO1-LLCO3: LLVMOPT = -O1 --no-strip
-OPTO1-LLCO3: $(patsubst %, %/OPTO1-LLCO3, $(POLY_BENCHMARKS))
-
-### OPT1 stripped
-
-.PHONY: OPTO1-LLCO0-stripped
-OPTO1-LLCO0-stripped: LLCOPT = LLCO0
-OPTO1-LLCO0-stripped: PIPELINE = opt-LLC
-OPTO1-LLCO0-stripped: LLVMOPT = -O1
-OPTO1-LLCO0-stripped: $(patsubst %, %/OPTO1-LLCO0-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO1-LLCO1-stripped
-OPTO1-LLCO1-stripped: LLCOPT = LLCO1
-OPTO1-LLCO1-stripped: PIPELINE = opt-LLC
-OPTO1-LLCO1-stripped: LLVMOPT = -O1
-OPTO1-LLCO1-stripped: $(patsubst %, %/OPTO1-LLCO1-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO1-LLCO3-stripped
-OPTO1-LLCO3-stripped: LLCOPT = LLCO3
-OPTO1-LLCO3-stripped: PIPELINE = opt-LLC
-OPTO1-LLCO3-stripped: LLVMOPT = -O1
-OPTO1-LLCO3-stripped: $(patsubst %, %/OPTO1-LLCO3-stripped, $(POLY_BENCHMARKS))
-
-### OPT2
-
-.PHONY: OPTO2-LLCO0
-OPTO2-LLCO0: LLCOPT = LLCO0
-OPTO2-LLCO0: PIPELINE = opt-LLC
-OPTO2-LLCO0: LLVMOPT = -O2 --no-strip
-OPTO2-LLCO0: $(patsubst %, %/OPTO2-LLCO0, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO2-LLCO1
-OPTO2-LLCO1: LLCOPT = LLCO1
-OPTO2-LLCO1: PIPELINE = opt-LLC
-OPTO2-LLCO1: LLVMOPT = -O2 --no-strip
-OPTO2-LLCO1: $(patsubst %, %/OPTO2-LLCO1, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO2-LLCO3
-OPTO2-LLCO3: LLCOPT = LLCO3
-OPTO2-LLCO3: PIPELINE = opt-LLC
-OPTO2-LLCO3: LLVMOPT = -O2 --no-strip
-OPTO2-LLCO3: $(patsubst %, %/OPTO2-LLCO3, $(POLY_BENCHMARKS))
-
-### OPT2 stripped
-
-.PHONY: OPTO2-LLCO0-stripped
-OPTO2-LLCO0-stripped: LLCOPT = LLCO0
-OPTO2-LLCO0-stripped: PIPELINE = opt-LLC
-OPTO2-LLCO0-stripped: LLVMOPT = -O2
-OPTO2-LLCO0-stripped: $(patsubst %, %/OPTO2-LLCO0-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO2-LLCO1-stripped
-OPTO2-LLCO1-stripped: LLCOPT = LLCO1
-OPTO2-LLCO1-stripped: PIPELINE = opt-LLC
-OPTO2-LLCO1-stripped: LLVMOPT = -O2
-OPTO2-LLCO1-stripped: $(patsubst %, %/OPTO2-LLCO1-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO2-LLCO3-stripped
-OPTO2-LLCO3-stripped: LLCOPT = LLCO3
-OPTO2-LLCO3-stripped: PIPELINE = opt-LLC
-OPTO2-LLCO3-stripped: LLVMOPT = -O2
-OPTO2-LLCO3-stripped: $(patsubst %, %/OPTO2-LLCO3-stripped, $(POLY_BENCHMARKS))
-
-### OPT3
-
-.PHONY: OPTO3-LLCO0
-OPTO3-LLCO0: LLCOPT = LLCO0
-OPTO3-LLCO0: PIPELINE = opt-LLC
-OPTO3-LLCO0: LLVMOPT = -O3 --no-strip
-OPTO3-LLCO0: $(patsubst %, %/OPTO3-LLCO0, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-LLCO1
-OPTO3-LLCO1: LLCOPT = LLCO1
-OPTO3-LLCO1: PIPELINE = opt-LLC
-OPTO3-LLCO1: LLVMOPT = -O3 --no-strip
-OPTO3-LLCO1: $(patsubst %, %/OPTO3-LLCO1, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-LLCO3
-OPTO3-LLCO3: LLCOPT = LLCO3
-OPTO3-LLCO3: PIPELINE = opt-LLC
-OPTO3-LLCO3: LLVMOPT = -O3 --no-strip
-OPTO3-LLCO3: $(patsubst %, %/OPTO3-LLCO3, $(POLY_BENCHMARKS))
-
-### OPT3 stripped
-
-.PHONY: OPTO3-LLCO0-stripped
-OPTO3-LLCO0-stripped: LLCOPT = LLCO0
-OPTO3-LLCO0-stripped: PIPELINE = opt-LLC
-OPTO3-LLCO0-stripped: LLVMOPT = -O3
-OPTO3-LLCO0-stripped: $(patsubst %, %/OPTO3-LLCO0-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-LLCO1-stripped
-OPTO3-LLCO1-stripped: LLCOPT = LLCO1
-OPTO3-LLCO1-stripped: PIPELINE = opt-LLC
-OPTO3-LLCO1-stripped: LLVMOPT = -O3
-OPTO3-LLCO1-stripped: $(patsubst %, %/OPTO3-LLCO1-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-LLCO3-stripped
-OPTO3-LLCO3-stripped: LLCOPT = LLCO3
-OPTO3-LLCO3-stripped: PIPELINE = opt-LLC
-OPTO3-LLCO3-stripped: LLVMOPT = -O3
-OPTO3-LLCO3-stripped: $(patsubst %, %/OPTO3-LLCO3-stripped, $(POLY_BENCHMARKS))
-
-### OPT3 no-vec
-
-NO_VEC = $(shell ./print-llvm-opts.py | sed 's/-V-loop-vectorize //' | sed 's/-V-slp-vectorize //')
-
-.PHONY: OPTO3-no-vec-LLCO0
-OPTO3-no-vec-LLCO0: LLCOPT = LLCO0
-OPTO3-no-vec-LLCO0: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
-OPTO3-no-vec-LLCO0: $(patsubst %, %/OPTO3-no-vec-LLCO0, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-no-vec-LLCO1
-OPTO3-no-vec-LLCO1: LLCOPT = LLCO1
-OPTO3-no-vec-LLCO1: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
-OPTO3-no-vec-LLCO1: $(patsubst %, %/OPTO3-no-vec-LLCO1, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-no-vec-LLCO3
-OPTO3-no-vec-LLCO3: LLCOPT = LLCO3
-OPTO3-no-vec-LLCO3: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0: LLVMOPT = $(NO_VEC) --no-strip
-OPTO3-no-vec-LLCO3: $(patsubst %, %/OPTO3-no-vec-LLCO3, $(POLY_BENCHMARKS))
-
-### OPT3 no-vec stripped
-
-.PHONY: OPTO3-no-vec-LLCO0-stripped
-OPTO3-no-vec-LLCO0-stripped: LLCOPT = LLCO0
-OPTO3-no-vec-LLCO0-stripped: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
-OPTO3-no-vec-LLCO0-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO0-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-no-vec-LLCO1-stripped
-OPTO3-no-vec-LLCO1-stripped: LLCOPT = LLCO1
-OPTO3-no-vec-LLCO1-stripped: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
-OPTO3-no-vec-LLCO1-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO1-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTO3-no-vec-LLCO3-stripped
-OPTO3-no-vec-LLCO3-stripped: LLCOPT = LLCO3
-OPTO3-no-vec-LLCO3-stripped: PIPELINE = opt-LLC
-OPTO3-no-vec-LLCO0-stripped: LLVMOPT = $(NO_VEC)
-OPTO3-no-vec-LLCO3-stripped: $(patsubst %, %/OPTO3-no-vec-LLCO3-stripped, $(POLY_BENCHMARKS))
-
-### OPTs
-
-.PHONY: OPTOs-LLCO0
-OPTOs-LLCO0: LLCOPT = LLCO0
-OPTOs-LLCO0: PIPELINE = opt-LLC
-OPTOs-LLCO0: LLVMOPT = -Os --no-strip
-OPTOs-LLCO0: $(patsubst %, %/OPTOs-LLCO0, $(POLY_BENCHMARKS))
-
-.PHONY: OPTOs-LLCO1
-OPTOs-LLCO1: LLCOPT = LLCO1
-OPTOs-LLCO1: PIPELINE = opt-LLC
-OPTOs-LLCO1: LLVMOPT = -Os --no-strip
-OPTOs-LLCO1: $(patsubst %, %/OPTOs-LLCO1, $(POLY_BENCHMARKS))
-
-.PHONY: OPTOs-LLCO3
-OPTOs-LLCO3: LLCOPT = LLCO3
-OPTOs-LLCO3: PIPELINE = opt-LLC
-OPTOs-LLCO3: LLVMOPT = -Os --no-strip
-OPTOs-LLCO3: $(patsubst %, %/OPTOs-LLCO3, $(POLY_BENCHMARKS))
-
-### OPTs stripped
-
-.PHONY: OPTOs-LLCO0-stripped
-OPTOs-LLCO0-stripped: LLCOPT = LLCO0
-OPTOs-LLCO0-stripped: PIPELINE = opt-LLC
-OPTOs-LLCO0-stripped: LLVMOPT = -Os
-OPTOs-LLCO0-stripped: $(patsubst %, %/OPTOs-LLCO0-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTOs-LLCO1-stripped
-OPTOs-LLCO1-stripped: LLCOPT = LLCO1
-OPTOs-LLCO1-stripped: PIPELINE = opt-LLC
-OPTOs-LLCO1-stripped: LLVMOPT = -Os
-OPTOs-LLCO1-stripped: $(patsubst %, %/OPTOs-LLCO1-stripped, $(POLY_BENCHMARKS))
-
-.PHONY: OPTOs-LLCO3-stripped
-OPTOs-LLCO3-stripped: LLCOPT = LLCO3
-OPTOs-LLCO3-stripped: PIPELINE = opt-LLC
-OPTOs-LLCO3-stripped: LLVMOPT = -Os
-OPTOs-LLCO3-stripped: $(patsubst %, %/OPTOs-LLCO3-stripped, $(POLY_BENCHMARKS))
 
 ### HELP
 
 define HELP_TEXT_POLYBENCH_TARGETS
 echo ""
-echo "COMP1, COMP2 and TARGET can be set to one of the following options"
+echo "COMP1, COMP2, and TARGET can be set to one of the following options"
 echo "--------------------------------------------------------------------------------"
-echo "OPTO0-LLCO0"
-echo "OPTO0-LLCO1"
-echo "OPTO0-LLCO3"
-echo "OPTO0-LLCO0-stripped"
-echo "OPTO0-LLCO3-stripped"
-echo ""
-echo "OPTO1-LLCO0"
-echo "OPTO1-LLCO1"
-echo "OPTO1-LLCO3"
-echo "OPTO1-LLCO0-stripped"
-echo "OPTO1-LLCO3-stripped"
-echo ""
-echo "OPTO2-LLCO0"
-echo "OPTO2-LLCO1"
-echo "OPTO2-LLCO3"
-echo "OPTO2-LLCO0-stripped"
-echo "OPTO2-LLCO3-stripped"
-echo ""
-echo "OPTO3-LLCO0"
-echo "OPTO3-LLCO1"
-echo "OPTO3-LLCO3"
-echo "OPTO3-LLCO0-stripped"
-echo "OPTO3-LLCO3-stripped"
-echo ""
-echo "OPTO3-no-vec-LLCO0"
-echo "OPTO3-no-vec-LLCO3"
-echo "OPTO3-no-vec-LLCO0-stripped"
-echo "OPTO3-no-vec-LLCO3-stripped"
-echo ""
-echo "OPTOs-LLCO0"
-echo "OPTOs-LLCO1"
-echo "OPTOs-LLCO3"
-echo "OPTOs-LLCO0-stripped"
-echo "OPTOs-LLCO3-stripped"
-echo ""
-echo "jlm-LLCO0"
-echo "jlm-LLCO1"
-echo "jlm-LLCO3"
-echo ""
-echo "jlm-no-unroll-LLCO3"
-echo "jlm-no-opt-LLCO3"
-echo ""
 echo "clang"
 echo "gcc"
+echo "jlc"
 endef
+
+############################################################################
+# TARGETS FOR COMPILING ALL BENCHMARKS WITH DIFFERENT OPTIMIZATION OPTIONS #
+############################################################################
+
+.PHONY: polybench
+polybench: polybench-clang polybench-gcc polybench-jlc
+
+.PHONY: polybench-clang
+polybench-clang: COMPILER = clang
+polybench-clang: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
+polybench-clang: $(patsubst %, $(POLYBENCH_BUILD)/%/clang.bin, $(POLY_BENCHMARKS))
+
+.PHONY: polybench-gcc
+polybench-gcc: COMPILER = gcc
+polybench-gcc: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
+polybench-gcc: $(patsubst %, $(POLYBENCH_BUILD)/%/gcc.bin, $(POLY_BENCHMARKS))
+
+.PHONY: polybench-jlc
+polybench-jlc: COMPILER = jlc
+polybench-jlc: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
+polybench-jlc: $(patsubst %, $(POLYBENCH_BUILD)/%/jlc.bin, $(POLY_BENCHMARKS))

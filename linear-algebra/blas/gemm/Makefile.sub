@@ -1,15 +1,10 @@
 GEMM_SRC = \
-	$(GEMM_ROOT)/gemm.c \
+	$(POLYBENCH_ROOT)/$(GEMM_ROOT)/gemm.c \
 	$(POLYBENCH_ROOT)/utilities/polybench.c
 
-$(GEMM_ROOT)/clang: $(GEMM_SRC)
-	$(VERBOSE) clang -O3 $(CPPFLAGS) $? -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
 
-$(GEMM_ROOT)/gcc: $(GEMM_SRC)
-	${VERBOSE} gcc -O3 ${CPPFLAGS} $? -o $(GEMM_ROOT)/$(@F) ${EXTRA_FLAGS}
+$(POLYBENCH_BUILD)/$(GEMM_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(GEMM_ROOT)
+	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(GEMM_SRC) -o $@ $(EXTRA_FLAGS)
 
-$(GEMM_ROOT)/jlm-%: llvm-strip
-	${POLYBENCH_ROOT}/jlc.py -s $(GEMM_ROOT)/jlmstats.log $(CPPFLAGS) $(JLMFLAGS) $(PIPELINE) $(LLCOPT) $(GEMM_SRC) -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
-
-$(GEMM_ROOT)/OPTO%: llvm-strip
-	${POLYBENCH_ROOT}/jlc.py $(CPPFLAGS) $(LLVMOPT) $(PIPELINE) $(LLCOPT) $(GEMM_SRC) -o $(GEMM_ROOT)/$(@F) $(EXTRA_FLAGS)
+$(POLYBENCH_BUILD)/$(GEMM_ROOT):
+	@mkdir -p $@

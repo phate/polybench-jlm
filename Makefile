@@ -10,16 +10,11 @@ help:
 	@echo "submodule              Initializes all the dependent git submodules"
 	@echo "all                    Compiles jlm, and runs unit and C tests"
 	@echo "clean                  Alias for polybench-clean"
-	@echo "purge                  Calls polybench-purge and clean for llvm-strip"
-	@$(HELP_TEXT_LLVMSTRIP)
+	@echo "purge                  Calls polybench-purge"
 
 POLYBENCH_ROOT ?= .
-LLVMSTRIP_ROOT = $(POLYBENCH_ROOT)/external/llvm-strip
 
 include $(POLYBENCH_ROOT)/Makefile.sub
-ifneq ("$(wildcard $(LLVMSTRIP_ROOT)/Makefile.sub)","")
-include $(LLVMSTRIP_ROOT)/Makefile.sub
-endif
 
 .PHONY: all
 all: polybench
@@ -32,7 +27,7 @@ submodule:
 clean: polybench-clean
 
 .PHONY: purge
-purge: polybench-purge llvm-strip-clean
+purge: polybench-purge
 
 .PHONY: compare
 compare: polybench-compare
