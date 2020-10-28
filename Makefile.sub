@@ -274,7 +274,7 @@ endef
 polybench: polybench-clang polybench-gcc polybench-jlc
 
 .PHONY: polybench-clang
-polybench-clang: COMPILER = clang
+polybench-clang: COMPILER = $(CLANG)
 polybench-clang: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
 polybench-clang: $(patsubst %, $(POLYBENCH_BUILD)/%/clang.bin, $(POLY_BENCHMARKS))
 
