@@ -14,6 +14,12 @@ help:
 
 POLYBENCH_ROOT ?= .
 
+# LLVM related variables
+LLVMCONFIG ?= llvm-config
+CLANG_BIN=$(shell $(LLVMCONFIG) --bindir)
+CLANG=$(CLANG_BIN)/clang
+CC=$(CLANG)
+
 include $(POLYBENCH_ROOT)/Makefile.sub
 
 .PHONY: all
