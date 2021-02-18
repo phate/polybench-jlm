@@ -7,10 +7,13 @@ endef
 help:
 	@$(HELP_TEXT)
 	@$(HELP_TEXT_POLYBENCH)
-	@echo "submodule              Initializes all the dependent git submodules"
-	@echo "all                    Compiles jlm, and runs unit and C tests"
+	@echo "all                    Compiles all targets for all benchmarks"
+	@echo "compare                Alias for polybench-compare"
+	@echo "check                  Alias for polybench-check"
+	@echo "time                   Alias for polybench-time"
+	@echo "size                   Alias for polybench-size"
 	@echo "clean                  Alias for polybench-clean"
-	@echo "purge                  Calls polybench-purge"
+	@echo "purge                  Alias for polybench-purge"
 
 POLYBENCH_ROOT ?= .
 
@@ -25,10 +28,6 @@ include $(POLYBENCH_ROOT)/Makefile.sub
 .PHONY: all
 all: polybench
 
-.PHONY: submodule
-submodule:
-	git submodule update --init --recursive
-
 .PHONY: clean
 clean: polybench-clean
 
@@ -37,6 +36,9 @@ purge: polybench-purge
 
 .PHONY: compare
 compare: polybench-compare
+
+.PHONY: check
+check: polybench-check
 
 .PHONY: time
 time: polybench-time

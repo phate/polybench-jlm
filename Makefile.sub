@@ -7,6 +7,7 @@ echo "polybench-clean        Runs clean for each benchmark"
 echo "polybench-purge        Like polybench-clean but also deletes results directory"
 echo "polybench-compare      Runs two compiled versions and compares their outputs"
 echo "                       The versions to compare is defined by COMP1 and COMP2"
+echo "polybench-check        Runs jlc compiled versions and checks md5 output"
 echo "polybench-time         Collects the execution time of specified target."
 echo "                       Default target is COMP1 but can also be set by TARGET"
 echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
@@ -152,13 +153,32 @@ polybench-compare: polybench-clean polybench-$(COMP1) polybench-$(COMP2)
 		\
 		echo "$(BENCHMARK):" ; \
 		echo "    Running $(COMP1) version" ; \
-		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP1).bin 2> /tmp/$(notdir $(BENCHMARK))-$(COMP1).log ; \
+		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP1).bin 2> /tmp/$(BENCHMARK)-$(COMP1).log ; \
 		echo "    Running $(COMP2) version" ; \
-		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP2).bin 2> /tmp/$(notdir $(BENCHMARK))-$(COMP2).log ; \
+		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP2).bin 2> /tmp/$(BENCHMARK)-$(COMP2).log ; \
 		$(DIFF) /tmp/$(BENCHMARK)-$(COMP1).log /tmp/$(BENCHMARK)-$(COMP2).log ; \
 		rm -f /tmp/$(BENCHMARK)-$(COMP1).log ; \
 		rm -f /tmp/$(BENCHMARK)-$(COMP2).log ; \
 	)
+
+.PHONY: polybench-check
+polybench-check: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
+polybench-check: polybench-clean polybench-$(COMP1)
+	@set -e; \
+	$(foreach BENCHMARKDIR, $(POLY_BENCHMARKS), \
+		$(eval BENCHMARK = $(notdir $(BENCHMARKDIR))) \
+		$(eval DIFF = $(POLYBENCH_ROOT)/utilities/md5-diff.sh) \
+		\
+		echo "$(BENCHMARK):" ; \
+		echo "    Running $(COMP1) version" ; \
+		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP1).bin 2> /tmp/$(BENCHMARK)-$(COMP1).log ; \
+		md5sum /tmp/$(BENCHMARK)-$(COMP1).log | cut -d" " -f1 > /tmp/$(BENCHMARK)-$(COMP1)-output.md5 ; \
+		$(DIFF) /tmp/$(BENCHMARK)-$(COMP1)-output.md5 $(POLYBENCH_ROOT)/$(BENCHMARKDIR)/$(BENCHMARK)-output.md5 ; \
+		rm -f /tmp/$(BENCHMARK)-$(COMP1).log ; \
+		rm -f /tmp/$(BENCHMARK)-$(COMP1)-output.md5 ; \
+	)
+
 
 .PHONY: polybench-time
 polybench-time: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
