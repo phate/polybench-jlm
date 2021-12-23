@@ -17,6 +17,8 @@ help:
 
 POLYBENCH_ROOT ?= .
 
+JLC?=jlc
+
 # LLVM related variables
 LLVMCONFIG ?= llvm-config
 CLANG_BIN=$(shell $(LLVMCONFIG) --bindir)

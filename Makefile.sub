@@ -304,6 +304,6 @@ polybench-gcc: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities
 polybench-gcc: $(patsubst %, $(POLYBENCH_BUILD)/%/gcc.bin, $(POLY_BENCHMARKS))
 
 .PHONY: polybench-jlc
-polybench-jlc: COMPILER = jlc
+polybench-jlc: COMPILER = $(JLC)
 polybench-jlc: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
 polybench-jlc: $(patsubst %, $(POLYBENCH_BUILD)/%/jlc.bin, $(POLY_BENCHMARKS))
