@@ -1,9 +1,0 @@
-BICG_SRC = \
-	$(POLYBENCH_ROOT)/$(BICG_ROOT)/bicg.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(BICG_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(BICG_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(BICG_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(BICG_ROOT):
-	@mkdir -p $@

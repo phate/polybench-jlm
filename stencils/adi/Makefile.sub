@@ -1,9 +1,0 @@
-ADI_SRC = \
-	$(POLYBENCH_ROOT)/$(ADI_ROOT)/adi.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(ADI_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(ADI_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(ADI_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(ADI_ROOT):
-	@mkdir -p $@

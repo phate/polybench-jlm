@@ -1,9 +1,0 @@
-FDTD_2D_SRC = \
-	$(POLYBENCH_ROOT)/$(FDTD_2D_ROOT)/fdtd-2d.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(FDTD_2D_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(FDTD_2D_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(FDTD_2D_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(FDTD_2D_ROOT):
-	@mkdir -p $@

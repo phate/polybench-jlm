@@ -1,9 +1,0 @@
-SYMM_SRC = \
-	$(POLYBENCH_ROOT)/$(SYMM_ROOT)/symm.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(SYMM_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(SYMM_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(SYMM_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(SYMM_ROOT):
-	@mkdir -p $@

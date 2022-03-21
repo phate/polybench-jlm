@@ -1,9 +1,0 @@
-MVT_SRC = \
-	$(POLYBENCH_ROOT)/$(MVT_ROOT)/mvt.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(MVT_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(MVT_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(MVT_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(MVT_ROOT):
-	@mkdir -p $@

@@ -1,9 +1,0 @@
-SYR2K_SRC = \
-	$(POLYBENCH_ROOT)/$(SYR2K_ROOT)/syr2k.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(SYR2K_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(SYR2K_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(SYR2K_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(SYR2K_ROOT):
-	@mkdir -p $@

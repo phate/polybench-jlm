@@ -1,9 +1,0 @@
-TRMM_SRC = \
-	$(POLYBENCH_ROOT)/$(TRMM_ROOT)/trmm.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(TRMM_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(TRMM_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(TRMM_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(TRMM_ROOT):
-	@mkdir -p $@

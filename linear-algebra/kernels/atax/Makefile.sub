@@ -1,9 +1,0 @@
-ATAX_SRC = \
-	$(POLYBENCH_ROOT)/$(ATAX_ROOT)/atax.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(ATAX_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(ATAX_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(ATAX_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(ATAX_ROOT):
-	@mkdir -p $@

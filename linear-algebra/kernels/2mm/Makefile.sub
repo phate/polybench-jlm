@@ -1,9 +1,0 @@
-2MM_SRC = \
-	$(POLYBENCH_ROOT)/$(2MM_ROOT)/2mm.c \
-	$(POLYBENCH_ROOT)/utilities/polybench.c
-
-$(POLYBENCH_BUILD)/$(2MM_ROOT)/%.bin: $(POLYBENCH_BUILD)/$(2MM_ROOT)
-	@$(VERBOSE) $(COMPILER) $(CPPFLAGS) $(2MM_SRC) -o $@ $(EXTRA_FLAGS)
-
-$(POLYBENCH_BUILD)/$(2MM_ROOT):
-	@mkdir -p $@

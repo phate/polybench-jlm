@@ -8,14 +8,14 @@ echo "polybench-purge        Like polybench-clean but also deletes results direc
 echo "polybench-compare      Runs two compiled versions and compares their outputs"
 echo "                       The versions to compare is defined by COMP1 and COMP2"
 echo "polybench-check        Runs jlc compiled versions and checks md5 output"
-echo "polybench-time         Collects the execution time of specified target."
-echo "                       Default target is COMP1 but can also be set by TARGET"
-echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
-echo "polybench-timetable    Collects the excution time for all benchmarks and targets"
-echo "polybench-size         Collects the text size of sepcified target."
-echo "                       Default target is COMP1 but can also be set by TARGET"
-echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
-echo "polybench-sizetable    Collects the text size for all benchmarks and targets"
+#echo "polybench-time         Collects the execution time of specified target."
+#echo "                       Default target is COMP1 but can also be set by TARGET"
+#echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
+#echo "polybench-timetable    Collects the excution time for all benchmarks and targets"
+#echo "polybench-size         Collects the text size of sepcified target."
+#echo "                       Default target is COMP1 but can also be set by TARGET"
+#echo "                       Collected results are stored in $(POLYBENCH_RESULTS)"
+#echo "polybench-sizetable    Collects the text size for all benchmarks and targets"
 #echo "polybench-jlmstats     Collects JLM compilation metrics for all benchmarks."
 echo "polybench-help         Prints possible options for COMP1, COMP2, and TARGET"
 endef
@@ -27,112 +27,40 @@ polybench-help:
 CC=clang
 
 POLYBENCH_BUILD = $(POLYBENCH_ROOT)/build
-
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
 POLYBENCH_JLMSTATS = $(POLYBENCH_RESULTS)/jlmstats.log
 
-CORRELATION_ROOT = datamining/correlation
-include $(POLYBENCH_ROOT)/$(CORRELATION_ROOT)/Makefile.sub
-COVARIANCE_ROOT = datamining/covariance
-include $(POLYBENCH_ROOT)/$(COVARIANCE_ROOT)/Makefile.sub
-
-GEMM_ROOT = linear-algebra/blas/gemm
-include $(POLYBENCH_ROOT)/$(GEMM_ROOT)/Makefile.sub
-GEMVER_ROOT = linear-algebra/blas/gemver
-include $(POLYBENCH_ROOT)/$(GEMVER_ROOT)/Makefile.sub
-GESUMMV_ROOT = linear-algebra/blas/gesummv
-include $(POLYBENCH_ROOT)/$(GESUMMV_ROOT)/Makefile.sub
-SYMM_ROOT = linear-algebra/blas/symm
-include $(POLYBENCH_ROOT)/$(SYMM_ROOT)/Makefile.sub
-SYR2K_ROOT = linear-algebra/blas/syr2k
-include $(POLYBENCH_ROOT)/$(SYR2K_ROOT)/Makefile.sub
-SYRK_ROOT = linear-algebra/blas/syrk
-include $(POLYBENCH_ROOT)/$(SYRK_ROOT)/Makefile.sub
-TRMM_ROOT = linear-algebra/blas/trmm
-include $(POLYBENCH_ROOT)/$(TRMM_ROOT)/Makefile.sub
-
-2MM_ROOT = linear-algebra/kernels/2mm
-include $(POLYBENCH_ROOT)/$(2MM_ROOT)/Makefile.sub
-3MM_ROOT = linear-algebra/kernels/3mm
-include $(POLYBENCH_ROOT)/$(3MM_ROOT)/Makefile.sub
-ATAX_ROOT = linear-algebra/kernels/atax
-include $(POLYBENCH_ROOT)/$(ATAX_ROOT)/Makefile.sub
-BICG_ROOT = linear-algebra/kernels/bicg
-include $(POLYBENCH_ROOT)/$(BICG_ROOT)/Makefile.sub
-DOITGEN_ROOT = linear-algebra/kernels/doitgen
-include $(POLYBENCH_ROOT)/$(DOITGEN_ROOT)/Makefile.sub
-MVT_ROOT = linear-algebra/kernels/mvt
-include $(POLYBENCH_ROOT)/$(MVT_ROOT)/Makefile.sub
-
-CHOLESKY_ROOT = linear-algebra/solvers/cholesky
-include $(POLYBENCH_ROOT)/$(CHOLESKY_ROOT)/Makefile.sub
-DURBIN_ROOT = linear-algebra/solvers/durbin
-include $(POLYBENCH_ROOT)/$(DURBIN_ROOT)/Makefile.sub
-GRAMSCHMIDT_ROOT = linear-algebra/solvers/gramschmidt
-include $(POLYBENCH_ROOT)/$(GRAMSCHMIDT_ROOT)/Makefile.sub
-LU_ROOT = linear-algebra/solvers/lu
-include $(POLYBENCH_ROOT)/$(LU_ROOT)/Makefile.sub
-LUDCMP_ROOT = linear-algebra/solvers/ludcmp
-include $(POLYBENCH_ROOT)/$(LUDCMP_ROOT)/Makefile.sub
-TRISOLV_ROOT = linear-algebra/solvers/trisolv
-include $(POLYBENCH_ROOT)/$(TRISOLV_ROOT)/Makefile.sub
-
-DERICHE_ROOT = medley/deriche
-include $(POLYBENCH_ROOT)/$(DERICHE_ROOT)/Makefile.sub
-FLOYD_WARSHALL_ROOT = medley/floyd-warshall
-include $(POLYBENCH_ROOT)/$(FLOYD_WARSHALL_ROOT)/Makefile.sub
-NUSSINOV_ROOT = medley/nussinov
-include $(POLYBENCH_ROOT)/$(NUSSINOV_ROOT)/Makefile.sub
-
-ADI_ROOT = stencils/adi
-include $(POLYBENCH_ROOT)/$(ADI_ROOT)/Makefile.sub
-FDTD_2D_ROOT = stencils/fdtd-2d
-include $(POLYBENCH_ROOT)/$(FDTD_2D_ROOT)/Makefile.sub
-HEAT_3D_ROOT = stencils/heat-3d
-include $(POLYBENCH_ROOT)/$(HEAT_3D_ROOT)/Makefile.sub
-JACOBI_1D_ROOT = stencils/jacobi-1d
-include $(POLYBENCH_ROOT)/$(JACOBI_1D_ROOT)/Makefile.sub
-JACOBI_2D_ROOT = stencils/jacobi-2d
-include $(POLYBENCH_ROOT)/$(JACOBI_2D_ROOT)/Makefile.sub
-SEIDEL_2D_ROOT = stencils/seidel-2d
-include $(POLYBENCH_ROOT)/$(SEIDEL_2D_ROOT)/Makefile.sub
-
-EXTRA_FLAGS=-lm
-
-POLY_BENCHMARKS = \
-	$(CORRELATION_ROOT) \
-	$(COVARIANCE_ROOT) \
-	$(GEMM_ROOT) \
-	$(GEMVER_ROOT)\
-	$(GESUMMV_ROOT) \
-	$(SYMM_ROOT) \
-	$(SYR2K_ROOT) \
-	$(SYRK_ROOT) \
-	$(TRMM_ROOT) \
-	$(2MM_ROOT) \
-	$(3MM_ROOT) \
-	$(ATAX_ROOT) \
-	$(BICG_ROOT) \
-	$(DOITGEN_ROOT) \
-	$(MVT_ROOT) \
-	$(CHOLESKY_ROOT) \
-	$(DURBIN_ROOT) \
-	$(GRAMSCHMIDT_ROOT) \
-	$(LU_ROOT) \
-	$(LUDCMP_ROOT) \
-	$(TRISOLV_ROOT) \
-	$(DERICHE_ROOT) \
-	$(FLOYD_WARSHALL_ROOT) \
-	$(NUSSINOV_ROOT) \
-	$(ADI_ROOT) \
-	$(FDTD_2D_ROOT) \
-	$(HEAT_3D_ROOT) \
-	$(JACOBI_1D_ROOT) \
-	$(JACOBI_2D_ROOT) \
-	$(SEIDEL_2D_ROOT)
-
-
-### COMPARE, TIME, SIZE
+POLYBENCH_SRC = \
+	datamining/correlation/correlation.c \
+	datamining/covariance/covariance.c \
+	linear-algebra/blas/gemm/gemm.c \
+	linear-algebra/blas/gemver/gemver.c \
+	linear-algebra/blas/gesummv/gesummv.c \
+	linear-algebra/blas/symm/symm.c \
+	linear-algebra/blas/syr2k/syr2k.c \
+	linear-algebra/blas/syrk/syrk.c \
+	linear-algebra/blas/trmm/trmm.c \
+	linear-algebra/kernels/2mm/2mm.c \
+	linear-algebra/kernels/3mm/3mm.c \
+	linear-algebra/kernels/atax/atax.c \
+	linear-algebra/kernels/bicg/bicg.c \
+	linear-algebra/kernels/doitgen/doitgen.c \
+	linear-algebra/kernels/mvt/mvt.c \
+	linear-algebra/solvers/cholesky/cholesky.c \
+	linear-algebra/solvers/durbin/durbin.c \
+	linear-algebra/solvers/gramschmidt/gramschmidt.c \
+	linear-algebra/solvers/lu/lu.c \
+	linear-algebra/solvers/ludcmp/ludcmp.c \
+	linear-algebra/solvers/trisolv/trisolv.c \
+	medley/deriche/deriche.c \
+	medley/floyd-warshall/floyd-warshall.c \
+	medley/nussinov/nussinov.c \
+	stencils/adi/adi.c \
+	stencils/fdtd-2d/fdtd-2d.c \
+	stencils/heat-3d/heat-3d.c \
+	stencils/jacobi-1d/jacobi-1d.c \
+	stencils/jacobi-2d/jacobi-2d.c \
+	stencils/seidel-2d/seidel-2d.c
 
 COMPILATION_TARGETS = \
 	clang \
@@ -143,63 +71,62 @@ COMP1 ?= jlc
 COMP2 ?= clang
 TARGET ?= $(COMP1)
 
+# polybench-compare is based on compiling and running each benchmark
+# with two different compilers and comparing the results
+
+$(POLYBENCH_BUILD)/%: $(POLYBENCH_BUILD)/%.$(COMP1) $(POLYBENCH_BUILD)/%.$(COMP2)
+	@$@.$(COMP1) 2> $@-$(COMP1).log
+	@$@.$(COMP2) 2> $@-$(COMP2).log
+	@echo "$@" ; \
+	$(POLYBENCH_ROOT)/utilities/md5-diff.sh $@-$(COMP1).log $@-$(COMP2).log
+
 .PHONY: polybench-compare
 polybench-compare: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-compare: polybench-clean polybench-$(COMP1) polybench-$(COMP2)
-	@$(foreach BENCHMARKDIR, $(POLY_BENCHMARKS), \
-		$(eval BENCHMARK = $(notdir $(BENCHMARKDIR))) \
-		$(eval DIFF = $(POLYBENCH_ROOT)/utilities/diff.sh) \
-		\
-		echo "$(BENCHMARK):" ; \
-		echo "    Running $(COMP1) version" ; \
-		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP1).bin 2> /tmp/$(BENCHMARK)-$(COMP1).log ; \
-		echo "    Running $(COMP2) version" ; \
-		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP2).bin 2> /tmp/$(BENCHMARK)-$(COMP2).log ; \
-		$(DIFF) /tmp/$(BENCHMARK)-$(COMP1).log /tmp/$(BENCHMARK)-$(COMP2).log ; \
-		rm -f /tmp/$(BENCHMARK)-$(COMP1).log ; \
-		rm -f /tmp/$(BENCHMARK)-$(COMP2).log ; \
-	)
+polybench-compare: polybench-clean #polybench-$(COMP1) polybench-$(COMP2)
+polybench-compare: $(patsubst %.c, $(POLYBENCH_BUILD)/%, $(POLYBENCH_SRC))
+
+# polybench-check is based on a precomputed md5 checksum of the result,
+# which the output of each benchmark is compared against
+
+$(POLYBENCH_BUILD)/%.md5: $(POLYBENCH_BUILD)/%.$(COMP1)
+	@$^ 2> $@.log
+	@md5sum $@.log | cut -d" " -f1 > $@
+	@echo "$@" ; \
+	$(POLYBENCH_ROOT)/utilities/md5-diff.sh $@ $@-golden
 
 .PHONY: polybench-check
 polybench-check: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
 	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
 polybench-check: polybench-clean polybench-$(COMP1)
-	@set -e; \
-	$(foreach BENCHMARKDIR, $(POLY_BENCHMARKS), \
-		$(eval BENCHMARK = $(notdir $(BENCHMARKDIR))) \
-		$(eval DIFF = $(POLYBENCH_ROOT)/utilities/md5-diff.sh) \
-		\
-		echo "$(BENCHMARK):" ; \
-		echo "    Running $(COMP1) version" ; \
-		$(POLYBENCH_BUILD)/$(BENCHMARKDIR)/$(COMP1).bin 2> /tmp/$(BENCHMARK)-$(COMP1).log ; \
-		md5sum /tmp/$(BENCHMARK)-$(COMP1).log | cut -d" " -f1 > /tmp/$(BENCHMARK)-$(COMP1)-output.md5 ; \
-		$(DIFF) /tmp/$(BENCHMARK)-$(COMP1)-output.md5 $(POLYBENCH_ROOT)/$(BENCHMARKDIR)/$(BENCHMARK)-output.md5 ; \
-		rm -f /tmp/$(BENCHMARK)-$(COMP1).log ; \
-		rm -f /tmp/$(BENCHMARK)-$(COMP1)-output.md5 ; \
-	)
+polybench-check: $(patsubst %.c, $(POLYBENCH_BUILD)/%.md5, $(POLYBENCH_SRC))
 
 
-.PHONY: polybench-time
-polybench-time: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
-	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
-polybench-time: polybench-clean-target $(POLYBENCH_RESULTS) polybench-$(TARGET)
-	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
-		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-time.txt) \
-		\
-		echo "$(BENCHMARK)/$(TARGET) > $(RESULTFILE)" ; \
-		$(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin > $(RESULTFILE) ; \
-	)
+#
+# TODO: convert these other targets to the new structure based on source files
+#       instead of benchmark paths and individual makefiles for each benchmark
+#
 
-.PHONY: polybench-size
-polybench-size: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
-	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
-polybench-size: polybench-clean-target $(POLYBENCH_RESULTS) polybench-$(TARGET)
-	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
-		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-size.txt) \
-		\
-		size $(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin | tail -1 | cut -f1 | xargs > $(RESULTFILE) ; \
-	)
+# .PHONY: polybench-time
+# polybench-time: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+# 	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
+# polybench-time: polybench-clean-target $(POLYBENCH_RESULTS) polybench-$(TARGET)
+# 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
+# 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-time.txt) \
+# 		\
+# 		echo "$(BENCHMARK)/$(TARGET) > $(RESULTFILE)" ; \
+# 		$(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin > $(RESULTFILE) ; \
+# 	)
+
+# .PHONY: polybench-size
+# polybench-size: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+# 	-DPOLYBENCH_DUMP_ARRAYS -DPOLYBENCH_USE_C99_PROTO
+# polybench-size: polybench-clean-target $(POLYBENCH_RESULTS) polybench-$(TARGET)
+# 	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
+# 		$(eval RESULTFILE = $(POLYBENCH_RESULTS)/$(notdir $(BENCHMARK))-$(TARGET)-size.txt) \
+# 		\
+# 		size $(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin | tail -1 | cut -f1 | xargs > $(RESULTFILE) ; \
+# 	)
 
 # .PHONY: polybench-jlmstats
 # polybench-jlmstats: LLCOPT = LLCO0
@@ -214,48 +141,48 @@ polybench-size: polybench-clean-target $(POLYBENCH_RESULTS) polybench-$(TARGET)
 # 		cat $(BENCHMARK_ROOT)/jlmstats.log >> $(POLYBENCH_JLMSTATS) ; \
 # 	)
 
-.PHONY: polybench-timetable
-polybench-timetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
-	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
-polybench-timetable: polybench-clean polybench
-	@echo -n "# benchmark"
-	@$(foreach TARGET, $(COMPILATION_TARGETS), \
-		echo -n " $(TARGET)" ; \
-	)
-	@echo ""
-	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
-		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
-		\
-		echo -n "$(BENCHMARK)" ; \
-		$(foreach TARGET, $(COMPILATION_TARGETS), \
-			TIME=`$(POLYBENCH_BUILD)/$(BENCHMARK_ROOT)/$(TARGET).bin` ; \
-			echo -n " $${TIME}" ; \
-		) \
-		echo "" ; \
-	)
+# .PHONY: polybench-timetable
+# polybench-timetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+# 	-DPOLYBENCH_USE_C99_PROTO -DPOLYBENCH_TIME
+# polybench-timetable: polybench-clean polybench
+# 	@echo -n "# benchmark"
+# 	@$(foreach TARGET, $(COMPILATION_TARGETS), \
+# 		echo -n " $(TARGET)" ; \
+# 	)
+# 	@echo ""
+# 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
+# 		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
+# 		\
+# 		echo -n "$(BENCHMARK)" ; \
+# 		$(foreach TARGET, $(COMPILATION_TARGETS), \
+# 			TIME=`$(POLYBENCH_BUILD)/$(BENCHMARK_ROOT)/$(TARGET).bin` ; \
+# 			echo -n " $${TIME}" ; \
+# 		) \
+# 		echo "" ; \
+# 	)
 
-.PHONY: polybench-sizetable
-polybench-sizetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
-	-DPOLYBENCH_USE_C99_PROTO
-polybench-sizetable: polybench-clean polybench
-	@echo -n "# benchmark "
-	@$(foreach TARGET, $(COMPILATION_TARGETS), \
-		echo -n " $(TARGET)" ; \
-	)
-	@echo ""
-	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
-		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
-		\
-		echo -n "$(BENCHMARK)" ; \
-		$(foreach TARGET, $(COMPILATION_TARGETS), \
-			SIZE=`size $(POLYBENCH_BUILD)/$(BENCHMARK_ROOT)/$(TARGET).bin | tail -1 | cut -f1 | xargs`; \
-			echo -n " $${SIZE}" ; \
-		) \
-		echo "" ; \
-	)
+# .PHONY: polybench-sizetable
+# polybench-sizetable: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
+# 	-DPOLYBENCH_USE_C99_PROTO
+# polybench-sizetable: polybench-clean polybench
+# 	@echo -n "# benchmark "
+# 	@$(foreach TARGET, $(COMPILATION_TARGETS), \
+# 		echo -n " $(TARGET)" ; \
+# 	)
+# 	@echo ""
+# 	@$(foreach BENCHMARK_ROOT, $(POLY_BENCHMARKS), \
+# 		$(eval BENCHMARK = $(notdir $(BENCHMARK_ROOT))) \
+# 		\
+# 		echo -n "$(BENCHMARK)" ; \
+# 		$(foreach TARGET, $(COMPILATION_TARGETS), \
+# 			SIZE=`size $(POLYBENCH_BUILD)/$(BENCHMARK_ROOT)/$(TARGET).bin | tail -1 | cut -f1 | xargs`; \
+# 			echo -n " $${SIZE}" ; \
+# 		) \
+# 		echo "" ; \
+# 	)
 
-$(POLYBENCH_RESULTS):
-	mkdir -p $(POLYBENCH_RESULTS)
+# $(POLYBENCH_RESULTS):
+# 	mkdir -p $(POLYBENCH_RESULTS)
 
 ### CLEAN
 
@@ -267,9 +194,8 @@ polybench-clean:
 
 .PHONY: polybench-clean-target
 polybench-clean-target:
-	@$(foreach BENCHMARK, $(POLY_BENCHMARKS), \
-		rm -f $(POLYBENCH_BUILD)/$(BENCHMARK)/$(TARGET).bin ; \
-	)
+	rm -f $(POLYBENCH_BUILD)/*/*.$(TARGET)
+	rm -f $(POLYBENCH_BUILD)/*/*/*.$(TARGET)
 
 .PHONY: polybench-purge
 polybench-purge: polybench-clean
@@ -290,20 +216,71 @@ endef
 # TARGETS FOR COMPILING ALL BENCHMARKS WITH DIFFERENT OPTIMIZATION OPTIONS #
 ############################################################################
 
+EXTRA_FLAGS=-lm
+
 .PHONY: polybench
 polybench: polybench-clang polybench-gcc polybench-jlc
 
+# Copy the precomputed md5 checksum to the build directory
+# This checksum is later used by polybench-check to verify
+# the result of benchmark runs
+$(POLYBENCH_BUILD)/%.md5-golden: $(POLYBENCH_ROOT)/%-output.md5
+	@cp $^ $@
+
+#
+# clang
+#
+
+# Compile individual C files into clang specific object files
+$(POLYBENCH_BUILD)/%-clang.o: $(POLYBENCH_ROOT)/%.c
+	@mkdir -p $(dir $@)
+	@$(VERBOSE) $(CLANG) $(CPPFLAGS) -c $^ -o $@
+
+# Once both the polybench and benchmark specific file has been compiled
+# it can be linked to a clang specific executable
+$(POLYBENCH_BUILD)/%.clang: $(POLYBENCH_BUILD)/%-clang.o $(POLYBENCH_BUILD)/utilities/polybench-clang.o
+	@$(VERBOSE) $(CLANG) $(CPPFLAGS) $^ -o $@ $(EXTRA_FLAGS)
+
 .PHONY: polybench-clang
-polybench-clang: COMPILER = $(CLANG)
 polybench-clang: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
-polybench-clang: $(patsubst %, $(POLYBENCH_BUILD)/%/clang.bin, $(POLY_BENCHMARKS))
+polybench-clang: $(POLYBENCH_BUILD)/utilities/polybench-clang.o
+polybench-clang: $(patsubst %.c, $(POLYBENCH_BUILD)/%.clang, $(POLYBENCH_SRC))
+
+#
+# gcc
+#
+
+# Compile individual C files into gcc specific object files
+$(POLYBENCH_BUILD)/%-gcc.o: $(POLYBENCH_ROOT)/%.c
+	@mkdir -p $(dir $@)
+	@$(VERBOSE) gcc $(CPPFLAGS) -c $^ -o $@ $(EXTRA_FLAGS)
+
+# Once both the polybench and benchmark specific file has been compiled
+# it can be linked to a gcc specific executable
+$(POLYBENCH_BUILD)/%.gcc: $(POLYBENCH_BUILD)/%-gcc.o $(POLYBENCH_BUILD)/utilities/polybench-gcc.o
+	@$(VERBOSE) gcc $(CPPFLAGS) $^ -o $@ $(EXTRA_FLAGS)
 
 .PHONY: polybench-gcc
-polybench-gcc: COMPILER = gcc
 polybench-gcc: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
-polybench-gcc: $(patsubst %, $(POLYBENCH_BUILD)/%/gcc.bin, $(POLY_BENCHMARKS))
+polybench-gcc: $(POLYBENCH_BUILD)/utilities/polybench-gcc.o
+polybench-gcc: $(patsubst %.c, $(POLYBENCH_BUILD)/%.gcc, $(POLYBENCH_SRC))
+
+#
+# jlc
+#
+
+# Compile individual C files into jlc specific object files
+$(POLYBENCH_BUILD)/%-jlc.o: $(POLYBENCH_ROOT)/%.c
+	@mkdir -p $(dir $@)
+	@$(VERBOSE) $(JLC) $(CPPFLAGS) -c $^ -o $@ $(EXTRA_FLAGS)
+
+# Once both the polybench and benchmark specific file has been compiled
+# it can be linked to a jlc specific executable
+$(POLYBENCH_BUILD)/%.jlc: $(POLYBENCH_BUILD)/%-jlc.o $(POLYBENCH_BUILD)/utilities/polybench-jlc.o
+	@$(VERBOSE) $(JLC) $(CPPFLAGS) $^ -o $@ $(EXTRA_FLAGS)
 
 .PHONY: polybench-jlc
-polybench-jlc: COMPILER = $(JLC)
 polybench-jlc: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
-polybench-jlc: $(patsubst %, $(POLYBENCH_BUILD)/%/jlc.bin, $(POLY_BENCHMARKS))
+polybench-jlc: $(POLYBENCH_BUILD)/utilities/polybench-jlc.o
+polybench-jlc: $(patsubst %.c, $(POLYBENCH_BUILD)/%.jlc, $(POLYBENCH_SRC))
+polybench-jlc: $(patsubst %.c, $(POLYBENCH_BUILD)/%.md5-golden, $(POLYBENCH_SRC))
