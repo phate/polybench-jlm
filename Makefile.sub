@@ -26,6 +26,18 @@ polybench-help:
 
 CC=clang
 
+# Color definition for terminal output
+NC=\033[0m
+RED=\033[0;31m
+GREEN=\033[0;32m
+BLUE=\033[1;34m
+
+# Set MacOS specific paths
+ifeq ($(shell uname -s),Darwin)
+	CPPFLAGS += -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness
+	LDFLAGS += -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib/
+endif
+
 POLYBENCH_BUILD = $(POLYBENCH_ROOT)/build
 POLYBENCH_RESULTS = $(POLYBENCH_ROOT)/results
 POLYBENCH_JLMSTATS = $(POLYBENCH_RESULTS)/jlmstats.log
@@ -75,10 +87,11 @@ TARGET ?= $(COMP1)
 # with two different compilers and comparing the results
 
 $(POLYBENCH_BUILD)/%: $(POLYBENCH_BUILD)/%.$(COMP1) $(POLYBENCH_BUILD)/%.$(COMP2)
+	@echo "Running $(COMP1) version: $@"
 	@$@.$(COMP1) 2> $@-$(COMP1).log
+	@echo "Running $(COMP2) version: $@"
 	@$@.$(COMP2) 2> $@-$(COMP2).log
-	@echo "$@" ; \
-	$(POLYBENCH_ROOT)/utilities/md5-diff.sh $@-$(COMP1).log $@-$(COMP2).log
+	@$(POLYBENCH_ROOT)/utilities/md5-diff.sh $@-$(COMP1).log $@-$(COMP2).log
 
 .PHONY: polybench-compare
 polybench-compare: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
@@ -90,10 +103,10 @@ polybench-compare: $(patsubst %.c, $(POLYBENCH_BUILD)/%, $(POLYBENCH_SRC))
 # which the output of each benchmark is compared against
 
 $(POLYBENCH_BUILD)/%.md5: $(POLYBENCH_BUILD)/%.$(COMP1)
+	@echo "Running: $@"
 	@$^ 2> $@.log
 	@md5sum $@.log | cut -d" " -f1 > $@
-	@echo "$@" ; \
-	$(POLYBENCH_ROOT)/utilities/md5-diff.sh $@ $@-golden
+	@$(POLYBENCH_ROOT)/utilities/md5-diff.sh $@ $@-golden
 
 .PHONY: polybench-check
 polybench-check: CPPFLAGS += -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities \
@@ -271,13 +284,17 @@ polybench-gcc: $(patsubst %.c, $(POLYBENCH_BUILD)/%.gcc, $(POLYBENCH_SRC))
 
 # Compile individual C files into jlc specific object files
 $(POLYBENCH_BUILD)/%-jlc.o: $(POLYBENCH_ROOT)/%.c
+	@echo "Compiling: $*"
 	@mkdir -p $(dir $@)
 	@$(VERBOSE) $(JLC) $(CPPFLAGS) -c $^ -o $@ $(EXTRA_FLAGS)
+	@printf '    $(GREEN)%s$(NC): %s\n' "SUCCESS" "$*"
 
 # Once both the polybench and benchmark specific file has been compiled
 # it can be linked to a jlc specific executable
 $(POLYBENCH_BUILD)/%.jlc: $(POLYBENCH_BUILD)/%-jlc.o $(POLYBENCH_BUILD)/utilities/polybench-jlc.o
-	@$(VERBOSE) $(JLC) $(CPPFLAGS) $^ -o $@ $(EXTRA_FLAGS)
+	@echo "Linking: $*"
+	@$(VERBOSE) $(JLC) $(CPPFLAGS) $(LDFLAGS) $^ -o $@ $(EXTRA_FLAGS)
+	@printf '    $(GREEN)%s$(NC): %s\n' "SUCCESS" "$*"
 
 .PHONY: polybench-jlc
 polybench-jlc: CPPFLAGS += -O3 -I$(POLYBENCH_ROOT) -I$(POLYBENCH_ROOT)/utilities -DPOLYBENCH_USE_C99_PROTO
