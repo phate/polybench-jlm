@@ -1,5 +1,5 @@
 name: "Install packages"
-description: "Installs packages that the hls-test-suite depends on."
+description: "Installs packages that polybench depends on."
 
 inputs:
   llvm-version:
@@ -22,17 +22,9 @@ runs:
       run: sudo apt-get update
       shell: bash
 
-    - name: "Install necessary tools and packages"
+    - name: "Install LLVM"
       run: |
-        sudo apt-get install llvm-${{inputs.llvm-version}}-dev clang-${{inputs.llvm-version}} mlir-${{inputs.llvm-version}}-tools libmlir-${{inputs.llvm-version}}-dev ninja-build verilator
+        sudo apt-get install llvm-${{inputs.llvm-version}}-dev clang-${{inputs.llvm-version}}
         pip install "lit~=${{inputs.llvm-version}}.0"
         echo "$(python -m site --user-base)/bin" >> $GITHUB_PATH
-      shell: bash
-
-    - name: "Create MLIR library links"
-      run: |
-        if ! [ -f /usr/lib/x86_64-linux-gnu/libMLIR.so ]; then
-          sudo ln -s /usr/lib/llvm-${{inputs.llvm-version}}/lib/libMLIR.so.${{inputs.llvm-version}}* /usr/lib/x86_64-linux-gnu/
-          sudo ln -s /usr/lib/llvm-${{inputs.llvm-version}}/lib/libMLIR.so.${{inputs.llvm-version}}* /usr/lib/x86_64-linux-gnu/libMLIR.so
-        fi
       shell: bash
