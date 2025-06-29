@@ -18,11 +18,16 @@ help:
 POLYBENCH_ROOT ?= .
 
 JLC?=jlc
+CGEIST?=cgeist
 
 # LLVM related variables
-LLVMCONFIG ?= llvm-config
-CLANG_BIN=$(shell $(LLVMCONFIG) --bindir)
-CLANG=$(CLANG_BIN)/clang
+LLVM_VERSION = 18
+LLVMCONFIG ?= llvm-config-$(LLVM_VERSION)
+LLVM_BIN_DIR=$(shell $(LLVMCONFIG) --bindir)
+LLVM_INCLUDE_DIR=$(shell $(LLVMCONFIG) --includedir)
+LLVM_LIB_DIR=$(shell $(LLVMCONFIG) --libdir)
+CLANG=$(LLVM_BIN_DIR)/clang
+LLC=$(LLVM_BIN_DIR)/llc
 CC=$(CLANG)
 
 include $(POLYBENCH_ROOT)/Makefile.sub
