@@ -115,6 +115,47 @@ polybench-check: polybench-clean polybench-$(COMP1)
 polybench-check: $(patsubst %.c, $(POLYBENCH_BUILD)/%.md5, $(POLYBENCH_SRC))
 
 
+### PROFILING
+
+.PRECIOUS: $(POLYBENCH_BUILD)/%.perf
+$(POLYBENCH_BUILD)/%.perf: $(POLYBENCH_BUILD)/%.$(COMP1)
+	@echo "Profiling: $@"
+	@valgrind --tool=callgrind --callgrind-out-file=$@.raw $^ 2> /dev/null
+	@callgrind_annotate $@.raw > $@
+
+# Compares the instruction count between the executed benchmark, and the golden reference.
+# Exit if different.
+#.PHONY: inst-compare/%
+inst-compare/%: $(POLYBENCH_BUILD)/%.perf $(POLYBENCH_ROOT)/%.perf
+	@set -e ; \
+	INSTRUCTIONS=$$(grep 'PROGRAM TOTALS' $< | cut -d' ' -f1 |  tr -dc '0-9') ; \
+	GOLDEN=$$(cat $(POLYBENCH_ROOT)/$*.perf) ; \
+	\
+	if [ "$$INSTRUCTIONS" != "$$GOLDEN" ] ; then \
+		printf '$(RED)%s$(NC)\n    $(GREEN)%s$(NC)\n    $(RED)%s$(NC)\n' \
+		"The execution time of $* has changed" \
+		"Golden instructions time: $${GOLDEN}" \
+		"Simulated instructions: $${INSTRUCTIONS}" ; \
+		echo "The execution time of $* has changed" >> $(POLYBENCH_BUILD)/instructions-diff.log ; \
+		echo "  Golden instructions time: $${GOLDEN}" >> $(POLYBENCH_BUILD)/instructions-diff.log ; \
+		echo "  Simulated instructions: $${INSTRUCTIONS}" >> $(POLYBENCH_BUILD)/instructions-diff.log ; \
+	else \
+		echo "    Executed instructions match golden instructions ($${INSTRUCTIONS}==$${GOLDEN})" ; \
+	fi
+
+.PHONY: polybench-callgrind
+polybench-callgrind: polybench-clean polybench-$(COMP1)
+polybench-callgrind: $(patsubst %.c, inst-compare/%, $(POLYBENCH_SRC))
+
+.PHONY: update-golden-file/%
+update-golden-file/%: $(POLYBENCH_BUILD)/%.perf
+	@set -e ; \
+	INSTRUCTIONS=$$(grep 'PROGRAM TOTALS' $< | cut -d' ' -f1 |  tr -dc '0-9') ; \
+	echo "$${INSTRUCTIONS}" > $(POLYBENCH_ROOT)/$*.perf
+
+.PHONY: update-golden
+update-golden: $(patsubst %.c, update-golden-file/%, $(POLYBENCH_SRC))
+
 #
 # TODO: convert these other targets to the new structure based on source files
 #       instead of benchmark paths and individual makefiles for each benchmark
@@ -238,6 +279,7 @@ polybench: polybench-clang polybench-gcc polybench-jlc
 # This checksum is later used by polybench-check to verify
 # the result of benchmark runs
 $(POLYBENCH_BUILD)/%.md5-golden: $(POLYBENCH_ROOT)/%-output.md5
+	@mkdir -p $(dir $@)
 	@cp $^ $@
 
 #
